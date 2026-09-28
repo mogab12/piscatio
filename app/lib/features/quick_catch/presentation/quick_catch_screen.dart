@@ -23,9 +23,13 @@ enum _Step { photo, species, confirm }
 /// every step, so the thumb never moves: "+ Catch", "Take photo", "Save".
 /// Everything optional lives in the collapsed "More details" area.
 class QuickCatchScreen extends ConsumerStatefulWidget {
-  const QuickCatchScreen({super.key, required this.tripId});
+  const QuickCatchScreen({super.key, required this.tripId, this.photoPath});
 
   final String tripId;
+
+  /// A photo recovered after Android killed the app during the capture:
+  /// the flow resumes at the species step.
+  final String? photoPath;
 
   @override
   ConsumerState<QuickCatchScreen> createState() => _QuickCatchScreenState();
@@ -57,9 +61,20 @@ class _QuickCatchScreenState extends ConsumerState<QuickCatchScreen> {
     context.pop();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    final recovered = widget.photoPath;
+    if (recovered != null) _usePhoto(recovered);
+  }
+
   Future<void> _pick(PhotoOrigin origin) async {
     final path = await ref.read(photoSourceProvider).pick(origin);
     if (path == null || !mounted) return;
+    _usePhoto(path);
+  }
+
+  void _usePhoto(String path) {
     final importer = ref.read(photoImporterProvider);
     setState(() {
       _pickedPath = path;

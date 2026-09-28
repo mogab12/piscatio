@@ -38,18 +38,27 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 - [x] Cards: recorde na linguagem de cada estilo, marca discreta, local conforme
       privacidade (e chave "Mostrar local")
 - [x] Compartilhar via share sheet (PNG renderizado pelo app: não carrega EXIF)
-- [ ] **Checkpoint 1B**: testar no celular
+- [x] **Checkpoint 1B**: testado no celular (feedback aplicado na 1C: marca, cards, atualização)
 
 ### 1C — Estatísticas, retroativa e acabamento
 
-- [ ] Estatísticas: totais, horas, espécies, recordes, isca mais produtiva
-- [ ] Iscas e equipamentos: listas simples
-- [ ] Pescaria retroativa com sugestão de data/local pelo EXIF
-- [ ] Busca de local por nome (geocodificação da plataforma)
-- [ ] Exportar dados (JSON) e apagar todos os dados
-- [ ] Revisão de acessibilidade (leitor de tela nos 3 idiomas, fonte dinâmica)
-- [ ] README: emulador e celular físico
-- [ ] **Critérios de pronto da Fase 1** verificados (modo avião, troca de idioma/unidade)
+- [x] Estatísticas (aba Números): totais, horas, capturas por hora, espécies, iscas,
+      recordes e melhor pescaria
+- [x] Iscas e equipamentos: listas com adicionar, editar, arquivar e restaurar
+- [x] Pescaria passada com data, horário e local sugeridos pelas fotos (EXIF lido
+      antes de ser removido); cada foto vira uma captura
+- [x] Busca de local por nome (geocodificação da plataforma)
+- [x] Exportar dados (JSON pelo menu de compartilhar) e apagar todos os dados
+- [x] Recuperar a foto quando o Android encerra o app com a câmera aberta
+- [x] Revisão de acessibilidade das telas novas (fonte 1,6×, rótulos para leitor de
+      tela, alvos ≥ 56 dp)
+- [x] Marca: símbolo da boia, assinatura nos cards, zonas seguras do story;
+      personalização dos cards (cor, foto, detalhes, legenda)
+- [x] README: emulador, celular físico, atualizar sem desinstalar
+- [x] Critérios de pronto da Fase 1: offline-first coberto pelos testes (rede sempre
+      falha nos testes de widget e nada trava), troca de idioma e unidade em tempo
+      real (testes de ajustes)
+- [ ] **Checkpoint 1C**: testar no celular
 
 ## Fase 2 — Backend e sincronização
 

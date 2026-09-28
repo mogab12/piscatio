@@ -112,7 +112,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/capture/:tripId',
         pageBuilder: (context, state) => MaterialPage(
           fullscreenDialog: true,
-          child: QuickCatchScreen(tripId: state.pathParameters['tripId']!),
+          child: QuickCatchScreen(
+            tripId: state.pathParameters['tripId']!,
+            photoPath: state.uri.queryParameters['photo'],
+          ),
         ),
       ),
       GoRoute(

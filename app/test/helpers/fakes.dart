@@ -35,10 +35,20 @@ class FakePhotoSource implements PhotoSource {
   String? path;
   final picks = <PhotoOrigin>[];
 
+  /// What [recoverLost] returns (a photo from a killed session).
+  String? lost;
+
   @override
   Future<String?> pick(PhotoOrigin origin) async {
     picks.add(origin);
     return path;
+  }
+
+  @override
+  Future<String?> recoverLost() async {
+    final l = lost;
+    lost = null;
+    return l;
   }
 }
 

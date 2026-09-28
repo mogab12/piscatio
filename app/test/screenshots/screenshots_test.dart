@@ -297,4 +297,61 @@ void main() {
     await saveScreenshot(tester, 'card_editor');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
+
+  testWidgets('phase 1C screens', (tester) async {
+    usePhoneSurface(tester);
+    final app = await TestApp.start(
+      tester,
+      overrides: [
+        photoSourceProvider.overrideWithValue(FakePhotoSource()),
+        imageProcessorProvider.overrideWithValue(PassThroughImageProcessor()),
+      ],
+    );
+    await app.run(tester, () async {
+      await app.read(settingsRepositoryProvider).completeOnboarding();
+      await app
+          .read(tackleRepositoryProvider)
+          .addBait('Tuvira', BaitType.natural);
+      await app
+          .read(tackleRepositoryProvider)
+          .addBait('Jig de pena', BaitType.artificial);
+    });
+    await seedSummaryTrip(app, tester);
+    await app.pumpApp(tester);
+    await tester.tap(find.text('Números'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'stats');
+    await tester.drag(
+      find.byType(CustomScrollView).last,
+      const Offset(0, -500),
+    );
+    await app.settle(tester);
+    await saveScreenshot(tester, 'stats_scrolled');
+    await tester.tap(find.text('Ajustes'));
+    await app.settle(tester);
+    await tester.drag(find.byType(ListView).last, const Offset(0, -400));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'settings_1c');
+    await tester.tap(find.text('Iscas'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'tackle_baits');
+    await tester.tap(find.byTooltip('Voltar'));
+    await app.settle(tester);
+    await tester.tap(find.text('Diário'));
+    await app.settle(tester);
+    await tester.tap(find.text('Registrar pescaria passada'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'past_trip');
+
+    tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await app.settle(tester);
+    await saveScreenshot(tester, 'past_trip_large_text');
+    await tester.tap(find.byTooltip('Voltar'));
+    await app.settle(tester);
+    await tester.tap(find.text('Números'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'stats_large_text');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
 }

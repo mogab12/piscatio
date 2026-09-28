@@ -382,6 +382,8 @@ class _AddPhotoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    // Wider with large system text, so the label wraps between words.
+    final width = MediaQuery.textScalerOf(context).scale(88).clamp(88.0, 160.0);
     return Semantics(
       button: true,
       label: label,
@@ -390,7 +392,7 @@ class _AddPhotoTile extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(PiscatioRadii.thumb),
         child: Container(
-          width: 88,
+          width: width,
           height: 88,
           decoration: BoxDecoration(
             color: scheme.surfaceContainer,

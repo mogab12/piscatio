@@ -11,7 +11,12 @@ abstract final class AppRoutes {
 
   static String trip(String id) => '/trip/$id';
   static String editTrip(String id) => '/trip/$id/edit';
-  static String capture(String tripId) => '/capture/$tripId';
+  static String capture(String tripId, {String? photo}) => photo == null
+      ? '/capture/$tripId'
+      : Uri(
+          path: '/capture/$tripId',
+          queryParameters: {'photo': photo},
+        ).toString();
   static String catchDetail(String id) => '/catch/$id';
   static String tripSummary(String id) => '/summary/$id';
   static String tripCard(String id) => '/cards/trip/$id';

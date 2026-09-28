@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/device.dart';
 import '../../../core/formatting/formatters.dart';
 import '../../../core/formatting/l10n.dart';
+import '../../../core/media/photo_source.dart';
 import '../../../core/providers.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/theme/tokens.dart';
@@ -25,6 +28,27 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   var _starting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_recoverLostPhoto());
+  }
+
+  /// Android may kill the app while the camera is open; the photo comes
+  /// back on the next launch. With a trip running, the catch continues.
+  Future<void> _recoverLostPhoto() async {
+    final String? path;
+    try {
+      path = await ref.read(photoSourceProvider).recoverLost();
+    } on Exception {
+      return;
+    }
+    if (path == null || !mounted) return;
+    final trip = await ref.read(tripRepositoryProvider).activeTrip();
+    if (trip == null || !mounted) return;
+    unawaited(context.push(AppRoutes.capture(trip.id, photo: path)));
+  }
 
   Future<void> _start() async {
     if (_starting) return;

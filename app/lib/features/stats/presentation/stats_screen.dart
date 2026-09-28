@@ -171,12 +171,13 @@ class _Totals extends ConsumerWidget {
               ),
               style: muted,
             ),
-            Text(
-              l10n.statsReleased(
-                pct.format(stats.releasedCount / stats.catchCount),
+            if (stats.releasedCount > 0)
+              Text(
+                l10n.statsReleased(
+                  pct.format(stats.releasedCount / stats.catchCount),
+                ),
+                style: muted,
               ),
-              style: muted,
-            ),
           ],
         ],
       ),
@@ -241,8 +242,8 @@ class _HourChartState extends State<HourChart> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // The value being read: the busiest hour, or the tapped one.
-        SizedBox(
-          height: 24,
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 24),
           child: shown == null
               ? null
               : Text(
