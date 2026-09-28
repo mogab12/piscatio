@@ -216,7 +216,8 @@ void main() {
     await app.settle(tester);
     expect(find.byType(ActiveTripScreen), findsOneWidget);
     expect(await flow.catches(tester), isEmpty);
-    expect(photosDir.listSync(), isEmpty);
+    // The copy is deleted in the background after the screen closes.
+    await app.settleUntil(tester, () => photosDir.listSync().isEmpty);
     await app.dispose(tester);
   });
 

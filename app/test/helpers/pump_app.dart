@@ -178,6 +178,23 @@ class TestApp {
     await tester.pumpAndSettle();
   }
 
+  /// Settles until [done] holds, for effects of fire-and-forget work
+  /// (e.g. a file deleted after the screen closed) whose real I/O can take
+  /// longer than [settle] on a slow machine. Fails after [maxTries].
+  Future<void> settleUntil(
+    WidgetTester tester,
+    bool Function() done, {
+    int maxTries = 50,
+  }) async {
+    for (var i = 0; i < maxTries && !done(); i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 20)),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(done(), isTrue, reason: 'condition not reached after settling');
+  }
+
   /// Unmounts the tree and closes the database (avoids pending timers).
   Future<void> dispose(WidgetTester tester) async {
     await tester.pumpWidget(const SizedBox());

@@ -101,6 +101,8 @@ void main() {
     expect(find.text('Poço do Dourado'), findsNothing);
 
     await tester.tap(find.text('Compartilhar'));
+    // Rendering and PNG encoding run on the real event loop.
+    await app.settleUntil(tester, () => sharer.shared.isNotEmpty);
     await app.settle(tester);
     expect(sharer.shared, hasLength(1));
     final (png, name) = sharer.shared.single;
