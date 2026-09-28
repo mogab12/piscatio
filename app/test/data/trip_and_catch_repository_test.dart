@@ -162,9 +162,9 @@ void main() {
       expect(await catches.watchCatch(c.id).first, isNull);
       expect(await trips.watchOverviews().first, isEmpty);
 
-      final tombstone = await (db.select(db.trips)).getSingle();
+      final tombstone = await db.select(db.trips).getSingle();
       expect(tombstone.deletedAt, isNotNull);
-      final photo = await (db.select(db.catchPhotos)).getSingle();
+      final photo = await db.select(db.catchPhotos).getSingle();
       expect(photo.deletedAt, isNotNull);
     });
   });

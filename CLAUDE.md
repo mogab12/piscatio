@@ -28,6 +28,7 @@ flutter analyze
 flutter test
 dart run tool/check_l10n.dart          # chaves e placeholders iguais nos 3 idiomas
 dart run tool/check_hardcoded_strings.dart   # nenhum texto literal na UI
+tool/verify.sh                         # tudo acima, como na CI — rodar antes de commitar
 ```
 
 O código gerado (`*.g.dart`, `*.freezed.dart`, `lib/l10n/generated/`) **é commitado**

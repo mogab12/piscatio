@@ -36,8 +36,7 @@ class SpeciesRepository {
       return [
         for (final group in grouped.values)
           group.first.readTable(_db.speciesTable).toModel([
-            for (final r in group)
-              if (r.readTableOrNull(_db.speciesNames) case final n?) n,
+            for (final r in group) ?r.readTableOrNull(_db.speciesNames),
           ]),
       ];
     });
