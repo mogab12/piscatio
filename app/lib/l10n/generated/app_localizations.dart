@@ -921,6 +921,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a number, like 2.5'**
   String get errorInvalidNumber;
+
+  /// Empty logbook.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished trips show up here, month by month.'**
+  String get historyEmpty;
+
+  /// Trip was deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip no longer exists.'**
+  String get tripNotFound;
+
+  /// Catch was deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This catch no longer exists.'**
+  String get catchNotFound;
+
+  /// Trip without catches.
+  ///
+  /// In en, this message translates to:
+  /// **'No catches on this trip.'**
+  String get tripNoCatches;
+
+  /// Add a catch to a finished trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a catch'**
+  String get tripAddCatch;
+
+  /// Trip start and end times.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} to {end}'**
+  String tripTimeRange(String start, String end);
+
+  /// Label under the trip duration.
+  ///
+  /// In en, this message translates to:
+  /// **'fishing'**
+  String get tripStatDuration;
+
+  /// Word next to a big species count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{species} other{species}}'**
+  String speciesCountLabel(int count);
+
+  /// Biggest catch of the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest: {species}, {measure}'**
+  String tripBiggestCatch(String species, String measure);
+
+  /// Delete trip action and dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete trip'**
+  String get deleteTripTitle;
+
+  /// Delete trip confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Its catches and photos will be deleted too. This cannot be undone.'**
+  String get deleteTripBody;
+
+  /// Delete catch action and dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete catch'**
+  String get deleteCatchTitle;
+
+  /// Delete catch confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'The catch and its photo will be deleted.'**
+  String get deleteCatchBody;
+
+  /// Edit trip screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit trip'**
+  String get editTripTitle;
+
+  /// Trip date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get editTripDate;
+
+  /// Trip start time.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get editTripStart;
+
+  /// Trip end time.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get editTripEnd;
+
+  /// Validation error.
+  ///
+  /// In en, this message translates to:
+  /// **'The end must be after the start.'**
+  String get editTripEndBeforeStart;
+
+  /// Location name field.
+  ///
+  /// In en, this message translates to:
+  /// **'Place name'**
+  String get editTripPlace;
+
+  /// When the place name is shown.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown on cards only with “Exact spot”.'**
+  String get editTripPlaceHelp;
+
+  /// Region field (city, state).
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get editTripRegion;
+
+  /// What the region is and when it is shown.
+  ///
+  /// In en, this message translates to:
+  /// **'City or state, e.g. Cuiabá, MT. Shown with “Approximate area”.'**
+  String get editTripRegionHelp;
+
+  /// Privacy level of this trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Location privacy'**
+  String get editTripPrivacy;
+
+  /// Photo source sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get catchPhoto;
+
+  /// Add a photo to a catch.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get catchAddPhoto;
+
+  /// Replace the catch photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get catchReplacePhoto;
+
+  /// Remove the catch photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get catchRemovePhoto;
+
+  /// Catch time field.
+  ///
+  /// In en, this message translates to:
+  /// **'Time caught'**
+  String get catchTime;
+
+  /// A duration of whole hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String durationHours(int hours);
 }
 
 class _AppLocalizationsDelegate

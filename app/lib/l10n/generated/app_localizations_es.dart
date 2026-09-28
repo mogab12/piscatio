@@ -479,4 +479,109 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorInvalidNumber => 'Escribe un número, como 2,5';
+
+  @override
+  String get historyEmpty =>
+      'Las jornadas finalizadas aparecen aquí, mes a mes.';
+
+  @override
+  String get tripNotFound => 'Esta jornada ya no existe.';
+
+  @override
+  String get catchNotFound => 'Esta captura ya no existe.';
+
+  @override
+  String get tripNoCatches => 'Ninguna captura en esta jornada.';
+
+  @override
+  String get tripAddCatch => 'Agregar captura';
+
+  @override
+  String tripTimeRange(String start, String end) {
+    return 'De $start a $end';
+  }
+
+  @override
+  String get tripStatDuration => 'pescando';
+
+  @override
+  String speciesCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'especies',
+      one: 'especie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripBiggestCatch(String species, String measure) {
+    return 'La más grande: $species, $measure';
+  }
+
+  @override
+  String get deleteTripTitle => 'Eliminar jornada';
+
+  @override
+  String get deleteTripBody =>
+      'Sus capturas y fotos también se eliminarán. No se puede deshacer.';
+
+  @override
+  String get deleteCatchTitle => 'Eliminar captura';
+
+  @override
+  String get deleteCatchBody => 'La captura y su foto se eliminarán.';
+
+  @override
+  String get editTripTitle => 'Editar jornada';
+
+  @override
+  String get editTripDate => 'Fecha';
+
+  @override
+  String get editTripStart => 'Inicio';
+
+  @override
+  String get editTripEnd => 'Fin';
+
+  @override
+  String get editTripEndBeforeStart => 'El fin debe ser después del inicio.';
+
+  @override
+  String get editTripPlace => 'Nombre del lugar';
+
+  @override
+  String get editTripPlaceHelp =>
+      'Aparece en las tarjetas solo con “Lugar exacto”.';
+
+  @override
+  String get editTripRegion => 'Región';
+
+  @override
+  String get editTripRegionHelp =>
+      'Ciudad o provincia, como Corrientes. Aparece con “Zona aproximada”.';
+
+  @override
+  String get editTripPrivacy => 'Privacidad del lugar';
+
+  @override
+  String get catchPhoto => 'Foto';
+
+  @override
+  String get catchAddPhoto => 'Agregar foto';
+
+  @override
+  String get catchReplacePhoto => 'Cambiar';
+
+  @override
+  String get catchRemovePhoto => 'Quitar';
+
+  @override
+  String get catchTime => 'Hora de la captura';
+
+  @override
+  String durationHours(int hours) {
+    return '$hours h';
+  }
 }

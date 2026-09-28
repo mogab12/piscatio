@@ -38,6 +38,7 @@ void main() {
     final pt = _f('pt', UnitSystem.metric);
     expect(pt.duration(const Duration(hours: 3, minutes: 20)), '3 h 20 min');
     expect(pt.duration(const Duration(minutes: 45)), '45 min');
+    expect(pt.duration(const Duration(hours: 4)), '4 h');
     expect(
       Formatters.timer(const Duration(hours: 1, minutes: 5, seconds: 9)),
       '1:05:09',

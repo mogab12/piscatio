@@ -173,4 +173,68 @@ void main() {
     await saveScreenshot(tester, 'capture_4_confirm');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
+
+  testWidgets('logbook', (tester) async {
+    usePhoneSurface(tester);
+    final app = await TestApp.start(tester);
+    await app.run(tester, () async {
+      await app.read(settingsRepositoryProvider).completeOnboarding();
+      final trips = app.read(tripRepositoryProvider);
+      final catches = app.read(catchRepositoryProvider);
+      final plan = [
+        (
+          DateTime.utc(2026, 8, 16, 9),
+          'Represa de Furnas',
+          150,
+          [('cichla-kelberi', 2100, 480), ('cichla-kelberi', 1650, 440)],
+        ),
+        (
+          DateTime.utc(2026, 8, 30, 8),
+          'Rio Paraná',
+          240,
+          [('salminus-brasiliensis', 5200, 780)],
+        ),
+        (
+          DateTime.utc(2026, 9, 10, 6),
+          'Rio Cuiabá',
+          200,
+          [
+            ('hoplias-malabaricus', 900, 390),
+            ('pseudoplatystoma-corruscans', 8400, 920),
+            ('piaractus-mesopotamicus', 3100, 520),
+          ],
+        ),
+      ];
+      for (final (start, name, minutes, list) in plan) {
+        app.clock.set(start);
+        final t = await trips.startTrip(
+          timezone: 'UTC',
+          privacy: PrivacyLevel.private,
+        );
+        for (final (sp, g, mm) in list) {
+          app.clock.advance(const Duration(minutes: 35));
+          final c = await catches.addCatch(tripId: t.id, speciesId: sp);
+          await catches.updateDetails(
+            c.id,
+            CatchDetails(speciesId: sp, weightGrams: g, lengthMillimeters: mm),
+          );
+        }
+        await trips.updateTrip(t.copyWith(locationName: name));
+        app.clock.set(start.add(Duration(minutes: minutes)));
+        await trips.finishTrip(t.id);
+      }
+      app.clock.set(DateTime.utc(2026, 9, 12, 9));
+    });
+    await app.pumpApp(tester);
+    await tester.tap(find.text('Diário'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'logbook');
+    await tester.tap(find.text('Rio Cuiabá'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'trip_detail');
+    await tester.tap(find.text('Pintado'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'catch_detail');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
 }

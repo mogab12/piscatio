@@ -72,13 +72,13 @@ class Formatters {
   static String _capitalize(String s) =>
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
-  /// `3 h 20 min` / `45 min`.
+  /// `3 h 20 min`, `4 h` or `45 min`.
   String duration(Duration d) {
     final hours = d.inHours;
     final minutes = d.inMinutes.remainder(60);
-    return hours == 0
-        ? l10n.durationMinutes(minutes)
-        : l10n.durationHoursMinutes(hours, minutes);
+    if (hours == 0) return l10n.durationMinutes(minutes);
+    if (minutes == 0) return l10n.durationHours(hours);
+    return l10n.durationHoursMinutes(hours, minutes);
   }
 
   /// Running timer: `1:05:09`, always with seconds.

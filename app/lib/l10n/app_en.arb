@@ -621,5 +621,147 @@
   "errorInvalidNumber": "Enter a number, like 2.5",
   "@errorInvalidNumber": {
     "description": "Invalid number in a field."
+  },
+  "historyEmpty": "Finished trips show up here, month by month.",
+  "@historyEmpty": {
+    "description": "Empty logbook."
+  },
+  "tripNotFound": "This trip no longer exists.",
+  "@tripNotFound": {
+    "description": "Trip was deleted."
+  },
+  "catchNotFound": "This catch no longer exists.",
+  "@catchNotFound": {
+    "description": "Catch was deleted."
+  },
+  "tripNoCatches": "No catches on this trip.",
+  "@tripNoCatches": {
+    "description": "Trip without catches."
+  },
+  "tripAddCatch": "Add a catch",
+  "@tripAddCatch": {
+    "description": "Add a catch to a finished trip."
+  },
+  "tripTimeRange": "{start} to {end}",
+  "@tripTimeRange": {
+    "description": "Trip start and end times.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "tripStatDuration": "fishing",
+  "@tripStatDuration": {
+    "description": "Label under the trip duration."
+  },
+  "speciesCountLabel": "{count, plural, =1{species} other{species}}",
+  "@speciesCountLabel": {
+    "description": "Word next to a big species count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripBiggestCatch": "Biggest: {species}, {measure}",
+  "@tripBiggestCatch": {
+    "description": "Biggest catch of the trip.",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "measure": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteTripTitle": "Delete trip",
+  "@deleteTripTitle": {
+    "description": "Delete trip action and dialog title."
+  },
+  "deleteTripBody": "Its catches and photos will be deleted too. This cannot be undone.",
+  "@deleteTripBody": {
+    "description": "Delete trip confirmation."
+  },
+  "deleteCatchTitle": "Delete catch",
+  "@deleteCatchTitle": {
+    "description": "Delete catch action and dialog title."
+  },
+  "deleteCatchBody": "The catch and its photo will be deleted.",
+  "@deleteCatchBody": {
+    "description": "Delete catch confirmation."
+  },
+  "editTripTitle": "Edit trip",
+  "@editTripTitle": {
+    "description": "Edit trip screen title."
+  },
+  "editTripDate": "Date",
+  "@editTripDate": {
+    "description": "Trip date."
+  },
+  "editTripStart": "Start",
+  "@editTripStart": {
+    "description": "Trip start time."
+  },
+  "editTripEnd": "End",
+  "@editTripEnd": {
+    "description": "Trip end time."
+  },
+  "editTripEndBeforeStart": "The end must be after the start.",
+  "@editTripEndBeforeStart": {
+    "description": "Validation error."
+  },
+  "editTripPlace": "Place name",
+  "@editTripPlace": {
+    "description": "Location name field."
+  },
+  "editTripPlaceHelp": "Shown on cards only with “Exact spot”.",
+  "@editTripPlaceHelp": {
+    "description": "When the place name is shown."
+  },
+  "editTripRegion": "Region",
+  "@editTripRegion": {
+    "description": "Region field (city, state)."
+  },
+  "editTripRegionHelp": "City or state, e.g. Cuiabá, MT. Shown with “Approximate area”.",
+  "@editTripRegionHelp": {
+    "description": "What the region is and when it is shown."
+  },
+  "editTripPrivacy": "Location privacy",
+  "@editTripPrivacy": {
+    "description": "Privacy level of this trip."
+  },
+  "catchPhoto": "Photo",
+  "@catchPhoto": {
+    "description": "Photo source sheet title."
+  },
+  "catchAddPhoto": "Add photo",
+  "@catchAddPhoto": {
+    "description": "Add a photo to a catch."
+  },
+  "catchReplacePhoto": "Replace",
+  "@catchReplacePhoto": {
+    "description": "Replace the catch photo."
+  },
+  "catchRemovePhoto": "Remove",
+  "@catchRemovePhoto": {
+    "description": "Remove the catch photo."
+  },
+  "catchTime": "Time caught",
+  "@catchTime": {
+    "description": "Catch time field."
+  },
+  "durationHours": "{hours} h",
+  "@durationHours": {
+    "description": "A duration of whole hours.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
   }
 }

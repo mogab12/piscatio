@@ -478,4 +478,108 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get errorInvalidNumber => 'Digite um número, como 2,5';
+
+  @override
+  String get historyEmpty =>
+      'As pescarias finalizadas aparecem aqui, mês a mês.';
+
+  @override
+  String get tripNotFound => 'Esta pescaria não existe mais.';
+
+  @override
+  String get catchNotFound => 'Esta captura não existe mais.';
+
+  @override
+  String get tripNoCatches => 'Nenhuma captura nesta pescaria.';
+
+  @override
+  String get tripAddCatch => 'Adicionar captura';
+
+  @override
+  String tripTimeRange(String start, String end) {
+    return 'Das $start às $end';
+  }
+
+  @override
+  String get tripStatDuration => 'pescando';
+
+  @override
+  String speciesCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'espécies',
+      one: 'espécie',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripBiggestCatch(String species, String measure) {
+    return 'Maior: $species, $measure';
+  }
+
+  @override
+  String get deleteTripTitle => 'Excluir pescaria';
+
+  @override
+  String get deleteTripBody =>
+      'As capturas e fotos desta pescaria também serão excluídas. Não dá para desfazer.';
+
+  @override
+  String get deleteCatchTitle => 'Excluir captura';
+
+  @override
+  String get deleteCatchBody => 'A captura e a foto dela serão excluídas.';
+
+  @override
+  String get editTripTitle => 'Editar pescaria';
+
+  @override
+  String get editTripDate => 'Data';
+
+  @override
+  String get editTripStart => 'Início';
+
+  @override
+  String get editTripEnd => 'Fim';
+
+  @override
+  String get editTripEndBeforeStart => 'O fim precisa ser depois do início.';
+
+  @override
+  String get editTripPlace => 'Nome do local';
+
+  @override
+  String get editTripPlaceHelp => 'Aparece nos cards só com “Local exato”.';
+
+  @override
+  String get editTripRegion => 'Região';
+
+  @override
+  String get editTripRegionHelp =>
+      'Cidade ou estado, como Cuiabá, MT. Aparece com “Região aproximada”.';
+
+  @override
+  String get editTripPrivacy => 'Privacidade do local';
+
+  @override
+  String get catchPhoto => 'Foto';
+
+  @override
+  String get catchAddPhoto => 'Adicionar foto';
+
+  @override
+  String get catchReplacePhoto => 'Trocar';
+
+  @override
+  String get catchRemovePhoto => 'Remover';
+
+  @override
+  String get catchTime => 'Horário da captura';
+
+  @override
+  String durationHours(int hours) {
+    return '$hours h';
+  }
 }

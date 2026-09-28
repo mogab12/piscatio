@@ -12,6 +12,7 @@ import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/action_slab.dart';
 import '../../../data/media/photo_importer.dart';
 import '../../../domain/models/catch.dart';
+import '../../../domain/services/catch_time.dart';
 import '../../common/catch_details_form.dart';
 import '../../common/species_label.dart';
 import '../../common/species_picker.dart';
@@ -87,10 +88,19 @@ class _QuickCatchScreenState extends ConsumerState<QuickCatchScreen> {
     }
     final catches = ref.read(catchRepositoryProvider);
     final speciesId = _species?.speciesId;
+    final trip = await ref.read(tripRepositoryProvider).getTrip(widget.tripId);
+    final now = ref.read(clockProvider).now();
     final saved = await catches.addCatch(
       tripId: widget.tripId,
       speciesId: speciesId,
       photo: imported?.stored,
+      caughtAt: trip == null
+          ? now
+          : defaultCatchTime(
+              trip: trip,
+              now: now,
+              photoTakenAt: imported?.stored.takenAt,
+            ),
     );
     if (_details != const CatchDetails()) {
       await catches.updateDetails(

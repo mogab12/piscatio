@@ -476,4 +476,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorInvalidNumber => 'Enter a number, like 2.5';
+
+  @override
+  String get historyEmpty => 'Finished trips show up here, month by month.';
+
+  @override
+  String get tripNotFound => 'This trip no longer exists.';
+
+  @override
+  String get catchNotFound => 'This catch no longer exists.';
+
+  @override
+  String get tripNoCatches => 'No catches on this trip.';
+
+  @override
+  String get tripAddCatch => 'Add a catch';
+
+  @override
+  String tripTimeRange(String start, String end) {
+    return '$start to $end';
+  }
+
+  @override
+  String get tripStatDuration => 'fishing';
+
+  @override
+  String speciesCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'species',
+      one: 'species',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tripBiggestCatch(String species, String measure) {
+    return 'Biggest: $species, $measure';
+  }
+
+  @override
+  String get deleteTripTitle => 'Delete trip';
+
+  @override
+  String get deleteTripBody =>
+      'Its catches and photos will be deleted too. This cannot be undone.';
+
+  @override
+  String get deleteCatchTitle => 'Delete catch';
+
+  @override
+  String get deleteCatchBody => 'The catch and its photo will be deleted.';
+
+  @override
+  String get editTripTitle => 'Edit trip';
+
+  @override
+  String get editTripDate => 'Date';
+
+  @override
+  String get editTripStart => 'Start';
+
+  @override
+  String get editTripEnd => 'End';
+
+  @override
+  String get editTripEndBeforeStart => 'The end must be after the start.';
+
+  @override
+  String get editTripPlace => 'Place name';
+
+  @override
+  String get editTripPlaceHelp => 'Shown on cards only with “Exact spot”.';
+
+  @override
+  String get editTripRegion => 'Region';
+
+  @override
+  String get editTripRegionHelp =>
+      'City or state, e.g. Cuiabá, MT. Shown with “Approximate area”.';
+
+  @override
+  String get editTripPrivacy => 'Location privacy';
+
+  @override
+  String get catchPhoto => 'Photo';
+
+  @override
+  String get catchAddPhoto => 'Add photo';
+
+  @override
+  String get catchReplacePhoto => 'Replace';
+
+  @override
+  String get catchRemovePhoto => 'Remove';
+
+  @override
+  String get catchTime => 'Time caught';
+
+  @override
+  String durationHours(int hours) {
+    return '$hours h';
+  }
 }
