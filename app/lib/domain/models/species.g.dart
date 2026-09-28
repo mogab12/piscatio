@@ -49,7 +49,7 @@ Map<String, dynamic> _$SpeciesToJson(_Species instance) => <String, dynamic>{
   'scientificName': instance.scientificName,
   'habitats': instance.habitats.map((e) => _$HabitatEnumMap[e]!).toList(),
   'regionTags': instance.regionTags,
-  'names': instance.names,
+  'names': instance.names.map((e) => e.toJson()).toList(),
   'isCustom': instance.isCustom,
 };
 

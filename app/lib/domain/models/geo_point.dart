@@ -1,19 +1,13 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'geo_point.freezed.dart';
+part 'geo_point.g.dart';
+
 /// A WGS84 coordinate. Never passed to card rendering.
-class GeoPoint {
-  const GeoPoint(this.latitude, this.longitude);
+@freezed
+abstract class GeoPoint with _$GeoPoint {
+  const factory GeoPoint(double latitude, double longitude) = _GeoPoint;
 
-  final double latitude;
-  final double longitude;
-
-  @override
-  bool operator ==(Object other) =>
-      other is GeoPoint &&
-      other.latitude == latitude &&
-      other.longitude == longitude;
-
-  @override
-  int get hashCode => Object.hash(latitude, longitude);
-
-  @override
-  String toString() => 'GeoPoint($latitude, $longitude)';
+  factory GeoPoint.fromJson(Map<String, dynamic> json) =>
+      _$GeoPointFromJson(json);
 }
