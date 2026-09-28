@@ -549,6 +549,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open source licenses'**
   String get settingsLicenses;
+
+  /// Generic error message.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Try again.'**
+  String get errorGeneric;
+
+  /// Main button on the home screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Start trip'**
+  String get startTripAction;
+
+  /// Main button when a trip is running.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to trip'**
+  String get resumeTripAction;
+
+  /// Heading of the recent trips list.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent trips'**
+  String get homeRecentTrips;
+
+  /// Home empty state title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first trip starts here.'**
+  String get homeEmptyTitle;
+
+  /// Home empty state body.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Start trip when you reach the water. Each catch takes three taps, even with wet hands.'**
+  String get homeEmptyBody;
+
+  /// Label above the running timer.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip in progress'**
+  String get activeTripLabel;
+
+  /// Screen reader text for the timer.
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing for {duration}'**
+  String activeTripElapsed(String duration);
+
+  /// Start time of the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Started at {time}'**
+  String activeTripStartedAt(String time);
+
+  /// Trip has no GPS location.
+  ///
+  /// In en, this message translates to:
+  /// **'No location'**
+  String get activeTripNoLocation;
+
+  /// Trip has a GPS location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location saved'**
+  String get activeTripLocationSaved;
+
+  /// Active trip with no catches.
+  ///
+  /// In en, this message translates to:
+  /// **'No catches yet. Tap + Catch as soon as the fish is out of the water.'**
+  String get activeTripEmpty;
+
+  /// Tooltip: leave the active trip screen, the trip keeps running.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimize'**
+  String get activeTripMinimize;
+
+  /// Big button to register a catch.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Catch'**
+  String get addCatchAction;
+
+  /// Button to end the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finishTripAction;
+
+  /// Confirmation dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish this trip?'**
+  String get finishTripTitle;
+
+  /// Confirmation dialog body.
+  ///
+  /// In en, this message translates to:
+  /// **'The timer stops now. You can still edit times and catches later.'**
+  String get finishTripBody;
+
+  /// Confirm finishing the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish trip'**
+  String get finishTripConfirm;
+
+  /// Number of catches as a sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No catches} =1{1 catch} other{{count} catches}}'**
+  String catchCount(int count);
+
+  /// Word shown next to a big catch number.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{catch} other{catches}}'**
+  String catchCountLabel(int count);
+
+  /// The fish was released.
+  ///
+  /// In en, this message translates to:
+  /// **'Released'**
+  String get catchReleased;
+
+  /// Catch without species.
+  ///
+  /// In en, this message translates to:
+  /// **'Unidentified species'**
+  String get speciesUnknown;
+
+  /// Hour label on the trip time ruler.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String rulerHour(int hours);
+
+  /// Screen reader label of the time ruler.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Time ruler, no catches yet} =1{Time ruler with 1 catch marked} other{Time ruler with {count} catches marked}}'**
+  String rulerSemantics(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -61,13 +61,16 @@ class Formatters {
   /// `12 de set. de 2026`, `Sep 12, 2026`.
   String date(DateTime utc) => DateFormat.yMMMd(_locale).format(utc.toLocal());
 
-  /// `sáb., 12 de set.`, `Sat, Sep 12`.
+  /// `Sáb., 12 de set.`, `Sat, Sep 12` (capitalized: it starts a line).
   String weekdayDate(DateTime utc) =>
-      DateFormat.MMMEd(_locale).format(utc.toLocal());
+      _capitalize(DateFormat.MMMEd(_locale).format(utc.toLocal()));
 
-  /// `setembro de 2026`, for month headers.
+  /// `Setembro de 2026`, for month headers.
   String monthYear(DateTime utc) =>
-      DateFormat.yMMMM(_locale).format(utc.toLocal());
+      _capitalize(DateFormat.yMMMM(_locale).format(utc.toLocal()));
+
+  static String _capitalize(String s) =>
+      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
   /// `3 h 20 min` / `45 min`.
   String duration(Duration d) {

@@ -22,7 +22,13 @@ class SettingsRepository {
   final AppDatabase _db;
   final Random _random;
 
-  Stream<AppSettings> watch() => _db.select(_db.settings).watch().map((rows) {
+  Stream<AppSettings> watch() =>
+      _db.select(_db.settings).watch().map(_toSettings);
+
+  Future<AppSettings> read() async =>
+      _toSettings(await _db.select(_db.settings).get());
+
+  static AppSettings _toSettings(List<SettingRow> rows) {
     final map = {for (final r in rows) r.key: r.value};
     return AppSettings(
       languageCode: map[SettingKeys.language],
@@ -32,9 +38,7 @@ class SettingsRepository {
           PrivacyLevel.private,
       onboardingCompleted: map[SettingKeys.onboardingCompleted] == 'true',
     );
-  });
-
-  Future<AppSettings> read() => watch().first;
+  }
 
   Future<void> setLanguage(String? languageCode) =>
       _put(SettingKeys.language, languageCode);

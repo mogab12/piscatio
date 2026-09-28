@@ -250,4 +250,111 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsLicenses => 'Licenças de código aberto';
+
+  @override
+  String get errorGeneric => 'Algo deu errado. Tente de novo.';
+
+  @override
+  String get startTripAction => 'Iniciar pescaria';
+
+  @override
+  String get resumeTripAction => 'Voltar à pescaria';
+
+  @override
+  String get homeRecentTrips => 'Últimas pescarias';
+
+  @override
+  String get homeEmptyTitle => 'Sua primeira pescaria começa aqui.';
+
+  @override
+  String get homeEmptyBody =>
+      'Toque em Iniciar pescaria quando chegar na água. Cada captura leva três toques, mesmo com a mão molhada.';
+
+  @override
+  String get activeTripLabel => 'Pescaria em andamento';
+
+  @override
+  String activeTripElapsed(String duration) {
+    return 'Pescando há $duration';
+  }
+
+  @override
+  String activeTripStartedAt(String time) {
+    return 'Começou às $time';
+  }
+
+  @override
+  String get activeTripNoLocation => 'Sem localização';
+
+  @override
+  String get activeTripLocationSaved => 'Local salvo';
+
+  @override
+  String get activeTripEmpty =>
+      'Nenhuma captura ainda. Toque em + Captura assim que o peixe sair da água.';
+
+  @override
+  String get activeTripMinimize => 'Minimizar';
+
+  @override
+  String get addCatchAction => '+ Captura';
+
+  @override
+  String get finishTripAction => 'Finalizar';
+
+  @override
+  String get finishTripTitle => 'Finalizar a pescaria?';
+
+  @override
+  String get finishTripBody =>
+      'O cronômetro para agora. Horários e capturas continuam editáveis depois.';
+
+  @override
+  String get finishTripConfirm => 'Finalizar pescaria';
+
+  @override
+  String catchCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count capturas',
+      one: '1 captura',
+      zero: 'Nenhuma captura',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String catchCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'capturas',
+      one: 'captura',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get catchReleased => 'Solto';
+
+  @override
+  String get speciesUnknown => 'Espécie não identificada';
+
+  @override
+  String rulerHour(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String rulerSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Régua do tempo com $count capturas marcadas',
+      one: 'Régua do tempo com 1 captura marcada',
+      zero: 'Régua do tempo, nenhuma captura ainda',
+    );
+    return '$_temp0';
+  }
 }

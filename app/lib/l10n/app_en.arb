@@ -333,5 +333,131 @@
   "settingsLicenses": "Open source licenses",
   "@settingsLicenses": {
     "description": "Settings row: licenses page."
+  },
+  "errorGeneric": "Something went wrong. Try again.",
+  "@errorGeneric": {
+    "description": "Generic error message."
+  },
+  "startTripAction": "Start trip",
+  "@startTripAction": {
+    "description": "Main button on the home screen."
+  },
+  "resumeTripAction": "Back to trip",
+  "@resumeTripAction": {
+    "description": "Main button when a trip is running."
+  },
+  "homeRecentTrips": "Recent trips",
+  "@homeRecentTrips": {
+    "description": "Heading of the recent trips list."
+  },
+  "homeEmptyTitle": "Your first trip starts here.",
+  "@homeEmptyTitle": {
+    "description": "Home empty state title."
+  },
+  "homeEmptyBody": "Tap Start trip when you reach the water. Each catch takes three taps, even with wet hands.",
+  "@homeEmptyBody": {
+    "description": "Home empty state body."
+  },
+  "activeTripLabel": "Trip in progress",
+  "@activeTripLabel": {
+    "description": "Label above the running timer."
+  },
+  "activeTripElapsed": "Fishing for {duration}",
+  "@activeTripElapsed": {
+    "description": "Screen reader text for the timer.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "activeTripStartedAt": "Started at {time}",
+  "@activeTripStartedAt": {
+    "description": "Start time of the trip.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "activeTripNoLocation": "No location",
+  "@activeTripNoLocation": {
+    "description": "Trip has no GPS location."
+  },
+  "activeTripLocationSaved": "Location saved",
+  "@activeTripLocationSaved": {
+    "description": "Trip has a GPS location."
+  },
+  "activeTripEmpty": "No catches yet. Tap + Catch as soon as the fish is out of the water.",
+  "@activeTripEmpty": {
+    "description": "Active trip with no catches."
+  },
+  "activeTripMinimize": "Minimize",
+  "@activeTripMinimize": {
+    "description": "Tooltip: leave the active trip screen, the trip keeps running."
+  },
+  "addCatchAction": "+ Catch",
+  "@addCatchAction": {
+    "description": "Big button to register a catch."
+  },
+  "finishTripAction": "Finish",
+  "@finishTripAction": {
+    "description": "Button to end the trip."
+  },
+  "finishTripTitle": "Finish this trip?",
+  "@finishTripTitle": {
+    "description": "Confirmation dialog title."
+  },
+  "finishTripBody": "The timer stops now. You can still edit times and catches later.",
+  "@finishTripBody": {
+    "description": "Confirmation dialog body."
+  },
+  "finishTripConfirm": "Finish trip",
+  "@finishTripConfirm": {
+    "description": "Confirm finishing the trip."
+  },
+  "catchCount": "{count, plural, =0{No catches} =1{1 catch} other{{count} catches}}",
+  "@catchCount": {
+    "description": "Number of catches as a sentence.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catchCountLabel": "{count, plural, =1{catch} other{catches}}",
+  "@catchCountLabel": {
+    "description": "Word shown next to a big catch number.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catchReleased": "Released",
+  "@catchReleased": {
+    "description": "The fish was released."
+  },
+  "speciesUnknown": "Unidentified species",
+  "@speciesUnknown": {
+    "description": "Catch without species."
+  },
+  "rulerHour": "{hours} h",
+  "@rulerHour": {
+    "description": "Hour label on the trip time ruler.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "rulerSemantics": "{count, plural, =0{Time ruler, no catches yet} =1{Time ruler with 1 catch marked} other{Time ruler with {count} catches marked}}",
+  "@rulerSemantics": {
+    "description": "Screen reader label of the time ruler.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

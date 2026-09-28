@@ -17,21 +17,30 @@ class TripRepository {
   final IdGenerator _ids;
 
   /// The trip in progress, if any. Only one trip can be active at a time.
-  Stream<Trip?> watchActiveTrip() {
-    final query = _db.select(_db.trips)
-      ..where((t) => t.deletedAt.isNull() & t.endedAt.isNull())
-      ..orderBy([(t) => OrderingTerm.desc(t.startedAt)])
-      ..limit(1);
-    return query.watchSingleOrNull().map((row) => row?.toModel());
-  }
+  Stream<Trip?> watchActiveTrip() =>
+      _activeQuery().watchSingleOrNull().map((row) => row?.toModel());
 
-  Future<Trip?> activeTrip() => watchActiveTrip().first;
+  // One-shot reads use get(), never watch().first: Drift shares identical
+  // stream queries, and a stream already watched by the UI may deliver its
+  // events in another zone.
+  Future<Trip?> activeTrip() async =>
+      (await _activeQuery().getSingleOrNull())?.toModel();
 
-  Stream<Trip?> watchTrip(String id) {
-    final query = _db.select(_db.trips)
-      ..where((t) => t.id.equals(id) & t.deletedAt.isNull());
-    return query.watchSingleOrNull().map((row) => row?.toModel());
-  }
+  SimpleSelectStatement<$TripsTable, TripRow> _activeQuery() =>
+      _db.select(_db.trips)
+        ..where((t) => t.deletedAt.isNull() & t.endedAt.isNull())
+        ..orderBy([(t) => OrderingTerm.desc(t.startedAt)])
+        ..limit(1);
+
+  Stream<Trip?> watchTrip(String id) =>
+      _byId(id).watchSingleOrNull().map((row) => row?.toModel());
+
+  Future<Trip?> getTrip(String id) async =>
+      (await _byId(id).getSingleOrNull())?.toModel();
+
+  SimpleSelectStatement<$TripsTable, TripRow> _byId(String id) =>
+      _db.select(_db.trips)
+        ..where((t) => t.id.equals(id) & t.deletedAt.isNull());
 
   /// Trips with catch counts, most recent first. Pass [limit] for the home
   /// screen; omit it for the full history.

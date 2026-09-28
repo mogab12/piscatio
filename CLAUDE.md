@@ -53,6 +53,8 @@ Regras:
 - `domain/` não importa `package:flutter`, `drift` nem `data/`. Toda regra de negócio
   testável mora lá.
 - Repositórios convertem linhas do Drift ↔ modelos de domínio. Telas nunca usam Drift.
+- Leitura pontual = `get()`; **nunca** `watch().first`. O Drift compartilha streams
+  idênticos e um stream já observado pela UI pode travar a leitura.
 - Riverpod 3 **sem codegen** (`Provider`, `StreamProvider`, `Notifier`, `AsyncNotifier`).
   Dependências externas (relógio, UUID, GPS, câmera, HTTP, banco) são providers
   sobrescrevíveis em teste.

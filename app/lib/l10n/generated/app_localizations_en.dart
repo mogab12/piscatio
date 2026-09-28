@@ -249,4 +249,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsLicenses => 'Open source licenses';
+
+  @override
+  String get errorGeneric => 'Something went wrong. Try again.';
+
+  @override
+  String get startTripAction => 'Start trip';
+
+  @override
+  String get resumeTripAction => 'Back to trip';
+
+  @override
+  String get homeRecentTrips => 'Recent trips';
+
+  @override
+  String get homeEmptyTitle => 'Your first trip starts here.';
+
+  @override
+  String get homeEmptyBody =>
+      'Tap Start trip when you reach the water. Each catch takes three taps, even with wet hands.';
+
+  @override
+  String get activeTripLabel => 'Trip in progress';
+
+  @override
+  String activeTripElapsed(String duration) {
+    return 'Fishing for $duration';
+  }
+
+  @override
+  String activeTripStartedAt(String time) {
+    return 'Started at $time';
+  }
+
+  @override
+  String get activeTripNoLocation => 'No location';
+
+  @override
+  String get activeTripLocationSaved => 'Location saved';
+
+  @override
+  String get activeTripEmpty =>
+      'No catches yet. Tap + Catch as soon as the fish is out of the water.';
+
+  @override
+  String get activeTripMinimize => 'Minimize';
+
+  @override
+  String get addCatchAction => '+ Catch';
+
+  @override
+  String get finishTripAction => 'Finish';
+
+  @override
+  String get finishTripTitle => 'Finish this trip?';
+
+  @override
+  String get finishTripBody =>
+      'The timer stops now. You can still edit times and catches later.';
+
+  @override
+  String get finishTripConfirm => 'Finish trip';
+
+  @override
+  String catchCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count catches',
+      one: '1 catch',
+      zero: 'No catches',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String catchCountLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'catches',
+      one: 'catch',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get catchReleased => 'Released';
+
+  @override
+  String get speciesUnknown => 'Unidentified species';
+
+  @override
+  String rulerHour(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String rulerSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Time ruler with $count catches marked',
+      one: 'Time ruler with 1 catch marked',
+      zero: 'Time ruler, no catches yet',
+    );
+    return '$_temp0';
+  }
 }

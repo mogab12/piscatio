@@ -47,7 +47,7 @@ void main() {
     final app = await TestApp.start(
       tester,
       deviceLocale: const Locale('en', 'US'),
-      overrides: [locationServiceProvider.overrideWithValue(location)],
+      location: location,
     );
     await app.pumpApp(tester);
     await tester.tap(find.text('Continue'));
@@ -73,10 +73,7 @@ void main() {
 
   testWidgets('location can be skipped', (tester) async {
     final location = FakeLocationService(accessResult: LocationAccess.denied);
-    final app = await TestApp.start(
-      tester,
-      overrides: [locationServiceProvider.overrideWithValue(location)],
-    );
+    final app = await TestApp.start(tester, location: location);
     await app.pumpApp(tester);
     await tester.tap(find.text('Continuar'));
     await app.settle(tester);

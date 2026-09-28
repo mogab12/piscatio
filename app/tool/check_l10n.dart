@@ -78,14 +78,85 @@ List<String> checkArbDirectory(Directory dir) {
 Set<String> _messageKeys(Map<String, dynamic> arb) =>
     arb.keys.where((k) => !k.startsWith('@')).toSet();
 
-/// Top-level ICU argument names used in [message], e.g. `{count, plural, ...}`
-/// and `{name}` yield `count` and `name`. Nested plural/select branches are
-/// scanned too, so a placeholder used only inside a branch still counts.
+/// ICU argument names used in [message]: `{name}` and the argument of
+/// `{count, plural, ...}`, including arguments nested inside plural/select
+/// branches. Branch bodies such as `=1{catch}` are text, not placeholders.
 Set<String> placeholdersOf(String message) {
   final names = <String>{};
-  final pattern = RegExp(r'\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*(?:,|\})');
-  for (final m in pattern.allMatches(message)) {
-    names.add(m.group(1)!);
-  }
+  _IcuScanner(message, names).parseText(topLevel: true);
   return names;
+}
+
+class _IcuScanner {
+  _IcuScanner(this.src, this.names);
+
+  final String src;
+  final Set<String> names;
+  var pos = 0;
+
+  /// Reads text until the closing brace of the enclosing branch (or end).
+  void parseText({required bool topLevel}) {
+    while (pos < src.length) {
+      final c = src[pos];
+      if (c == '{') {
+        pos++;
+        parseArgument();
+      } else if (c == '}' && !topLevel) {
+        pos++;
+        return;
+      } else {
+        pos++;
+      }
+    }
+  }
+
+  /// After an opening brace: `name}` or `name, type, branches}`.
+  void parseArgument() {
+    final name = readUntil(const {',', '}'}).trim();
+    if (name.isNotEmpty) names.add(name);
+    if (pos >= src.length) return;
+    if (src[pos] == '}') {
+      pos++;
+      return;
+    }
+    pos++; // ','
+    final type = readUntil(const {',', '}'}).trim();
+    if (pos >= src.length) return;
+    if (src[pos] == '}') {
+      pos++;
+      return;
+    }
+    pos++; // ','
+    if (type != 'plural' && type != 'select' && type != 'selectordinal') {
+      readUntil(const {'}'});
+      pos++;
+      return;
+    }
+    // Branches: selector {text} ... until the argument's closing brace.
+    while (pos < src.length) {
+      skipSpaces();
+      if (pos >= src.length) return;
+      if (src[pos] == '}') {
+        pos++;
+        return;
+      }
+      readUntil(const {'{'});
+      pos++; // '{'
+      parseText(topLevel: false);
+    }
+  }
+
+  String readUntil(Set<String> stops) {
+    final start = pos;
+    while (pos < src.length && !stops.contains(src[pos])) {
+      pos++;
+    }
+    return src.substring(start, pos);
+  }
+
+  void skipSpaces() {
+    while (pos < src.length && src[pos].trim().isEmpty) {
+      pos++;
+    }
+  }
 }

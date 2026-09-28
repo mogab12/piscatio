@@ -3,8 +3,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'pump_app.dart';
 
 /// Screenshots are for design review only: `SCREENSHOTS=1 flutter test
 /// test/screenshots`. PNGs land in build/screenshots/.
@@ -46,21 +47,11 @@ void usePhoneSurface(
 }
 
 Future<void> saveScreenshot(WidgetTester tester, String name) async {
-  final element = tester.binding.rootElement!;
-  RenderRepaintBoundary? boundary;
-  void visit(Element e) {
-    if (boundary != null) return;
-    final r = e.renderObject;
-    if (r is RenderRepaintBoundary) {
-      boundary = r;
-      return;
-    }
-    e.visitChildren(visit);
-  }
-
-  element.visitChildren(visit);
+  final boundary = tester.renderObject<RenderRepaintBoundary>(
+    find.byKey(screenKey),
+  );
   final image = await tester.runAsync(() async {
-    final img = await boundary!.toImage(
+    final img = await boundary.toImage(
       pixelRatio: tester.view.devicePixelRatio,
     );
     final data = await img.toByteData(format: ui.ImageByteFormat.png);

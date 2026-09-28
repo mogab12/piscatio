@@ -48,6 +48,17 @@ void main() {
     });
   });
 
+  test('plural branch text is not a placeholder', () {
+    expect(placeholdersOf('{count, plural, =1{catch} other{catches}}'), {
+      'count',
+    });
+    expect(placeholdersOf('{hours} h {minutes} min'), {'hours', 'minutes'});
+    expect(
+      placeholdersOf('{g, select, a{x {name}} other{y}} and {n, number}'),
+      {'g', 'name', 'n'},
+    );
+  });
+
   test('placeholdersOf finds plural and nested arguments', () {
     expect(
       placeholdersOf(

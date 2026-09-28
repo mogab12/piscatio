@@ -15,34 +15,35 @@ class SpeciesRepository {
   final IdGenerator _ids;
 
   /// Catalog plus the user's custom species, with every name.
-  Stream<List<Species>> watchAll() {
-    final query =
-        _db.select(_db.speciesTable).join([
-            leftOuterJoin(
-              _db.speciesNames,
-              _db.speciesNames.speciesId.equalsExp(_db.speciesTable.id),
-            ),
-          ])
-          ..where(_db.speciesTable.deletedAt.isNull())
-          ..orderBy([
-            OrderingTerm.asc(_db.speciesTable.id),
-            OrderingTerm.asc(_db.speciesNames.id),
-          ]);
-    return query.watch().map((rows) {
-      final grouped = groupBy(
-        rows,
-        (TypedResult r) => r.readTable(_db.speciesTable).id,
-      );
-      return [
-        for (final group in grouped.values)
-          group.first.readTable(_db.speciesTable).toModel([
-            for (final r in group) ?r.readTableOrNull(_db.speciesNames),
-          ]),
-      ];
-    });
-  }
+  Stream<List<Species>> watchAll() => _allQuery().watch().map(_group);
 
-  Future<List<Species>> all() => watchAll().first;
+  Future<List<Species>> all() async => _group(await _allQuery().get());
+
+  JoinedSelectStatement<HasResultSet, dynamic> _allQuery() =>
+      _db.select(_db.speciesTable).join([
+          leftOuterJoin(
+            _db.speciesNames,
+            _db.speciesNames.speciesId.equalsExp(_db.speciesTable.id),
+          ),
+        ])
+        ..where(_db.speciesTable.deletedAt.isNull())
+        ..orderBy([
+          OrderingTerm.asc(_db.speciesTable.id),
+          OrderingTerm.asc(_db.speciesNames.id),
+        ]);
+
+  List<Species> _group(List<TypedResult> rows) {
+    final grouped = groupBy(
+      rows,
+      (TypedResult r) => r.readTable(_db.speciesTable).id,
+    );
+    return [
+      for (final group in grouped.values)
+        group.first.readTable(_db.speciesTable).toModel([
+          for (final r in group) ?r.readTableOrNull(_db.speciesNames),
+        ]),
+    ];
+  }
 
   /// A species the catalog does not have, named by the user in [lang].
   Future<Species> addCustomSpecies(String name, {required String lang}) {

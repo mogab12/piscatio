@@ -51,19 +51,22 @@ class CatchRepository {
     return query.watch().map(_groupPhotos);
   }
 
-  Stream<Catch?> watchCatch(String id) {
-    final query =
-        _db.select(_db.catches).join([
-            leftOuterJoin(
-              _db.catchPhotos,
-              _db.catchPhotos.catchId.equalsExp(_db.catches.id) &
-                  _db.catchPhotos.deletedAt.isNull(),
-            ),
-          ])
-          ..where(_db.catches.id.equals(id) & _db.catches.deletedAt.isNull())
-          ..orderBy([OrderingTerm.asc(_db.catchPhotos.sortOrder)]);
-    return query.watch().map((rows) => _groupPhotos(rows).firstOrNull);
-  }
+  Stream<Catch?> watchCatch(String id) =>
+      _catchQuery(id).watch().map((rows) => _groupPhotos(rows).firstOrNull);
+
+  Future<Catch?> getCatch(String id) async =>
+      _groupPhotos(await _catchQuery(id).get()).firstOrNull;
+
+  JoinedSelectStatement<HasResultSet, dynamic> _catchQuery(String id) =>
+      _db.select(_db.catches).join([
+          leftOuterJoin(
+            _db.catchPhotos,
+            _db.catchPhotos.catchId.equalsExp(_db.catches.id) &
+                _db.catchPhotos.deletedAt.isNull(),
+          ),
+        ])
+        ..where(_db.catches.id.equals(id) & _db.catches.deletedAt.isNull())
+        ..orderBy([OrderingTerm.asc(_db.catchPhotos.sortOrder)]);
 
   List<Catch> _groupPhotos(List<TypedResult> rows) {
     final grouped = groupBy(
@@ -111,7 +114,7 @@ class CatchRepository {
             ),
           );
       if (photo != null) await _insertPhoto(id, photo, now);
-      return (await watchCatch(id).first)!;
+      return (await getCatch(id))!;
     });
   }
 
