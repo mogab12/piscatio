@@ -44,6 +44,21 @@ class HistoryScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: PiscatioSizes.gutter - 8,
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () => context.push(AppRoutes.pastTrip),
+                    icon: const Icon(Icons.history_rounded),
+                    label: Text(l10n.pastTripAction),
+                  ),
+                ),
+              ),
+            ),
             if (trips.isEmpty)
               SliverToBoxAdapter(
                 child: Padding(

@@ -292,5 +292,18 @@
   "settingsWipeHint": "Pescarias, capturas, fotos e iscas. Não dá para desfazer.",
   "wipeTitle": "Apagar todos os dados?",
   "wipeBody": "Tudo o que você registrou sai deste celular: pescarias, capturas, fotos, iscas e ajustes. Exporte antes se quiser guardar uma cópia.",
-  "wipeConfirm": "Apagar tudo"
+  "wipeConfirm": "Apagar tudo",
+  "pastTripAction": "Registrar pescaria passada",
+  "pastTripTitle": "Pescaria passada",
+  "pastTripPhotos": "Fotos da pescaria",
+  "pastTripPhotosHint": "Cada foto vira uma captura. A data e o local das fotos sugerem os da pescaria.",
+  "pastTripAddPhoto": "Adicionar foto",
+  "pastTripSuggested": "Data e local sugeridos pelas fotos.",
+  "pastTripSave": "Salvar pescaria",
+  "pastTripPhotoFailed": "Não deu para ler esta foto. Tente outra.",
+  "placeSearchAction": "Buscar local por nome",
+  "placeSearchHint": "Represa, rio, cidade…",
+  "placeSearchEmpty": "Nenhum lugar encontrado com esse nome.",
+  "placeSearchFailed": "Sem conexão para buscar. Tente de novo.",
+  "placeSearchPointSaved": "Ponto do local marcado"
 }

@@ -6,8 +6,11 @@ import '../../../core/background.dart';
 import '../../../core/device.dart';
 import '../../../core/location/location_service.dart';
 import '../../../core/providers.dart';
+import '../../../data/media/photo_importer.dart';
 import '../../../domain/models/enums.dart';
+import '../../../domain/models/geo_point.dart';
 import '../../../domain/models/trip.dart';
+import '../../../domain/services/catch_time.dart';
 
 class TripController {
   TripController(this._ref);
@@ -78,6 +81,53 @@ class TripController {
     if (trip.location != null && (trip.locationRegion ?? '').isEmpty) {
       await work.placeNameFor(trip.id);
     }
+  }
+
+  /// Logs a trip after the fact. Each photo becomes a catch at the time it
+  /// was taken (when that falls inside the trip), with the place it was
+  /// taken; weather and the region are queued like for a live trip.
+  Future<Trip> createPastTrip({
+    required DateTime startedAt,
+    required DateTime endedAt,
+    required PrivacyLevel privacy,
+    GeoPoint? location,
+    String? locationName,
+    String? locationRegion,
+    List<ImportedPhoto> photos = const [],
+  }) async {
+    final timezone = await _ref.read(deviceTimezoneProvider.future);
+    final trips = _ref.read(tripRepositoryProvider);
+    final trip = await trips.createPastTrip(
+      startedAt: startedAt,
+      endedAt: endedAt,
+      timezone: timezone,
+      privacy: privacy,
+      location: location,
+      locationName: locationName,
+    );
+    if (locationRegion != null) {
+      await trips.fillRegion(trip.id, locationRegion);
+    }
+    final catches = _ref.read(catchRepositoryProvider);
+    final now = _ref.read(clockProvider).now();
+    for (final p in photos) {
+      await catches.addCatch(
+        tripId: trip.id,
+        caughtAt: defaultCatchTime(
+          trip: trip,
+          now: now,
+          photoTakenAt: p.stored.takenAt,
+        ),
+        photo: p.stored,
+        location: p.exifLocation,
+      );
+    }
+    final work = _ref.read(backgroundWorkProvider);
+    await work.weatherFor(trip.id);
+    if (location != null && locationRegion == null) {
+      await work.placeNameFor(trip.id);
+    }
+    return trip;
   }
 
   Future<void> setPrivacy(Trip trip, PrivacyLevel level) =>

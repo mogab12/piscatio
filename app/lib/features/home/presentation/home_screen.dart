@@ -199,6 +199,12 @@ class _FirstTrip extends StatelessWidget {
             l10n.homeEmptyBody,
             style: text.bodyLarge!.copyWith(color: context.palette.muted),
           ),
+          const SizedBox(height: 16),
+          TextButton.icon(
+            onPressed: () => context.push(AppRoutes.pastTrip),
+            icon: const Icon(Icons.history_rounded),
+            label: Text(l10n.pastTripAction),
+          ),
         ],
       ),
     );

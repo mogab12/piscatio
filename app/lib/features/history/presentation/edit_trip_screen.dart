@@ -9,7 +9,9 @@ import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/action_slab.dart';
 import '../../../core/widgets/choice_sheet.dart';
 import '../../../domain/models/enums.dart';
+import '../../../domain/models/geo_point.dart';
 import '../../../domain/models/trip.dart';
+import '../../common/place_search_sheet.dart';
 import '../../trip/application/trip_controller.dart';
 
 class EditTripScreen extends ConsumerWidget {
@@ -41,6 +43,7 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
   late final _place = TextEditingController(text: widget.trip.locationName);
   late final _region = TextEditingController(text: widget.trip.locationRegion);
   late final _notes = TextEditingController(text: widget.trip.notes);
+  late GeoPoint? _location = widget.trip.location;
   var _saving = false;
 
   @override
@@ -105,6 +108,16 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
     });
   }
 
+  Future<void> _searchPlace() async {
+    final found = await showPlaceSearch(context);
+    if (found == null || !mounted) return;
+    setState(() {
+      _location = found.point;
+      _place.text = found.name;
+      _region.text = found.region ?? '';
+    });
+  }
+
   Future<void> _save() async {
     if (!_valid || _saving) return;
     setState(() => _saving = true);
@@ -116,6 +129,7 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
           widget.trip.copyWith(
             startedAt: _start.toUtc(),
             endedAt: _end?.toUtc(),
+            location: _location,
             locationName: clean(_place),
             locationRegion: clean(_region),
             privacyLevel: _privacy,
@@ -177,6 +191,15 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
               labelText: l10n.editTripPlace,
               helperText: l10n.editTripPlaceHelp,
               helperMaxLines: 2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton.icon(
+              onPressed: _searchPlace,
+              icon: const Icon(Icons.search_rounded),
+              label: Text(l10n.placeSearchAction),
             ),
           ),
           const SizedBox(height: 16),

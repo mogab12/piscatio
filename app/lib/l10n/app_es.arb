@@ -292,5 +292,18 @@
   "settingsWipeHint": "Salidas, capturas, fotos y carnadas. No se puede deshacer.",
   "wipeTitle": "¿Borrar todos los datos?",
   "wipeBody": "Todo lo que registraste sale de este teléfono: salidas, capturas, fotos, carnadas y ajustes. Exporta antes si quieres guardar una copia.",
-  "wipeConfirm": "Borrar todo"
+  "wipeConfirm": "Borrar todo",
+  "pastTripAction": "Registrar salida pasada",
+  "pastTripTitle": "Salida pasada",
+  "pastTripPhotos": "Fotos de la salida",
+  "pastTripPhotosHint": "Cada foto se vuelve una captura. Su fecha y lugar sugieren los de la salida.",
+  "pastTripAddPhoto": "Agregar foto",
+  "pastTripSuggested": "Fecha y lugar sugeridos por las fotos.",
+  "pastTripSave": "Guardar salida",
+  "pastTripPhotoFailed": "No se pudo leer esta foto. Prueba con otra.",
+  "placeSearchAction": "Buscar lugar por nombre",
+  "placeSearchHint": "Represa, río, ciudad…",
+  "placeSearchEmpty": "No se encontró ningún lugar con ese nombre.",
+  "placeSearchFailed": "Sin conexión para buscar. Inténtalo de nuevo.",
+  "placeSearchPointSaved": "Punto del lugar marcado"
 }

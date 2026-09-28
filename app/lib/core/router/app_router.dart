@@ -16,6 +16,7 @@ import '../../features/settings/presentation/tackle_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
 import '../../features/stats/presentation/stats_screen.dart';
 import '../../features/summary/presentation/trip_summary_screen.dart';
+import '../../features/trip/presentation/past_trip_screen.dart';
 import '../providers.dart';
 import 'app_routes.dart';
 
@@ -126,6 +127,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 EditTripScreen(tripId: state.pathParameters['tripId']!),
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: AppRoutes.pastTrip,
+        builder: (context, state) => const PastTripScreen(),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

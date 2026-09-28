@@ -1062,4 +1062,44 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get wipeConfirm => 'Apagar tudo';
+
+  @override
+  String get pastTripAction => 'Registrar pescaria passada';
+
+  @override
+  String get pastTripTitle => 'Pescaria passada';
+
+  @override
+  String get pastTripPhotos => 'Fotos da pescaria';
+
+  @override
+  String get pastTripPhotosHint =>
+      'Cada foto vira uma captura. A data e o local das fotos sugerem os da pescaria.';
+
+  @override
+  String get pastTripAddPhoto => 'Adicionar foto';
+
+  @override
+  String get pastTripSuggested => 'Data e local sugeridos pelas fotos.';
+
+  @override
+  String get pastTripSave => 'Salvar pescaria';
+
+  @override
+  String get pastTripPhotoFailed => 'Não deu para ler esta foto. Tente outra.';
+
+  @override
+  String get placeSearchAction => 'Buscar local por nome';
+
+  @override
+  String get placeSearchHint => 'Represa, rio, cidade…';
+
+  @override
+  String get placeSearchEmpty => 'Nenhum lugar encontrado com esse nome.';
+
+  @override
+  String get placeSearchFailed => 'Sem conexão para buscar. Tente de novo.';
+
+  @override
+  String get placeSearchPointSaved => 'Ponto do local marcado';
 }

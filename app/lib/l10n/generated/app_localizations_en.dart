@@ -1057,4 +1057,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wipeConfirm => 'Delete everything';
+
+  @override
+  String get pastTripAction => 'Log a past trip';
+
+  @override
+  String get pastTripTitle => 'Past trip';
+
+  @override
+  String get pastTripPhotos => 'Trip photos';
+
+  @override
+  String get pastTripPhotosHint =>
+      'Each photo becomes a catch. Their date and place suggest the trip\'s.';
+
+  @override
+  String get pastTripAddPhoto => 'Add photo';
+
+  @override
+  String get pastTripSuggested => 'Date and place suggested by the photos.';
+
+  @override
+  String get pastTripSave => 'Save trip';
+
+  @override
+  String get pastTripPhotoFailed =>
+      'Could not read this photo. Try another one.';
+
+  @override
+  String get placeSearchAction => 'Search a place by name';
+
+  @override
+  String get placeSearchHint => 'Lake, river, town…';
+
+  @override
+  String get placeSearchEmpty => 'No place found with that name.';
+
+  @override
+  String get placeSearchFailed => 'No connection to search. Try again.';
+
+  @override
+  String get placeSearchPointSaved => 'Place marked on the map';
 }

@@ -1384,5 +1384,57 @@
   "wipeConfirm": "Delete everything",
   "@wipeConfirm": {
     "description": "Confirm button of the delete-all dialog."
+  },
+  "pastTripAction": "Log a past trip",
+  "@pastTripAction": {
+    "description": "Button that opens the form for a trip that already happened."
+  },
+  "pastTripTitle": "Past trip",
+  "@pastTripTitle": {
+    "description": "Title of the past trip form."
+  },
+  "pastTripPhotos": "Trip photos",
+  "@pastTripPhotos": {
+    "description": "Section title in the past trip form."
+  },
+  "pastTripPhotosHint": "Each photo becomes a catch. Their date and place suggest the trip's.",
+  "@pastTripPhotosHint": {
+    "description": "Explains what photos do in the past trip form."
+  },
+  "pastTripAddPhoto": "Add photo",
+  "@pastTripAddPhoto": {
+    "description": "Button to add a photo to a past trip."
+  },
+  "pastTripSuggested": "Date and place suggested by the photos.",
+  "@pastTripSuggested": {
+    "description": "Note when the form was filled from photo metadata."
+  },
+  "pastTripSave": "Save trip",
+  "@pastTripSave": {
+    "description": "Save button of the past trip form."
+  },
+  "pastTripPhotoFailed": "Could not read this photo. Try another one.",
+  "@pastTripPhotoFailed": {
+    "description": "Error when importing a photo fails."
+  },
+  "placeSearchAction": "Search a place by name",
+  "@placeSearchAction": {
+    "description": "Button that opens the place search."
+  },
+  "placeSearchHint": "Lake, river, town…",
+  "@placeSearchHint": {
+    "description": "Hint of the place search field."
+  },
+  "placeSearchEmpty": "No place found with that name.",
+  "@placeSearchEmpty": {
+    "description": "Place search without results."
+  },
+  "placeSearchFailed": "No connection to search. Try again.",
+  "@placeSearchFailed": {
+    "description": "Place search error."
+  },
+  "placeSearchPointSaved": "Place marked on the map",
+  "@placeSearchPointSaved": {
+    "description": "Shown in the trip form when a searched place set the location."
   }
 }

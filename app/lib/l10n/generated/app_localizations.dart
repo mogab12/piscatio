@@ -1857,6 +1857,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete everything'**
   String get wipeConfirm;
+
+  /// Button that opens the form for a trip that already happened.
+  ///
+  /// In en, this message translates to:
+  /// **'Log a past trip'**
+  String get pastTripAction;
+
+  /// Title of the past trip form.
+  ///
+  /// In en, this message translates to:
+  /// **'Past trip'**
+  String get pastTripTitle;
+
+  /// Section title in the past trip form.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip photos'**
+  String get pastTripPhotos;
+
+  /// Explains what photos do in the past trip form.
+  ///
+  /// In en, this message translates to:
+  /// **'Each photo becomes a catch. Their date and place suggest the trip\'s.'**
+  String get pastTripPhotosHint;
+
+  /// Button to add a photo to a past trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get pastTripAddPhoto;
+
+  /// Note when the form was filled from photo metadata.
+  ///
+  /// In en, this message translates to:
+  /// **'Date and place suggested by the photos.'**
+  String get pastTripSuggested;
+
+  /// Save button of the past trip form.
+  ///
+  /// In en, this message translates to:
+  /// **'Save trip'**
+  String get pastTripSave;
+
+  /// Error when importing a photo fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read this photo. Try another one.'**
+  String get pastTripPhotoFailed;
+
+  /// Button that opens the place search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a place by name'**
+  String get placeSearchAction;
+
+  /// Hint of the place search field.
+  ///
+  /// In en, this message translates to:
+  /// **'Lake, river, town…'**
+  String get placeSearchHint;
+
+  /// Place search without results.
+  ///
+  /// In en, this message translates to:
+  /// **'No place found with that name.'**
+  String get placeSearchEmpty;
+
+  /// Place search error.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to search. Try again.'**
+  String get placeSearchFailed;
+
+  /// Shown in the trip form when a searched place set the location.
+  ///
+  /// In en, this message translates to:
+  /// **'Place marked on the map'**
+  String get placeSearchPointSaved;
 }
 
 class _AppLocalizationsDelegate

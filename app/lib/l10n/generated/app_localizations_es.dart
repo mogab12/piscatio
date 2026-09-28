@@ -1066,4 +1066,46 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get wipeConfirm => 'Borrar todo';
+
+  @override
+  String get pastTripAction => 'Registrar salida pasada';
+
+  @override
+  String get pastTripTitle => 'Salida pasada';
+
+  @override
+  String get pastTripPhotos => 'Fotos de la salida';
+
+  @override
+  String get pastTripPhotosHint =>
+      'Cada foto se vuelve una captura. Su fecha y lugar sugieren los de la salida.';
+
+  @override
+  String get pastTripAddPhoto => 'Agregar foto';
+
+  @override
+  String get pastTripSuggested => 'Fecha y lugar sugeridos por las fotos.';
+
+  @override
+  String get pastTripSave => 'Guardar salida';
+
+  @override
+  String get pastTripPhotoFailed =>
+      'No se pudo leer esta foto. Prueba con otra.';
+
+  @override
+  String get placeSearchAction => 'Buscar lugar por nombre';
+
+  @override
+  String get placeSearchHint => 'Represa, río, ciudad…';
+
+  @override
+  String get placeSearchEmpty => 'No se encontró ningún lugar con ese nombre.';
+
+  @override
+  String get placeSearchFailed =>
+      'Sin conexión para buscar. Inténtalo de nuevo.';
+
+  @override
+  String get placeSearchPointSaved => 'Punto del lugar marcado';
 }

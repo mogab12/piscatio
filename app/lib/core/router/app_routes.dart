@@ -7,6 +7,7 @@ abstract final class AppRoutes {
   static const baits = '/settings/baits';
   static const gear = '/settings/gear';
   static const activeTrip = '/trip/active';
+  static const pastTrip = '/past-trip';
 
   static String trip(String id) => '/trip/$id';
   static String editTrip(String id) => '/trip/$id/edit';

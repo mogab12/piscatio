@@ -58,6 +58,20 @@ class FakePlaceNameService implements PlaceNameService {
   Exception? error;
   final asked = <GeoPoint>[];
 
+  /// Answers every search with these places.
+  List<PlaceResult> results = const [];
+  final searched = <String>[];
+
+  @override
+  Future<List<PlaceResult>> search(
+    String query, {
+    required String languageCode,
+  }) async {
+    searched.add(query);
+    if (error != null) throw error!;
+    return results;
+  }
+
   @override
   Future<String?> regionFor(
     GeoPoint point, {
