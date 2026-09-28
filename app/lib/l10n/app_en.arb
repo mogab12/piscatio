@@ -208,5 +208,130 @@
   "tackleTypeOther": "Other",
   "@tackleTypeOther": {
     "description": "Bait or gear type: other."
+  },
+  "actionContinue": "Continue",
+  "@actionContinue": {
+    "description": "Button to go to the next step."
+  },
+  "actionBack": "Back",
+  "@actionBack": {
+    "description": "Tooltip of the back button."
+  },
+  "actionCancel": "Cancel",
+  "@actionCancel": {
+    "description": "Cancel button."
+  },
+  "actionSave": "Save",
+  "@actionSave": {
+    "description": "Save button."
+  },
+  "actionDelete": "Delete",
+  "@actionDelete": {
+    "description": "Delete button."
+  },
+  "actionEdit": "Edit",
+  "@actionEdit": {
+    "description": "Edit button."
+  },
+  "actionUndo": "Undo",
+  "@actionUndo": {
+    "description": "Undo action in a snackbar."
+  },
+  "onboardingStepOf": "Step {step} of {total}",
+  "@onboardingStepOf": {
+    "description": "Screen reader label of the onboarding progress bar.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingTagline": "Every fishing trip becomes a story.",
+  "@onboardingTagline": {
+    "description": "Tagline on the first onboarding screen."
+  },
+  "onboardingLanguageTitle": "Language",
+  "@onboardingLanguageTitle": {
+    "description": "Label above the language options in onboarding."
+  },
+  "onboardingUnitsTitle": "How do you measure your fish?",
+  "@onboardingUnitsTitle": {
+    "description": "Title of the units step."
+  },
+  "onboardingUnitsHint": "You can change this later in Settings.",
+  "@onboardingUnitsHint": {
+    "description": "Hint under the units title."
+  },
+  "onboardingLocationTitle": "Where are you fishing?",
+  "@onboardingLocationTitle": {
+    "description": "Title of the location permission step."
+  },
+  "onboardingLocationWhy": "Your location saves where each trip happened and lets us look up that day’s weather.",
+  "@onboardingLocationWhy": {
+    "description": "Why the app asks for location."
+  },
+  "onboardingLocationPrivacy": "The spot stays on your phone. Cards never show coordinates, and you decide how much to reveal.",
+  "@onboardingLocationPrivacy": {
+    "description": "Privacy promise in the location step."
+  },
+  "onboardingLocationOffline": "Works without signal. The weather is fetched when you are back online.",
+  "@onboardingLocationOffline": {
+    "description": "Offline note in the location step."
+  },
+  "onboardingLocationAllow": "Allow location",
+  "@onboardingLocationAllow": {
+    "description": "Button that asks for location permission."
+  },
+  "onboardingLocationSkip": "Not now",
+  "@onboardingLocationSkip": {
+    "description": "Skip the location permission."
+  },
+  "settingsSectionPreferences": "Preferences",
+  "@settingsSectionPreferences": {
+    "description": "Settings section heading."
+  },
+  "settingsSectionAbout": "About",
+  "@settingsSectionAbout": {
+    "description": "Settings section heading."
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Settings row: app language."
+  },
+  "settingsLanguageDevice": "Device language: {language}",
+  "@settingsLanguageDevice": {
+    "description": "Option to follow the device language.",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsUnits": "Units",
+  "@settingsUnits": {
+    "description": "Settings row: unit system."
+  },
+  "settingsUnitsValue": "{system} ({examples})",
+  "@settingsUnitsValue": {
+    "description": "Current unit system with examples.",
+    "placeholders": {
+      "system": {
+        "type": "String"
+      },
+      "examples": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDefaultPrivacy": "Default location privacy",
+  "@settingsDefaultPrivacy": {
+    "description": "Settings row: privacy level for new trips."
+  },
+  "settingsLicenses": "Open source licenses",
+  "@settingsLicenses": {
+    "description": "Settings row: licenses page."
   }
 }

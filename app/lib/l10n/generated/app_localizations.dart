@@ -393,6 +393,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get tackleTypeOther;
+
+  /// Button to go to the next step.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get actionContinue;
+
+  /// Tooltip of the back button.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get actionBack;
+
+  /// Cancel button.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// Save button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get actionSave;
+
+  /// Delete button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get actionDelete;
+
+  /// Edit button.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get actionEdit;
+
+  /// Undo action in a snackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get actionUndo;
+
+  /// Screen reader label of the onboarding progress bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingStepOf(int step, int total);
+
+  /// Tagline on the first onboarding screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Every fishing trip becomes a story.'**
+  String get onboardingTagline;
+
+  /// Label above the language options in onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get onboardingLanguageTitle;
+
+  /// Title of the units step.
+  ///
+  /// In en, this message translates to:
+  /// **'How do you measure your fish?'**
+  String get onboardingUnitsTitle;
+
+  /// Hint under the units title.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this later in Settings.'**
+  String get onboardingUnitsHint;
+
+  /// Title of the location permission step.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you fishing?'**
+  String get onboardingLocationTitle;
+
+  /// Why the app asks for location.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location saves where each trip happened and lets us look up that day’s weather.'**
+  String get onboardingLocationWhy;
+
+  /// Privacy promise in the location step.
+  ///
+  /// In en, this message translates to:
+  /// **'The spot stays on your phone. Cards never show coordinates, and you decide how much to reveal.'**
+  String get onboardingLocationPrivacy;
+
+  /// Offline note in the location step.
+  ///
+  /// In en, this message translates to:
+  /// **'Works without signal. The weather is fetched when you are back online.'**
+  String get onboardingLocationOffline;
+
+  /// Button that asks for location permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location'**
+  String get onboardingLocationAllow;
+
+  /// Skip the location permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get onboardingLocationSkip;
+
+  /// Settings section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get settingsSectionPreferences;
+
+  /// Settings section heading.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsSectionAbout;
+
+  /// Settings row: app language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// Option to follow the device language.
+  ///
+  /// In en, this message translates to:
+  /// **'Device language: {language}'**
+  String settingsLanguageDevice(String language);
+
+  /// Settings row: unit system.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get settingsUnits;
+
+  /// Current unit system with examples.
+  ///
+  /// In en, this message translates to:
+  /// **'{system} ({examples})'**
+  String settingsUnitsValue(String system, String examples);
+
+  /// Settings row: privacy level for new trips.
+  ///
+  /// In en, this message translates to:
+  /// **'Default location privacy'**
+  String get settingsDefaultPrivacy;
+
+  /// Settings row: licenses page.
+  ///
+  /// In en, this message translates to:
+  /// **'Open source licenses'**
+  String get settingsLicenses;
 }
 
 class _AppLocalizationsDelegate

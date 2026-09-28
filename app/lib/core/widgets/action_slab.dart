@@ -55,7 +55,7 @@ class ActionSlab extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: PiscatioFonts.expanded,
                         fontWeight: FontWeight.w800,
-                        fontSize: 20,
+                        fontSize: 19,
                         height: 1.1,
                         color: enabled ? fg : scheme.onSurfaceVariant,
                       ),

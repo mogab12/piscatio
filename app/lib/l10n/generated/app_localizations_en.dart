@@ -162,4 +162,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tackleTypeOther => 'Other';
+
+  @override
+  String get actionContinue => 'Continue';
+
+  @override
+  String get actionBack => 'Back';
+
+  @override
+  String get actionCancel => 'Cancel';
+
+  @override
+  String get actionSave => 'Save';
+
+  @override
+  String get actionDelete => 'Delete';
+
+  @override
+  String get actionEdit => 'Edit';
+
+  @override
+  String get actionUndo => 'Undo';
+
+  @override
+  String onboardingStepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get onboardingTagline => 'Every fishing trip becomes a story.';
+
+  @override
+  String get onboardingLanguageTitle => 'Language';
+
+  @override
+  String get onboardingUnitsTitle => 'How do you measure your fish?';
+
+  @override
+  String get onboardingUnitsHint => 'You can change this later in Settings.';
+
+  @override
+  String get onboardingLocationTitle => 'Where are you fishing?';
+
+  @override
+  String get onboardingLocationWhy =>
+      'Your location saves where each trip happened and lets us look up that day’s weather.';
+
+  @override
+  String get onboardingLocationPrivacy =>
+      'The spot stays on your phone. Cards never show coordinates, and you decide how much to reveal.';
+
+  @override
+  String get onboardingLocationOffline =>
+      'Works without signal. The weather is fetched when you are back online.';
+
+  @override
+  String get onboardingLocationAllow => 'Allow location';
+
+  @override
+  String get onboardingLocationSkip => 'Not now';
+
+  @override
+  String get settingsSectionPreferences => 'Preferences';
+
+  @override
+  String get settingsSectionAbout => 'About';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String settingsLanguageDevice(String language) {
+    return 'Device language: $language';
+  }
+
+  @override
+  String get settingsUnits => 'Units';
+
+  @override
+  String settingsUnitsValue(String system, String examples) {
+    return '$system ($examples)';
+  }
+
+  @override
+  String get settingsDefaultPrivacy => 'Default location privacy';
+
+  @override
+  String get settingsLicenses => 'Open source licenses';
 }

@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Where each trip happened (only while the app is open). -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Weather lookups when back online. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="piscatio"
+        android:label="Piscatio"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

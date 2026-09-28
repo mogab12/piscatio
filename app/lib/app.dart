@@ -8,11 +8,6 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
 
-/// Device locales in preference order (overridable in tests).
-final deviceLocalesProvider = Provider<List<Locale>>(
-  (ref) => WidgetsBinding.instance.platformDispatcher.locales,
-);
-
 class PiscatioApp extends ConsumerWidget {
   const PiscatioApp({super.key});
 

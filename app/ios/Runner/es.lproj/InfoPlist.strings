@@ -1,0 +1,4 @@
+"CFBundleDisplayName" = "Piscatio";
+"NSLocationWhenInUseUsageDescription" = "La ubicación guarda dónde fue cada jornada y permite a Piscatio consultar el clima de ese día. Se queda en tu teléfono.";
+"NSCameraUsageDescription" = "Toma fotos de tus capturas.";
+"NSPhotoLibraryUsageDescription" = "Elige fotos de tus capturas de la galería.";

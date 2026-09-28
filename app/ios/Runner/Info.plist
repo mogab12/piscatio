@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>pt-BR</string>
+		<string>es</string>
+	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location saves where each trip happened and lets Piscatio look up that day's weather. It stays on your phone.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Take photos of your catches.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choose photos of your catches from your library.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

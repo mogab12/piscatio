@@ -163,4 +163,92 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tackleTypeOther => 'Otro';
+
+  @override
+  String get actionContinue => 'Continuar';
+
+  @override
+  String get actionBack => 'Volver';
+
+  @override
+  String get actionCancel => 'Cancelar';
+
+  @override
+  String get actionSave => 'Guardar';
+
+  @override
+  String get actionDelete => 'Eliminar';
+
+  @override
+  String get actionEdit => 'Editar';
+
+  @override
+  String get actionUndo => 'Deshacer';
+
+  @override
+  String onboardingStepOf(int step, int total) {
+    return 'Paso $step de $total';
+  }
+
+  @override
+  String get onboardingTagline =>
+      'Cada jornada de pesca se vuelve una historia.';
+
+  @override
+  String get onboardingLanguageTitle => 'Idioma';
+
+  @override
+  String get onboardingUnitsTitle => '¿Cómo mides tus peces?';
+
+  @override
+  String get onboardingUnitsHint => 'Puedes cambiarlo después en Ajustes.';
+
+  @override
+  String get onboardingLocationTitle => '¿Dónde estás pescando?';
+
+  @override
+  String get onboardingLocationWhy =>
+      'La ubicación guarda dónde fue cada jornada y permite consultar el clima de ese día.';
+
+  @override
+  String get onboardingLocationPrivacy =>
+      'El lugar se queda en tu teléfono. Las tarjetas nunca muestran coordenadas y tú decides cuánto revelar.';
+
+  @override
+  String get onboardingLocationOffline =>
+      'Funciona sin señal. El clima se consulta cuando vuelva la conexión.';
+
+  @override
+  String get onboardingLocationAllow => 'Permitir ubicación';
+
+  @override
+  String get onboardingLocationSkip => 'Ahora no';
+
+  @override
+  String get settingsSectionPreferences => 'Preferencias';
+
+  @override
+  String get settingsSectionAbout => 'Acerca de';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String settingsLanguageDevice(String language) {
+    return 'Idioma del dispositivo: $language';
+  }
+
+  @override
+  String get settingsUnits => 'Unidades';
+
+  @override
+  String settingsUnitsValue(String system, String examples) {
+    return '$system ($examples)';
+  }
+
+  @override
+  String get settingsDefaultPrivacy => 'Privacidad predeterminada del lugar';
+
+  @override
+  String get settingsLicenses => 'Licencias de código abierto';
 }

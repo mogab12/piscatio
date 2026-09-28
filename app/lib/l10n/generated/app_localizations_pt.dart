@@ -163,4 +163,91 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tackleTypeOther => 'Outro';
+
+  @override
+  String get actionContinue => 'Continuar';
+
+  @override
+  String get actionBack => 'Voltar';
+
+  @override
+  String get actionCancel => 'Cancelar';
+
+  @override
+  String get actionSave => 'Salvar';
+
+  @override
+  String get actionDelete => 'Excluir';
+
+  @override
+  String get actionEdit => 'Editar';
+
+  @override
+  String get actionUndo => 'Desfazer';
+
+  @override
+  String onboardingStepOf(int step, int total) {
+    return 'Passo $step de $total';
+  }
+
+  @override
+  String get onboardingTagline => 'Cada pescaria vira uma história.';
+
+  @override
+  String get onboardingLanguageTitle => 'Idioma';
+
+  @override
+  String get onboardingUnitsTitle => 'Como você mede seus peixes?';
+
+  @override
+  String get onboardingUnitsHint => 'Dá para trocar depois nos Ajustes.';
+
+  @override
+  String get onboardingLocationTitle => 'Onde você está pescando?';
+
+  @override
+  String get onboardingLocationWhy =>
+      'A localização guarda onde cada pescaria aconteceu e permite buscar o clima daquele dia.';
+
+  @override
+  String get onboardingLocationPrivacy =>
+      'O local fica no seu celular. Os cards nunca mostram coordenadas, e você decide quanto revelar.';
+
+  @override
+  String get onboardingLocationOffline =>
+      'Funciona sem sinal. O clima é buscado quando a internet voltar.';
+
+  @override
+  String get onboardingLocationAllow => 'Permitir localização';
+
+  @override
+  String get onboardingLocationSkip => 'Agora não';
+
+  @override
+  String get settingsSectionPreferences => 'Preferências';
+
+  @override
+  String get settingsSectionAbout => 'Sobre';
+
+  @override
+  String get settingsLanguage => 'Idioma';
+
+  @override
+  String settingsLanguageDevice(String language) {
+    return 'Idioma do aparelho: $language';
+  }
+
+  @override
+  String get settingsUnits => 'Unidades';
+
+  @override
+  String settingsUnitsValue(String system, String examples) {
+    return '$system ($examples)';
+  }
+
+  @override
+  String get settingsDefaultPrivacy => 'Privacidade padrão do local';
+
+  @override
+  String get settingsLicenses => 'Licenças de código aberto';
 }

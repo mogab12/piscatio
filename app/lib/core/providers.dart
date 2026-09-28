@@ -35,6 +35,11 @@ final deviceLocaleProvider = Provider<Locale>(
   (ref) => WidgetsBinding.instance.platformDispatcher.locale,
 );
 
+/// Device locales in preference order (overridable in tests).
+final deviceLocalesProvider = Provider<List<Locale>>(
+  (ref) => WidgetsBinding.instance.platformDispatcher.locales,
+);
+
 // Repositories.
 
 final tripRepositoryProvider = Provider(

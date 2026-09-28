@@ -46,6 +46,7 @@ flutter:
   generate: true
   assets:
     - assets/seed/
+    - assets/fonts/OFL.txt
   fonts:
     - family: Archivo
       fonts:
