@@ -55,6 +55,12 @@ class TripDetailScreen extends ConsumerWidget {
           appBar: AppBar(
             leading: const _BackOrToHistory(),
             actions: [
+              if (!trip.isActive)
+                IconButton(
+                  tooltip: l10n.cardCreate,
+                  icon: const Icon(Icons.ios_share_rounded),
+                  onPressed: () => context.push(AppRoutes.tripCard(tripId)),
+                ),
               IconButton(
                 tooltip: l10n.actionEdit,
                 icon: const Icon(Icons.edit_outlined),

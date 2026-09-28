@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/active_trip/presentation/active_trip_screen.dart';
+import '../../features/cards/presentation/card_editor_screen.dart';
 import '../../features/history/presentation/catch_detail_screen.dart';
 import '../../features/history/presentation/edit_trip_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
@@ -100,6 +101,22 @@ final routerProvider = Provider<GoRouter>((ref) {
                 EditTripScreen(tripId: state.pathParameters['tripId']!),
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/cards/trip/:tripId',
+        builder: (context, state) => CardEditorScreen(
+          subject: CardSubject.trip,
+          id: state.pathParameters['tripId']!,
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/cards/catch/:catchId',
+        builder: (context, state) => CardEditorScreen(
+          subject: CardSubject.catchItem,
+          id: state.pathParameters['catchId']!,
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

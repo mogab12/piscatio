@@ -44,6 +44,9 @@ abstract final class PiscatioFonts {
   static const text = 'Archivo';
   static const expanded = 'ArchivoExpanded';
   static const condensed = 'ArchivoCondensed';
+
+  /// Typewriter face, only for the specimen-tag card (it is the metaphor).
+  static const typed = 'CourierPrime';
 }
 
 /// Semantic colors that Material's ColorScheme has no slot for.

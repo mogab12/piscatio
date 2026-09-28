@@ -843,5 +843,210 @@
   "settingsWeatherDataCredit": "NASA POWER Project, NASA Langley Research Center. CC BY 4.0.",
   "@settingsWeatherDataCredit": {
     "description": "Weather data attribution."
+  },
+  "brandName": "Piscatio",
+  "@brandName": {
+    "description": "App name printed on cards as the maker's mark."
+  },
+  "cardBiggestValue": "{species}, {measure}",
+  "@cardBiggestValue": {
+    "description": "Value of the 'Biggest' row on a trip card, e.g. 'Dourado, 4.2 kg'.",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "measure": {
+        "type": "String"
+      }
+    }
+  },
+  "cardCatchNumber": "No. {number}",
+  "@cardCatchNumber": {
+    "description": "Specimen number on the tag card: the catch's position in the user's logbook.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "cardFieldSpecies": "Species",
+  "@cardFieldSpecies": {
+    "description": "Field label on a card (scientific name)."
+  },
+  "cardFieldCommonName": "Common name",
+  "@cardFieldCommonName": {
+    "description": "Field label on a card."
+  },
+  "cardFieldPlace": "Locality",
+  "@cardFieldPlace": {
+    "description": "Field label on a card."
+  },
+  "cardFieldDate": "Date",
+  "@cardFieldDate": {
+    "description": "Field label on a card."
+  },
+  "cardFieldTime": "Time",
+  "@cardFieldTime": {
+    "description": "Field label on a card (time of day)."
+  },
+  "cardFieldLength": "Length",
+  "@cardFieldLength": {
+    "description": "Field label on a card."
+  },
+  "cardFieldWeight": "Weight",
+  "@cardFieldWeight": {
+    "description": "Field label on a card."
+  },
+  "cardFieldBait": "Bait",
+  "@cardFieldBait": {
+    "description": "Field label on a card."
+  },
+  "cardFieldWind": "Wind",
+  "@cardFieldWind": {
+    "description": "Field label on a card."
+  },
+  "cardFieldAir": "Air",
+  "@cardFieldAir": {
+    "description": "Field label on a card: air temperature."
+  },
+  "cardFieldPressure": "Pressure",
+  "@cardFieldPressure": {
+    "description": "Field label on a card: air pressure."
+  },
+  "cardFieldMoon": "Moon",
+  "@cardFieldMoon": {
+    "description": "Field label on a card."
+  },
+  "cardFieldDuration": "Time out",
+  "@cardFieldDuration": {
+    "description": "Field label on a trip card: how long the trip lasted."
+  },
+  "cardFieldBiggest": "Biggest",
+  "@cardFieldBiggest": {
+    "description": "Field label on a trip card: the biggest catch."
+  },
+  "cardFieldReleased": "Released",
+  "@cardFieldReleased": {
+    "description": "Value on a card when the fish was released."
+  },
+  "cardFieldKept": "Kept",
+  "@cardFieldKept": {
+    "description": "Value on a card when the fish was kept."
+  },
+  "cardFieldFate": "Fate",
+  "@cardFieldFate": {
+    "description": "Field label on a card: released or kept."
+  },
+  "cardFieldLog": "Field log",
+  "@cardFieldLog": {
+    "description": "Title of the trip version of the tag card: a field register listing the catches."
+  },
+  "cardPreviousRecord": "previous best {measure}",
+  "@cardPreviousRecord": {
+    "description": "Label next to the gold mark of the previous personal best on the ruler card.",
+    "placeholders": {
+      "measure": {
+        "type": "String"
+      }
+    }
+  },
+  "cardRecordImprovement": "Personal best, {improvement}",
+  "@cardRecordImprovement": {
+    "description": "A new personal record with how much it beat the previous one, e.g. '+14%'.",
+    "placeholders": {
+      "improvement": {
+        "type": "String"
+      }
+    }
+  },
+  "cardRecord": "Personal best",
+  "@cardRecord": {
+    "description": "A new personal record without an earlier measure to compare."
+  },
+  "cardFirstOfSpecies": "First of the species",
+  "@cardFirstOfSpecies": {
+    "description": "The user's first catch of this species."
+  },
+  "cardRecordCount": "{count, plural, =1{1 personal best} other{{count} personal bests}}",
+  "@cardRecordCount": {
+    "description": "How many catches of a trip were personal records.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardHoursUnit": "h",
+  "@cardHoursUnit": {
+    "description": "Unit printed at the end of the trip's time board (hours)."
+  },
+  "cardMoreCatches": "{count, plural, =1{and 1 more} other{and {count} more}}",
+  "@cardMoreCatches": {
+    "description": "Last line of a trip card when not all catches fit.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardCreate": "Create card",
+  "@cardCreate": {
+    "description": "Button/tooltip that opens the card editor."
+  },
+  "cardStyleBoard": "Board",
+  "@cardStyleBoard": {
+    "description": "Card style: a fish measuring board."
+  },
+  "cardStyleChart": "Chart",
+  "@cardStyleChart": {
+    "description": "Card style: a nautical chart."
+  },
+  "cardStyleTag": "Tag",
+  "@cardStyleTag": {
+    "description": "Card style: a museum specimen tag."
+  },
+  "cardFormatStory": "Story",
+  "@cardFormatStory": {
+    "description": "Card format 9:16 (stories)."
+  },
+  "cardFormatSquare": "Square",
+  "@cardFormatSquare": {
+    "description": "Card format 1:1 (feed post)."
+  },
+  "cardShowPlace": "Show place",
+  "@cardShowPlace": {
+    "description": "Switch in the card editor."
+  },
+  "cardPlacePrivate": "This trip is private: cards never show where it was.",
+  "@cardPlacePrivate": {
+    "description": "Card editor note when the trip's privacy hides the place."
+  },
+  "cardPlaceRegion": "Only the region is shown, never the spot.",
+  "@cardPlaceRegion": {
+    "description": "Card editor note for approximate privacy."
+  },
+  "cardPlaceUnknown": "No place name saved for this trip.",
+  "@cardPlaceUnknown": {
+    "description": "Card editor note when there is no place text to show."
+  },
+  "cardShare": "Share",
+  "@cardShare": {
+    "description": "Button that exports the card image and opens the share sheet."
+  },
+  "cardShareFailed": "Could not create the image. Try again.",
+  "@cardShareFailed": {
+    "description": "Error when exporting a card fails."
+  },
+  "cardPreviewLabel": "Card preview: {style}, {format}",
+  "@cardPreviewLabel": {
+    "description": "Screen reader label for the card preview.",
+    "placeholders": {
+      "style": {
+        "type": "String"
+      },
+      "format": {
+        "type": "String"
+      }
+    }
   }
 }

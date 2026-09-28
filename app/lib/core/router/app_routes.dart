@@ -9,4 +9,6 @@ abstract final class AppRoutes {
   static String editTrip(String id) => '/trip/$id/edit';
   static String capture(String tripId) => '/capture/$tripId';
   static String catchDetail(String id) => '/catch/$id';
+  static String tripCard(String id) => '/cards/trip/$id';
+  static String catchCard(String id) => '/cards/catch/$id';
 }

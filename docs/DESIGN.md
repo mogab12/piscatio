@@ -73,22 +73,60 @@ da régua. O resto é quieto.
 5. *Preto azulado no lugar do preto* no escuro. **Mudança:** o fundo é
    explicitamente água funda (`#0B2A33`), uma cor, não um quase-preto.
 
-## Cards (Fase 1B) — conceitos
+## Cards (Fase 1B) — plano
 
-Três estilos, todos em 9:16 (1080×1920) e 1:1 (1080×1080), para pescaria e captura:
+Canvas fixo: 1080×1920 (story 9:16) e 1080×1080 (quadrado 1:1), medidas em px do
+canvas. O texto não escala com a fonte do sistema. Cada estilo tem **uma** ousadia;
+o resto fica quieto. Recorde é mostrado com a linguagem do próprio estilo, não com
+um selo genérico.
 
-1. **Régua:** foto sangrando a tela toda; na base, a tábua de medição com escala em
-   cm ou polegadas e o entalhe vermelho no comprimento do peixe. Número gigante em
-   itálico expandido. Sem comprimento, a régua vira a escala de peso.
-2. **Carta:** fundo de água funda com isóbatas geradas a partir do id da pescaria
-   (decorativas, **nunca** das coordenadas reais). Os números da pescaria aparecem
-   como sondagens da carta. Espécies como legenda.
-3. **Etiqueta:** etiqueta de coleção ictiológica. Nome científico em itálico, local
-   (conforme privacidade), data com mês romano (12.IX.2026), medidas datilografadas.
-   Funciona sem foto.
+### Régua (a tábua de medição)
 
-Regras dos cards: marca discreta no rodapé; selo "Novo recorde" em dourado com a %
-de melhoria; nunca coordenadas; texto não escala com a fonte do sistema.
+- Foto sangrando a tela; sem foto, água funda.
+- Na base, uma **tábua de medição** branca com o batente escuro no zero (onde o
+  focinho encosta), marcas de 1 cm (ou ½ pol), números a cada 10 cm e um entalhe
+  vermelho no comprimento do peixe.
+- **Recorde:** o recorde anterior aparece como uma marca dourada na mesma escala,
+  com "recorde anterior" ao lado; a distância entre as marcas *é* a melhoria.
+- Sem comprimento, a tábua mede o peso; sem medida nenhuma, a hora do dia.
+- A marca Piscatio vai **impressa na tábua**, como a marca do fabricante.
+- Pescaria: a tábua vira a régua do tempo da pescaria (um entalhe por captura),
+  como na tela da pescaria ativa.
+
+### Carta (carta náutica, modo noturno)
+
+- Fundo água funda com **isóbatas** geradas a partir do id (curvas de nível de um
+  campo de ruído, por marching squares). Nunca a partir das coordenadas.
+- Borda graduada de carta (barras alternadas, como a escala de minutos).
+- Os números são **sondagens**: na carta, profundidade se escreve em itálico. O
+  número da pescaria (capturas) ou da captura (comprimento) é a sondagem gigante.
+- **Rosa dos ventos** com dados reais: seta do vento (NASA POWER) e, no centro,
+  o disco da lua na fase do dia.
+- Quadro de título (cartucho): local conforme privacidade, data e uma tabela
+  curta. Foto, se houver, num **encarte** de moldura dupla, como os planos
+  ampliados das cartas.
+- Recorde: linha dourada no cartucho com a % de melhoria.
+
+### Etiqueta (etiqueta de coleção ictiológica)
+
+- Uma **etiqueta de papel manilha** pendurada por um barbante, levemente
+  inclinada, sobre a foto escurecida (ou água funda).
+- Texto datilografado (Courier Prime, só neste estilo: é a metáfora, não um
+  rótulo técnico): nº de tombo (a posição da captura no diário), nome científico
+  em itálico, nome comum, local, data com mês romano (12.IX.2026), medidas, isca.
+- Recorde: **carimbo vermelho** "Recorde pessoal +14%"; primeira da espécie:
+  carimbo azul-escuro "Primeira captura".
+- Pescaria: a etiqueta vira uma folha de registro de campo com as capturas.
+
+### Revisão contra clichês
+
+- Papel manilha lembra o "fundo creme": aceito porque é um objeto na cena (sobre
+  foto/água), não o fundo da página, e sem serifa de display. Tom mais saturado
+  (`#E4D29E`) para ler como papel, não como interface.
+- Monoespaçada é um sinal de interface gerada quando usada em rótulos pequenos;
+  aqui ela é o assunto (etiqueta datilografada) e grande. Só no estilo Etiqueta.
+- Gradientes: só *scrims* funcionais sob texto em cima da foto.
+- Nada de selos redondos genéricos, CAIXA ALTA decorativa ou "·" entre dados.
 
 ## Registro de iterações
 

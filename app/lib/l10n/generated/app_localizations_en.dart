@@ -642,4 +642,154 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsWeatherDataCredit =>
       'NASA POWER Project, NASA Langley Research Center. CC BY 4.0.';
+
+  @override
+  String get brandName => 'Piscatio';
+
+  @override
+  String cardBiggestValue(String species, String measure) {
+    return '$species, $measure';
+  }
+
+  @override
+  String cardCatchNumber(String number) {
+    return 'No. $number';
+  }
+
+  @override
+  String get cardFieldSpecies => 'Species';
+
+  @override
+  String get cardFieldCommonName => 'Common name';
+
+  @override
+  String get cardFieldPlace => 'Locality';
+
+  @override
+  String get cardFieldDate => 'Date';
+
+  @override
+  String get cardFieldTime => 'Time';
+
+  @override
+  String get cardFieldLength => 'Length';
+
+  @override
+  String get cardFieldWeight => 'Weight';
+
+  @override
+  String get cardFieldBait => 'Bait';
+
+  @override
+  String get cardFieldWind => 'Wind';
+
+  @override
+  String get cardFieldAir => 'Air';
+
+  @override
+  String get cardFieldPressure => 'Pressure';
+
+  @override
+  String get cardFieldMoon => 'Moon';
+
+  @override
+  String get cardFieldDuration => 'Time out';
+
+  @override
+  String get cardFieldBiggest => 'Biggest';
+
+  @override
+  String get cardFieldReleased => 'Released';
+
+  @override
+  String get cardFieldKept => 'Kept';
+
+  @override
+  String get cardFieldFate => 'Fate';
+
+  @override
+  String get cardFieldLog => 'Field log';
+
+  @override
+  String cardPreviousRecord(String measure) {
+    return 'previous best $measure';
+  }
+
+  @override
+  String cardRecordImprovement(String improvement) {
+    return 'Personal best, $improvement';
+  }
+
+  @override
+  String get cardRecord => 'Personal best';
+
+  @override
+  String get cardFirstOfSpecies => 'First of the species';
+
+  @override
+  String cardRecordCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count personal bests',
+      one: '1 personal best',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cardHoursUnit => 'h';
+
+  @override
+  String cardMoreCatches(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'and $count more',
+      one: 'and 1 more',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cardCreate => 'Create card';
+
+  @override
+  String get cardStyleBoard => 'Board';
+
+  @override
+  String get cardStyleChart => 'Chart';
+
+  @override
+  String get cardStyleTag => 'Tag';
+
+  @override
+  String get cardFormatStory => 'Story';
+
+  @override
+  String get cardFormatSquare => 'Square';
+
+  @override
+  String get cardShowPlace => 'Show place';
+
+  @override
+  String get cardPlacePrivate =>
+      'This trip is private: cards never show where it was.';
+
+  @override
+  String get cardPlaceRegion => 'Only the region is shown, never the spot.';
+
+  @override
+  String get cardPlaceUnknown => 'No place name saved for this trip.';
+
+  @override
+  String get cardShare => 'Share';
+
+  @override
+  String get cardShareFailed => 'Could not create the image. Try again.';
+
+  @override
+  String cardPreviewLabel(String style, String format) {
+    return 'Card preview: $style, $format';
+  }
 }

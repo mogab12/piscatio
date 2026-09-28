@@ -16,6 +16,9 @@ Future<void> main() async {
     yield LicenseEntryWithLineBreaks([
       'Archivo',
     ], await rootBundle.loadString('assets/fonts/OFL.txt'));
+    yield LicenseEntryWithLineBreaks([
+      'Courier Prime',
+    ], await rootBundle.loadString('assets/fonts/OFL-CourierPrime.txt'));
   });
   final db = AppDatabase.open();
   await SpeciesSeeder(

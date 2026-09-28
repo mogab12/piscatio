@@ -1215,6 +1215,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'NASA POWER Project, NASA Langley Research Center. CC BY 4.0.'**
   String get settingsWeatherDataCredit;
+
+  /// App name printed on cards as the maker's mark.
+  ///
+  /// In en, this message translates to:
+  /// **'Piscatio'**
+  String get brandName;
+
+  /// Value of the 'Biggest' row on a trip card, e.g. 'Dourado, 4.2 kg'.
+  ///
+  /// In en, this message translates to:
+  /// **'{species}, {measure}'**
+  String cardBiggestValue(String species, String measure);
+
+  /// Specimen number on the tag card: the catch's position in the user's logbook.
+  ///
+  /// In en, this message translates to:
+  /// **'No. {number}'**
+  String cardCatchNumber(String number);
+
+  /// Field label on a card (scientific name).
+  ///
+  /// In en, this message translates to:
+  /// **'Species'**
+  String get cardFieldSpecies;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Common name'**
+  String get cardFieldCommonName;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Locality'**
+  String get cardFieldPlace;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get cardFieldDate;
+
+  /// Field label on a card (time of day).
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get cardFieldTime;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get cardFieldLength;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get cardFieldWeight;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Bait'**
+  String get cardFieldBait;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind'**
+  String get cardFieldWind;
+
+  /// Field label on a card: air temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Air'**
+  String get cardFieldAir;
+
+  /// Field label on a card: air pressure.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure'**
+  String get cardFieldPressure;
+
+  /// Field label on a card.
+  ///
+  /// In en, this message translates to:
+  /// **'Moon'**
+  String get cardFieldMoon;
+
+  /// Field label on a trip card: how long the trip lasted.
+  ///
+  /// In en, this message translates to:
+  /// **'Time out'**
+  String get cardFieldDuration;
+
+  /// Field label on a trip card: the biggest catch.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest'**
+  String get cardFieldBiggest;
+
+  /// Value on a card when the fish was released.
+  ///
+  /// In en, this message translates to:
+  /// **'Released'**
+  String get cardFieldReleased;
+
+  /// Value on a card when the fish was kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept'**
+  String get cardFieldKept;
+
+  /// Field label on a card: released or kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Fate'**
+  String get cardFieldFate;
+
+  /// Title of the trip version of the tag card: a field register listing the catches.
+  ///
+  /// In en, this message translates to:
+  /// **'Field log'**
+  String get cardFieldLog;
+
+  /// Label next to the gold mark of the previous personal best on the ruler card.
+  ///
+  /// In en, this message translates to:
+  /// **'previous best {measure}'**
+  String cardPreviousRecord(String measure);
+
+  /// A new personal record with how much it beat the previous one, e.g. '+14%'.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal best, {improvement}'**
+  String cardRecordImprovement(String improvement);
+
+  /// A new personal record without an earlier measure to compare.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal best'**
+  String get cardRecord;
+
+  /// The user's first catch of this species.
+  ///
+  /// In en, this message translates to:
+  /// **'First of the species'**
+  String get cardFirstOfSpecies;
+
+  /// How many catches of a trip were personal records.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 personal best} other{{count} personal bests}}'**
+  String cardRecordCount(int count);
+
+  /// Unit printed at the end of the trip's time board (hours).
+  ///
+  /// In en, this message translates to:
+  /// **'h'**
+  String get cardHoursUnit;
+
+  /// Last line of a trip card when not all catches fit.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{and 1 more} other{and {count} more}}'**
+  String cardMoreCatches(int count);
+
+  /// Button/tooltip that opens the card editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Create card'**
+  String get cardCreate;
+
+  /// Card style: a fish measuring board.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get cardStyleBoard;
+
+  /// Card style: a nautical chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Chart'**
+  String get cardStyleChart;
+
+  /// Card style: a museum specimen tag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get cardStyleTag;
+
+  /// Card format 9:16 (stories).
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get cardFormatStory;
+
+  /// Card format 1:1 (feed post).
+  ///
+  /// In en, this message translates to:
+  /// **'Square'**
+  String get cardFormatSquare;
+
+  /// Switch in the card editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Show place'**
+  String get cardShowPlace;
+
+  /// Card editor note when the trip's privacy hides the place.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip is private: cards never show where it was.'**
+  String get cardPlacePrivate;
+
+  /// Card editor note for approximate privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the region is shown, never the spot.'**
+  String get cardPlaceRegion;
+
+  /// Card editor note when there is no place text to show.
+  ///
+  /// In en, this message translates to:
+  /// **'No place name saved for this trip.'**
+  String get cardPlaceUnknown;
+
+  /// Button that exports the card image and opens the share sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get cardShare;
+
+  /// Error when exporting a card fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not create the image. Try again.'**
+  String get cardShareFailed;
+
+  /// Screen reader label for the card preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Card preview: {style}, {format}'**
+  String cardPreviewLabel(String style, String format);
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ import '../../../core/formatting/formatters_provider.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/media/photo_source.dart';
 import '../../../core/providers.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/action_slab.dart';
 import '../../../core/widgets/choice_sheet.dart';
@@ -173,6 +174,11 @@ class _CatchEditorState extends ConsumerState<_CatchEditor> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(
+            tooltip: l10n.cardCreate,
+            icon: const Icon(Icons.ios_share_rounded),
+            onPressed: () => context.push(AppRoutes.catchCard(widget.item.id)),
+          ),
           IconButton(
             tooltip: l10n.deleteCatchTitle,
             icon: const Icon(Icons.delete_outline_rounded),

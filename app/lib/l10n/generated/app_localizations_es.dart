@@ -647,4 +647,156 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get settingsWeatherDataCredit =>
       'Proyecto NASA POWER, NASA Langley Research Center. CC BY 4.0.';
+
+  @override
+  String get brandName => 'Piscatio';
+
+  @override
+  String cardBiggestValue(String species, String measure) {
+    return '$species, $measure';
+  }
+
+  @override
+  String cardCatchNumber(String number) {
+    return 'N.º $number';
+  }
+
+  @override
+  String get cardFieldSpecies => 'Especie';
+
+  @override
+  String get cardFieldCommonName => 'Nombre común';
+
+  @override
+  String get cardFieldPlace => 'Localidad';
+
+  @override
+  String get cardFieldDate => 'Fecha';
+
+  @override
+  String get cardFieldTime => 'Hora';
+
+  @override
+  String get cardFieldLength => 'Longitud';
+
+  @override
+  String get cardFieldWeight => 'Peso';
+
+  @override
+  String get cardFieldBait => 'Carnada';
+
+  @override
+  String get cardFieldWind => 'Viento';
+
+  @override
+  String get cardFieldAir => 'Aire';
+
+  @override
+  String get cardFieldPressure => 'Presión';
+
+  @override
+  String get cardFieldMoon => 'Luna';
+
+  @override
+  String get cardFieldDuration => 'Duración';
+
+  @override
+  String get cardFieldBiggest => 'Mayor';
+
+  @override
+  String get cardFieldReleased => 'Liberado';
+
+  @override
+  String get cardFieldKept => 'Conservado';
+
+  @override
+  String get cardFieldFate => 'Destino';
+
+  @override
+  String get cardFieldLog => 'Registro de campo';
+
+  @override
+  String cardPreviousRecord(String measure) {
+    return 'récord anterior $measure';
+  }
+
+  @override
+  String cardRecordImprovement(String improvement) {
+    return 'Récord personal, $improvement';
+  }
+
+  @override
+  String get cardRecord => 'Récord personal';
+
+  @override
+  String get cardFirstOfSpecies => 'Primera de la especie';
+
+  @override
+  String cardRecordCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count récords personales',
+      one: '1 récord personal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cardHoursUnit => 'h';
+
+  @override
+  String cardMoreCatches(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'y $count más',
+      one: 'y 1 más',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cardCreate => 'Crear tarjeta';
+
+  @override
+  String get cardStyleBoard => 'Regla';
+
+  @override
+  String get cardStyleChart => 'Carta';
+
+  @override
+  String get cardStyleTag => 'Etiqueta';
+
+  @override
+  String get cardFormatStory => 'Historia';
+
+  @override
+  String get cardFormatSquare => 'Cuadrado';
+
+  @override
+  String get cardShowPlace => 'Mostrar lugar';
+
+  @override
+  String get cardPlacePrivate =>
+      'Esta salida es privada: la tarjeta no muestra dónde fue.';
+
+  @override
+  String get cardPlaceRegion => 'Muestra solo la región, nunca el punto.';
+
+  @override
+  String get cardPlaceUnknown =>
+      'No hay nombre de lugar guardado en esta salida.';
+
+  @override
+  String get cardShare => 'Compartir';
+
+  @override
+  String get cardShareFailed =>
+      'No se pudo crear la imagen. Inténtalo de nuevo.';
+
+  @override
+  String cardPreviewLabel(String style, String format) {
+    return 'Vista previa de la tarjeta: $style, $format';
+  }
 }
