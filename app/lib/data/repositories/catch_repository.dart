@@ -51,6 +51,31 @@ class CatchRepository {
     return query.watch().map(_groupPhotos);
   }
 
+  /// Every live catch of every trip (for records and statistics).
+  Stream<List<Catch>> watchAll() {
+    final query =
+        _db.select(_db.catches).join([
+            leftOuterJoin(
+              _db.catchPhotos,
+              _db.catchPhotos.catchId.equalsExp(_db.catches.id) &
+                  _db.catchPhotos.deletedAt.isNull(),
+            ),
+          ])
+          ..where(
+            _db.catches.deletedAt.isNull() &
+                _db.catches.tripId.isInQuery(
+                  _db.selectOnly(_db.trips)
+                    ..addColumns([_db.trips.id])
+                    ..where(_db.trips.deletedAt.isNull()),
+                ),
+          )
+          ..orderBy([
+            OrderingTerm.asc(_db.catches.caughtAt),
+            OrderingTerm.asc(_db.catchPhotos.sortOrder),
+          ]);
+    return query.watch().map(_groupPhotos);
+  }
+
   Stream<Catch?> watchCatch(String id) =>
       _catchQuery(id).watch().map((rows) => _groupPhotos(rows).firstOrNull);
 

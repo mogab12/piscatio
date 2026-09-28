@@ -12,6 +12,7 @@ import '../domain/models/catch.dart';
 import '../domain/models/species.dart';
 import '../domain/models/tackle.dart';
 import '../domain/models/trip.dart';
+import '../domain/services/records.dart';
 import '../domain/services/species_search.dart';
 import '../domain/services/units.dart';
 import 'clock.dart';
@@ -113,6 +114,21 @@ final tripCatchesProvider = StreamProvider.family<List<Catch>, String>(
   (ref, tripId) =>
       ref.watch(catchRepositoryProvider).watchCatchesForTrip(tripId),
 );
+
+final allCatchesProvider = StreamProvider<List<Catch>>(
+  (ref) => ref.watch(catchRepositoryProvider).watchAll(),
+);
+
+/// Personal-record status of one catch, recomputed whenever any catch
+/// changes (records are never stored).
+final catchRecordProvider = Provider.family<CatchRecordStatus, String>((
+  ref,
+  catchId,
+) {
+  final all = ref.watch(allCatchesProvider).value ?? const <Catch>[];
+  final target = all.where((c) => c.id == catchId).firstOrNull;
+  return target == null ? CatchRecordStatus.none : recordStatus(target, all);
+});
 
 final catchProvider = StreamProvider.family<Catch?, String>(
   (ref, id) => ref.watch(catchRepositoryProvider).watchCatch(id),

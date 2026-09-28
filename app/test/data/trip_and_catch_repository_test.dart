@@ -265,4 +265,21 @@ void main() {
       });
     });
   });
+
+  test('watchAll lists live catches of live trips, oldest first', () async {
+    final a = await startTrip();
+    final first = await catches.addCatch(
+      tripId: a,
+      speciesId: 'cyprinus-carpio',
+    );
+    deps.clock.advance(const Duration(minutes: 1));
+    final gone = await catches.addCatch(tripId: a);
+    await catches.deleteCatch(gone.id);
+    await trips.finishTrip(a);
+    final b = await startTrip();
+    deps.clock.advance(const Duration(minutes: 1));
+    await catches.addCatch(tripId: b);
+    await trips.deleteTrip(b);
+    expect((await catches.watchAll().first).map((c) => c.id), [first.id]);
+  });
 }
