@@ -6,23 +6,23 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 
 ### 1A — Fundação e registro
 
-- [ ] Projeto Flutter em `/app`, lints estritos, CI (análise, testes, traduções, APK)
-- [ ] Internacionalização: ARB pt/en/es, teste de chaves, verificação de texto literal
-- [ ] Domínio: conversão de unidades e formatação por locale
-- [ ] Domínio: fase da lua
-- [ ] Domínio: deslocamento de privacidade (grade + HMAC)
-- [ ] Domínio: busca de espécies sem acento, com sinônimos
-- [ ] Banco Drift: pescarias, capturas, fotos, espécies, iscas, equipamentos, ajustes
-- [ ] Catálogo inicial: ~40 espécies da América do Sul + ~20 da América do Norte
-- [ ] Tema claro/escuro, fontes, rotas e navegação por abas
-- [ ] Onboarding: idioma, unidades, permissão de localização
-- [ ] Ajustes: idioma, unidades, privacidade padrão
-- [ ] Início: iniciar/retomar pescaria, últimas pescarias
-- [ ] Pescaria ativa: cronômetro, local, lista de capturas, finalizar
-- [ ] Captura rápida: foto (câmera/galeria/sem foto) → espécie → salvar, com desfazer
-- [ ] Detalhes da captura: peso, comprimento, isca, equipamento, profundidade, solto
-- [ ] Fotos: importação com remoção de EXIF, caminho relativo
-- [ ] Histórico: lista, detalhe, edição e exclusão
+- [x] Projeto Flutter em `/app`, lints estritos, CI (análise, testes, traduções, APK)
+- [x] Internacionalização: ARB pt/en/es, teste de chaves, verificação de texto literal
+- [x] Domínio: conversão de unidades e formatação por locale
+- [x] Domínio: fase da lua
+- [x] Domínio: deslocamento de privacidade (grade + HMAC)
+- [x] Domínio: busca de espécies sem acento, com sinônimos
+- [x] Banco Drift: pescarias, capturas, fotos, espécies, iscas, equipamentos, ajustes
+- [x] Catálogo inicial: ~40 espécies da América do Sul + ~20 da América do Norte
+- [x] Tema claro/escuro, fontes, rotas e navegação por abas
+- [x] Onboarding: idioma, unidades, permissão de localização
+- [x] Ajustes: idioma, unidades, privacidade padrão
+- [x] Início: iniciar/retomar pescaria, últimas pescarias
+- [x] Pescaria ativa: cronômetro, local, lista de capturas, finalizar
+- [x] Captura rápida: foto (câmera/galeria/sem foto) → espécie → salvar, com desfazer
+- [x] Detalhes da captura: peso, comprimento, isca, equipamento, profundidade, solto
+- [x] Fotos: importação com remoção de EXIF, caminho relativo
+- [x] Histórico: lista, detalhe, edição e exclusão
 - [ ] **Checkpoint 1A**: testar no celular
 
 ### 1B — Clima, resumo e cards
@@ -31,6 +31,7 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 - [ ] Clima via NASA POWER (série horária da pescaria) + atribuição
 - [ ] Nome do local via geocodificação da plataforma (enfileirado sem rede)
 - [ ] Resumo pós-pescaria: duração, capturas, espécies, maior captura, isca, local, lua
+      (cálculo pronto em `domain/services/trip_summary.dart`, falta a tela)
 - [ ] Recordes pessoais (peso e comprimento, % de melhoria, "primeira captura")
 - [ ] Cards: 3 estilos, 9:16 (1080×1920) e 1:1 (1080×1080), pescaria e captura
 - [ ] Cards: selo de recorde, marca discreta, local conforme privacidade

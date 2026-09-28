@@ -237,4 +237,47 @@ void main() {
     await saveScreenshot(tester, 'catch_detail');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
+
+  testWidgets('dark theme and large text', (tester) async {
+    usePhoneSurface(tester);
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+    final app = await TestApp.start(tester);
+    await app.run(tester, () async {
+      await app.read(settingsRepositoryProvider).completeOnboarding();
+      final trips = app.read(tripRepositoryProvider);
+      final catches = app.read(catchRepositoryProvider);
+      final start = DateTime.utc(2026, 9, 12, 9);
+      app.clock.set(start);
+      final t = await trips.startTrip(
+        timezone: 'UTC',
+        privacy: PrivacyLevel.private,
+      );
+      for (final (min, sp, g) in [
+        (20, 'cichla-kelberi', 2350),
+        (64, 'hoplias-malabaricus', 1450),
+      ]) {
+        app.clock.set(start.add(Duration(minutes: min)));
+        final c = await catches.addCatch(tripId: t.id, speciesId: sp);
+        await catches.updateDetails(
+          c.id,
+          CatchDetails(speciesId: sp, weightGrams: g),
+        );
+      }
+      app.clock.set(start.add(const Duration(minutes: 83, seconds: 4)));
+    });
+    await app.pumpApp(tester);
+    await tester.tap(find.text('Voltar à pescaria'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'dark_active_trip');
+
+    tester.platformDispatcher.textScaleFactorTestValue = 1.6;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await app.settle(tester);
+    await saveScreenshot(tester, 'dark_active_trip_large_text');
+    await tester.tap(find.byTooltip('Minimizar'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'dark_home_large_text');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
 }

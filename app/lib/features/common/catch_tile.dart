@@ -26,6 +26,14 @@ class CatchTile extends ConsumerWidget {
       if (item.weightGrams != null) f.weight(item.weightGrams!),
       if (item.lengthMillimeters != null) f.length(item.lengthMillimeters!),
     ];
+    // With large system text the measures move under the name instead of
+    // squeezing it.
+    final stacked = MediaQuery.textScalerOf(context).scale(10) > 13;
+    final measureStyle = text.titleMedium!.copyWith(
+      fontFamily: PiscatioFonts.expanded,
+      fontStyle: FontStyle.italic,
+      fontWeight: FontWeight.w800,
+    );
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -54,23 +62,17 @@ class CatchTile extends ConsumerWidget {
                       color: context.palette.muted,
                     ),
                   ),
+                  if (stacked)
+                    for (final m in measures) Text(m, style: measureStyle),
                 ],
               ),
             ),
-            if (measures.isNotEmpty) ...[
+            if (measures.isNotEmpty && !stacked) ...[
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  for (final m in measures)
-                    Text(
-                      m,
-                      style: text.titleMedium!.copyWith(
-                        fontFamily: PiscatioFonts.expanded,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
+                  for (final m in measures) Text(m, style: measureStyle),
                 ],
               ),
             ],

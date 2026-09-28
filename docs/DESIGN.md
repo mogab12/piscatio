@@ -92,4 +92,8 @@ de melhoria; nunca coordenadas; texto não escala com a fonte do sistema.
 
 ## Registro de iterações
 
-- 1A: tokens, tipografia e régua do tempo na pescaria ativa.
+- 1A: tokens, tipografia e régua do tempo na pescaria ativa. Revisado por capturas
+  de tela (claro, escuro, fonte 1,6×). Ajustes feitos depois da revisão: botão de
+  ação principal sempre no mesmo ponto em todo o fluxo de captura; no escuro, o bloco
+  "pescaria em andamento" usa `#184450` para não sumir no fundo; com fonte grande,
+  as medidas da captura descem para baixo do nome; cronômetros com `FittedBox`.

@@ -127,7 +127,10 @@ class _ActiveTripBanner extends ConsumerWidget {
         8,
       ),
       child: Material(
-        color: PiscatioColors.deepWater,
+        // On the dark theme the page itself is deep water: lift the block.
+        color: Theme.of(context).brightness == Brightness.dark
+            ? PiscatioColors.deepWater3
+            : PiscatioColors.deepWater,
         borderRadius: BorderRadius.circular(PiscatioRadii.slab),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -144,11 +147,16 @@ class _ActiveTripBanner extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  Formatters.timer(trip.duration(now)),
-                  style: text.displayMedium!.copyWith(
-                    color: fg,
-                    fontFeatures: tabularFigures,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    Formatters.timer(trip.duration(now)),
+                    maxLines: 1,
+                    style: text.displayMedium!.copyWith(
+                      color: fg,
+                      fontFeatures: tabularFigures,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 6),
