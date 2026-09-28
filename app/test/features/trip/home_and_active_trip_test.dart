@@ -5,6 +5,7 @@ import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/features/active_trip/presentation/active_trip_screen.dart';
 import 'package:piscatio/features/active_trip/presentation/time_ruler.dart';
 import 'package:piscatio/features/history/presentation/trip_detail_screen.dart';
+import 'package:piscatio/features/shell/presentation/app_shell.dart';
 
 import '../../helpers/pump_app.dart';
 
@@ -124,6 +125,13 @@ void main() {
       await app.run(tester, app.read(tripRepositoryProvider).activeTrip),
       isNull,
     );
+
+    // Regression: finishing must leave a way back, not a dead-end screen.
+    expect(find.byTooltip('Voltar'), findsOneWidget);
+    await tester.tap(find.byTooltip('Voltar'));
+    await app.settle(tester);
+    expect(find.byType(AppShell), findsOneWidget);
+    expect(find.text('Pescar'), findsOneWidget);
     await app.dispose(tester);
   });
 

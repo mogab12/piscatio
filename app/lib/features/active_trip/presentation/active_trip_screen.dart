@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -78,9 +80,16 @@ class _ActiveTripView extends ConsumerWidget {
       ),
     );
     if (ok != true || !context.mounted) return;
-    // Leave first: once the trip ends this screen has nothing to show.
+    // Leave first: once the trip ends this screen has nothing to show. Pop
+    // this screen off the root navigator (back to whatever opened it, i.e.
+    // Home with its tab bar) before pushing the trip's detail on top, so
+    // there is always a route underneath to return to. Using the router
+    // directly (rather than the context extensions) avoids relying on
+    // `context` staying valid across the two navigation calls.
+    final router = GoRouter.of(context);
     final controller = ref.read(tripControllerProvider);
-    context.go(AppRoutes.trip(trip.id));
+    router.pop();
+    unawaited(router.push(AppRoutes.trip(trip.id)));
     await controller.finishTrip(trip.id);
   }
 

@@ -45,13 +45,14 @@ class TripDetailScreen extends ConsumerWidget {
       data: (trip) {
         if (trip == null) {
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(leading: const _BackOrToHistory()),
             body: Center(child: Text(l10n.tripNotFound)),
           );
         }
         final catches = ref.watch(tripCatchesProvider(tripId)).value ?? [];
         return Scaffold(
           appBar: AppBar(
+            leading: const _BackOrToHistory(),
             actions: [
               IconButton(
                 tooltip: l10n.actionEdit,
@@ -118,6 +119,25 @@ class TripDetailScreen extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Pops back if possible, otherwise returns to the logbook tab (which keeps
+/// the bottom navigation bar). Guards against this screen ever being a dead
+/// end, however it was reached — e.g. finishing a trip pushes this screen
+/// after leaving the active trip screen, so there is normally a route to
+/// pop to, but this covers any other path that lands here directly.
+class _BackOrToHistory extends StatelessWidget {
+  const _BackOrToHistory();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: context.l10n.actionBack,
+      icon: const Icon(Icons.arrow_back_rounded),
+      onPressed: () =>
+          context.canPop() ? context.pop() : context.go(AppRoutes.history),
     );
   }
 }
