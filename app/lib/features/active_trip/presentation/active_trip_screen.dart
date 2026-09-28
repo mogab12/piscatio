@@ -82,14 +82,16 @@ class _ActiveTripView extends ConsumerWidget {
     if (ok != true || !context.mounted) return;
     // Leave first: once the trip ends this screen has nothing to show. Pop
     // this screen off the root navigator (back to whatever opened it, i.e.
-    // Home with its tab bar) before pushing the trip's detail on top, so
-    // there is always a route underneath to return to. Using the router
-    // directly (rather than the context extensions) avoids relying on
-    // `context` staying valid across the two navigation calls.
+    // Home with its tab bar), then stack the trip's detail and its summary
+    // on top: closing the summary shows the trip, and back from there
+    // returns home. Using the router directly (rather than the context
+    // extensions) avoids relying on `context` staying valid across the
+    // navigation calls.
     final router = GoRouter.of(context);
     final controller = ref.read(tripControllerProvider);
     router.pop();
     unawaited(router.push(AppRoutes.trip(trip.id)));
+    unawaited(router.push(AppRoutes.tripSummary(trip.id)));
     await controller.finishTrip(trip.id);
   }
 

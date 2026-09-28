@@ -55,7 +55,7 @@ TripCardData sampleTrip({String? photo}) => TripCardData(
   dateLabel: '12 de set. de 2026',
   romanDate: '12.IX.2026',
   place: 'Cuiabá, MT',
-  durationLabel: '4h 12min',
+  durationLabel: '4 h 12 min',
   timeRangeLabel: 'Das 05:40 às 09:52',
   catchCount: 8,
   speciesCount: 4,

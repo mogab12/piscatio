@@ -5,7 +5,10 @@ import 'package:piscatio/core/providers.dart';
 import 'package:piscatio/data/media/photo_importer.dart';
 import 'package:piscatio/domain/models/catch.dart';
 import 'package:piscatio/domain/models/enums.dart';
+import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
+import 'package:piscatio/features/summary/presentation/trip_summary_screen.dart';
 
+import '../features/summary/trip_summary_test.dart' show seedSummaryTrip;
 import '../helpers/fakes.dart';
 import '../helpers/pump_app.dart';
 import '../helpers/screenshots.dart';
@@ -278,6 +281,20 @@ void main() {
     await tester.tap(find.byTooltip('Minimizar'));
     await app.settle(tester);
     await saveScreenshot(tester, 'dark_home_large_text');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
+
+  testWidgets('trip summary and card editor', (tester) async {
+    usePhoneSurface(tester);
+    final app = await TestApp.start(tester);
+    final tripId = await seedSummaryTrip(app, tester);
+    await app.pumpScreen(tester, TripSummaryScreen(tripId: tripId));
+    await saveScreenshot(tester, 'trip_summary');
+    await app.pumpScreen(
+      tester,
+      CardEditorScreen(subject: CardSubject.trip, id: tripId),
+    );
+    await saveScreenshot(tester, 'card_editor');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
 }

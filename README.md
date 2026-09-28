@@ -10,8 +10,11 @@ cards bonitos no Instagram e no WhatsApp. Funciona sem internet.
 
 ## Status
 
-Fase 1A pronta: onboarding, ajustes, pescaria ativa, captura rápida com foto sem
-EXIF, histórico com edição e exclusão. Clima, resumo e cards chegam na 1B.
+Fase 1B pronta: além da 1A (onboarding, ajustes, pescaria ativa, captura rápida
+com foto sem EXIF, histórico com edição e exclusão), agora há resumo pós-pescaria,
+recordes pessoais, clima da NASA POWER, nome da região do local e cards para
+compartilhar em três estilos (Régua, Carta e Etiqueta), em story e quadrado.
+Estatísticas, pescaria retroativa e exportação chegam na 1C.
 
 ## Jeito mais rápido de testar (Android, sem instalar nada)
 
@@ -99,17 +102,34 @@ SCREENSHOTS=1 flutter test test/screenshots   # PNGs em app/build/screenshots/
 - O modo "Região aproximada" desloca o ponto de forma consistente (grade + HMAC),
   para que várias pescarias no mesmo lugar não revelem o pesqueiro.
 
-## Dados de clima (Fase 1B)
+## Dados de clima
 
-A Open-Meteo gratuita não permite uso comercial. O app vai usar a **NASA POWER**
-(CC BY 4.0, uso comercial permitido, sem chave), com atraso de 2 a 3 dias e crédito
-visível no app. Clima ao vivo fica para a Fase 2, através do backend.
+A Open-Meteo gratuita não permite uso comercial. O app usa a **NASA POWER**
+(CC BY 4.0, uso comercial permitido, sem chave). Os dados saem com 2 a 3 dias de
+atraso: ao finalizar, a pescaria entra numa fila que tenta de novo ao abrir o app,
+a cada 15 minutos e quando a internet volta. O crédito fica nos Ajustes. Clima ao
+vivo fica para a Fase 2, através do backend.
 
-## Limitações conhecidas da 1A
+## O que testar no checkpoint 1B
 
-- Sem clima, resumo pós-pescaria, cards, estatísticas e pescaria retroativa (1B/1C).
-- O nome do local é digitado pelo usuário (busca automática chega na 1B).
+1. Inicie uma pescaria com o GPS ligado, registre duas ou três capturas (com foto e
+   comprimento em pelo menos uma) e finalize. O resumo abre na hora.
+2. No resumo, toque em **Criar card**. Troque entre Régua, Carta e Etiqueta, entre
+   Story e Quadrado, e compartilhe no WhatsApp ou salve a imagem.
+3. Mude a privacidade da pescaria (Editar) e veja o local do card mudar: privada
+   não mostra nada, aproximada mostra só a região, exata mostra o nome do local.
+4. Registre outra captura da mesma espécie, maior que a anterior: o card mostra o
+   recorde (marca dourada na Régua, linha dourada na Carta, carimbo na Etiqueta).
+5. Volte à pescaria 3 dias depois: o painel de clima aparece com os dados.
+
+## Limitações conhecidas da 1B
+
+- Estatísticas, pescaria retroativa, busca de local por nome e exportação de dados
+  chegam na 1C.
+- O clima só existe 2 a 3 dias depois da pescaria (limite da fonte gratuita).
+- O nome da região depende do geocodificador do sistema (Android/iOS) e precisa de
+  internet; sem ela, fica na fila.
 - No Android, se o sistema encerrar o app enquanto a câmera está aberta, a foto
   daquela captura se perde (recuperação chega na 1C).
-- Validado por testes automatizados (unitários e de widget) e pela CI, que compila
-  o APK. Ainda não rodou em aparelho real: esse é o objetivo do checkpoint 1A.
+- Validado por testes automatizados e pela CI, que compila o APK. Ainda não rodou
+  em aparelho real: esse é o objetivo do checkpoint.

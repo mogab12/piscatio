@@ -13,6 +13,7 @@ import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/quick_catch/presentation/quick_catch_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
+import '../../features/summary/presentation/trip_summary_screen.dart';
 import '../providers.dart';
 import 'app_routes.dart';
 
@@ -101,6 +102,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                 EditTripScreen(tripId: state.pathParameters['tripId']!),
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/summary/:tripId',
+        builder: (context, state) =>
+            TripSummaryScreen(tripId: state.pathParameters['tripId']!),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

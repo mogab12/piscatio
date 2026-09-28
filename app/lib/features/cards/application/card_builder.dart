@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../core/background.dart';
@@ -30,14 +29,9 @@ import 'card_data.dart';
 String? _photo(String? root, String? relative) =>
     root == null || relative == null ? null : p.join(root, relative);
 
-String _improvement(RecordMark mark, String lang) {
-  final pct = NumberFormat.percentPattern(lang)..maximumFractionDigits = 0;
-  return '+${pct.format(mark.improvement)}';
-}
-
 /// The record the card features: the measure on the board first (length
 /// when there is one), preferring a mark that beat an earlier value.
-CardRecord? _record(CatchRecordStatus s, String lang, {required bool length}) {
+CardRecord? _record(CatchRecordStatus s, Formatters f, {required bool length}) {
   if (s.firstOfSpecies) return const CardRecord.first();
   final marks = [
     ?(length ? s.length : s.weight),
@@ -47,7 +41,9 @@ CardRecord? _record(CatchRecordStatus s, String lang, {required bool length}) {
   final mark =
       marks.firstWhereOrNull((m) => m.improvement != null) ?? marks.first;
   return CardRecord.record(
-    improvement: mark.improvement == null ? null : _improvement(mark, lang),
+    improvement: mark.improvement == null
+        ? null
+        : f.percentGain(mark.improvement!),
   );
 }
 
@@ -136,7 +132,7 @@ CatchCardData buildCatchCard({
       for (final q in headline)
         CardQuantity(f.quantityValue(q), f.unitSymbol(q.unit)),
     ],
-    record: _record(status, lang, length: item.lengthMillimeters != null),
+    record: _record(status, f, length: item.lengthMillimeters != null),
     previousRecordLabel: status.isRecord ? previous : null,
     moon: CardMoon(
       illumination: moon.illumination,

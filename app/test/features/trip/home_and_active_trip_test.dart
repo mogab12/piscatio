@@ -6,8 +6,10 @@ import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/features/active_trip/presentation/active_trip_screen.dart';
 import 'package:piscatio/features/active_trip/presentation/time_ruler.dart';
+import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
 import 'package:piscatio/features/history/presentation/trip_detail_screen.dart';
 import 'package:piscatio/features/shell/presentation/app_shell.dart';
+import 'package:piscatio/features/summary/presentation/trip_summary_screen.dart';
 
 import '../../helpers/pump_app.dart';
 
@@ -106,7 +108,7 @@ void main() {
     await app.dispose(tester);
   });
 
-  testWidgets('finishing asks for confirmation, then opens the trip', (
+  testWidgets('finishing asks for confirmation, then shows the summary', (
     tester,
   ) async {
     final app = await _onboarded(tester);
@@ -125,13 +127,14 @@ void main() {
     await app.settle(tester);
     await tester.tap(find.text('Finalizar pescaria'));
     await app.settle(tester);
-    expect(find.byType(TripDetailScreen), findsOneWidget);
+    expect(find.byType(TripSummaryScreen), findsOneWidget);
+    expect(find.text('Pescaria finalizada'), findsOneWidget);
     expect(
       await app.run(tester, app.read(tripRepositoryProvider).activeTrip),
       isNull,
     );
 
-    // Weather is queued and the detail says when it will arrive.
+    // Weather is queued and the summary says when it will arrive.
     final jobs = await app.run(tester, app.read(jobQueueProvider).all);
     expect(jobs.map((j) => j.kind), contains(JobKind.weather));
     expect(
@@ -139,7 +142,19 @@ void main() {
       findsOneWidget,
     );
 
-    // Regression: finishing must leave a way back, not a dead-end screen.
+    // The summary leads to a card, and back.
+    await tester.tap(find.text('Criar card'));
+    await app.settle(tester);
+    expect(find.byType(CardEditorScreen), findsOneWidget);
+    await tester.tap(find.byTooltip('Voltar'));
+    await app.settle(tester);
+    expect(find.byType(TripSummaryScreen), findsOneWidget);
+
+    // Closing the summary shows the trip; finishing must leave a way back,
+    // not a dead-end screen.
+    await tester.tap(find.byTooltip('Fechar'));
+    await app.settle(tester);
+    expect(find.byType(TripDetailScreen), findsOneWidget);
     expect(find.byTooltip('Voltar'), findsOneWidget);
     await tester.tap(find.byTooltip('Voltar'));
     await app.settle(tester);

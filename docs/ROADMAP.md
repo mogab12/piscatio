@@ -27,15 +27,17 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 
 ### 1B — Clima, resumo e cards
 
-- [ ] Fila de jobs (reprocessa ao abrir o app e quando a conexão volta)
-- [ ] Clima via NASA POWER (série horária da pescaria) + atribuição
-- [ ] Nome do local via geocodificação da plataforma (enfileirado sem rede)
-- [ ] Resumo pós-pescaria: duração, capturas, espécies, maior captura, isca, local, lua
-      (cálculo pronto em `domain/services/trip_summary.dart`, falta a tela)
-- [ ] Recordes pessoais (peso e comprimento, % de melhoria, "primeira captura")
-- [ ] Cards: 3 estilos, 9:16 (1080×1920) e 1:1 (1080×1080), pescaria e captura
-- [ ] Cards: selo de recorde, marca discreta, local conforme privacidade
-- [ ] Compartilhar via share sheet (PNG sem EXIF)
+- [x] Fila de jobs (reprocessa ao abrir o app, a cada 15 min e quando a conexão volta)
+- [x] Clima via NASA POWER (série horária da pescaria) + atribuição nos Ajustes
+- [x] Nome do local via geocodificação da plataforma (enfileirado sem rede)
+- [x] Resumo pós-pescaria: duração, capturas, espécies, régua do tempo, recordes,
+      maior captura, isca, região, lua e clima, com "Criar card"
+- [x] Recordes pessoais (peso e comprimento, % de melhoria, "primeira da espécie"),
+      sempre calculados
+- [x] Cards: Régua, Carta e Etiqueta, 9:16 (1080×1920) e 1:1 (1080×1080), pescaria e captura
+- [x] Cards: recorde na linguagem de cada estilo, marca discreta, local conforme
+      privacidade (e chave "Mostrar local")
+- [x] Compartilhar via share sheet (PNG renderizado pelo app: não carrega EXIF)
 - [ ] **Checkpoint 1B**: testar no celular
 
 ### 1C — Estatísticas, retroativa e acabamento

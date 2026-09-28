@@ -1461,6 +1461,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Card preview: {style}, {format}'**
   String cardPreviewLabel(String style, String format);
+
+  /// Generic close button tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get actionClose;
+
+  /// Title of the summary shown right after finishing a trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip finished'**
+  String get summaryTitle;
+
+  /// Section with the personal records set on this trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal bests'**
+  String get summaryRecords;
+
+  /// The bait with the most catches on this trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Best bait: {bait}'**
+  String summaryTopBait(String bait);
+
+  /// A record catch in the trip summary, e.g. 'Dourado, 72 cm'.
+  ///
+  /// In en, this message translates to:
+  /// **'{species}, {measure}'**
+  String summaryRecordLine(String species, String measure);
 }
 
 class _AppLocalizationsDelegate

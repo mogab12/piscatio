@@ -799,4 +799,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String cardPreviewLabel(String style, String format) {
     return 'Vista previa de la tarjeta: $style, $format';
   }
+
+  @override
+  String get actionClose => 'Cerrar';
+
+  @override
+  String get summaryTitle => 'Salida terminada';
+
+  @override
+  String get summaryRecords => 'Récords';
+
+  @override
+  String summaryTopBait(String bait) {
+    return 'Carnada con más capturas: $bait';
+  }
+
+  @override
+  String summaryRecordLine(String species, String measure) {
+    return '$species, $measure';
+  }
 }

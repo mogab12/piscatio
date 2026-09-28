@@ -24,6 +24,12 @@ class Formatters {
     return f.format(value);
   }
 
+  /// Gain as a signed percentage in the active locale: "+14%".
+  String percentGain(double fraction) {
+    final f = NumberFormat.percentPattern(_locale)..maximumFractionDigits = 0;
+    return '+${f.format(fraction)}';
+  }
+
   /// Number part of a quantity, without the unit.
   String quantityValue(Quantity q) =>
       number(q.value, maxFractionDigits: q.maxFractionDigits);

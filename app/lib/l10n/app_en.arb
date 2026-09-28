@@ -1048,5 +1048,38 @@
         "type": "String"
       }
     }
+  },
+  "actionClose": "Close",
+  "@actionClose": {
+    "description": "Generic close button tooltip."
+  },
+  "summaryTitle": "Trip finished",
+  "@summaryTitle": {
+    "description": "Title of the summary shown right after finishing a trip."
+  },
+  "summaryRecords": "Personal bests",
+  "@summaryRecords": {
+    "description": "Section with the personal records set on this trip."
+  },
+  "summaryTopBait": "Best bait: {bait}",
+  "@summaryTopBait": {
+    "description": "The bait with the most catches on this trip.",
+    "placeholders": {
+      "bait": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryRecordLine": "{species}, {measure}",
+  "@summaryRecordLine": {
+    "description": "A record catch in the trip summary, e.g. 'Dourado, 72 cm'.",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "measure": {
+        "type": "String"
+      }
+    }
   }
 }

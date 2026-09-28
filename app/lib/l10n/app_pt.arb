@@ -226,5 +226,10 @@
   "cardPlaceUnknown": "Nenhum nome de local salvo nesta pescaria.",
   "cardShare": "Compartilhar",
   "cardShareFailed": "Não deu para gerar a imagem. Tente de novo.",
-  "cardPreviewLabel": "Prévia do card: {style}, {format}"
+  "cardPreviewLabel": "Prévia do card: {style}, {format}",
+  "actionClose": "Fechar",
+  "summaryTitle": "Pescaria finalizada",
+  "summaryRecords": "Recordes",
+  "summaryTopBait": "Isca que mais pegou: {bait}",
+  "summaryRecordLine": "{species}, {measure}"
 }

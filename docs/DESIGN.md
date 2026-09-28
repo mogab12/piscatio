@@ -135,3 +135,13 @@ um selo genérico.
   ação principal sempre no mesmo ponto em todo o fluxo de captura; no escuro, o bloco
   "pescaria em andamento" usa `#184450` para não sumir no fundo; com fonte grande,
   as medidas da captura descem para baixo do nome; cronômetros com `FittedBox`.
+- 1B (cards): renderizados em 1080×1920 e 1080×1080 e revisados por capturas de
+  tela com e sem foto. Ajustes feitos depois da revisão: na Carta, as legendas da
+  lua e do vento saíram de dentro da rosa (brigavam com a seta) e as isóbatas
+  ficaram mais suaves (menos oitavas, escala maior) com menos sondagens; o quadrado
+  da Carta passou a ter o cartucho na largura toda (os valores eram cortados); na
+  Régua da pescaria, entalhes menores e números por cima das linhas; a Etiqueta
+  ficou menor para mostrar mais da foto e o carimbo não cobre mais os campos.
+- 1B (resumo): fundo água funda, uma só ação ("Criar card"); a régua do tempo da
+  pescaria ativa reaparece inteira, com um entalhe por captura; recordes com filete
+  dourado.

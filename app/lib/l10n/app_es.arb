@@ -226,5 +226,10 @@
   "cardPlaceUnknown": "No hay nombre de lugar guardado en esta salida.",
   "cardShare": "Compartir",
   "cardShareFailed": "No se pudo crear la imagen. Inténtalo de nuevo.",
-  "cardPreviewLabel": "Vista previa de la tarjeta: {style}, {format}"
+  "cardPreviewLabel": "Vista previa de la tarjeta: {style}, {format}",
+  "actionClose": "Cerrar",
+  "summaryTitle": "Salida terminada",
+  "summaryRecords": "Récords",
+  "summaryTopBait": "Carnada con más capturas: {bait}",
+  "summaryRecordLine": "{species}, {measure}"
 }

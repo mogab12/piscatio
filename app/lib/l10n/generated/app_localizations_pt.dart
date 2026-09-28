@@ -795,4 +795,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String cardPreviewLabel(String style, String format) {
     return 'Prévia do card: $style, $format';
   }
+
+  @override
+  String get actionClose => 'Fechar';
+
+  @override
+  String get summaryTitle => 'Pescaria finalizada';
+
+  @override
+  String get summaryRecords => 'Recordes';
+
+  @override
+  String summaryTopBait(String bait) {
+    return 'Isca que mais pegou: $bait';
+  }
+
+  @override
+  String summaryRecordLine(String species, String measure) {
+    return '$species, $measure';
+  }
 }
