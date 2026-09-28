@@ -69,6 +69,43 @@ class TackleRepository {
     return row.toModel();
   }
 
+  Future<void> renameBait(String id, String name) =>
+      (_db.update(_db.baits)..where((b) => b.id.equals(id))).write(
+        BaitsCompanion(
+          name: Value(_validName(name)),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value(SyncStatus.pending),
+        ),
+      );
+
+  /// Archived baits leave the pickers but keep their catches' history.
+  Future<void> setBaitArchived(String id, {required bool archived}) =>
+      (_db.update(_db.baits)..where((b) => b.id.equals(id))).write(
+        BaitsCompanion(
+          archived: Value(archived),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value(SyncStatus.pending),
+        ),
+      );
+
+  Future<void> renameGear(String id, String name) =>
+      (_db.update(_db.gearItems)..where((g) => g.id.equals(id))).write(
+        GearItemsCompanion(
+          name: Value(_validName(name)),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value(SyncStatus.pending),
+        ),
+      );
+
+  Future<void> setGearArchived(String id, {required bool archived}) =>
+      (_db.update(_db.gearItems)..where((g) => g.id.equals(id))).write(
+        GearItemsCompanion(
+          archived: Value(archived),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value(SyncStatus.pending),
+        ),
+      );
+
   static String _validName(String name) {
     final trimmed = name.trim();
     if (trimmed.isEmpty) throw ArgumentError('Name is empty');
