@@ -3,5 +3,210 @@
   "appTitle": "Piscatio",
   "@appTitle": {
     "description": "App name. Brand, do not translate."
+  },
+  "navFish": "Fishing",
+  "@navFish": {
+    "description": "Bottom tab with the start-trip button."
+  },
+  "navLogbook": "Logbook",
+  "@navLogbook": {
+    "description": "Bottom tab with past trips."
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Bottom tab with settings."
+  },
+  "unitGram": "g",
+  "@unitGram": {
+    "description": "Unit symbol: grams."
+  },
+  "unitKilogram": "kg",
+  "@unitKilogram": {
+    "description": "Unit symbol: kilograms."
+  },
+  "unitOunce": "oz",
+  "@unitOunce": {
+    "description": "Unit symbol: ounces."
+  },
+  "unitPound": "lb",
+  "@unitPound": {
+    "description": "Unit symbol: pounds."
+  },
+  "unitCentimeter": "cm",
+  "@unitCentimeter": {
+    "description": "Unit symbol: centimeters."
+  },
+  "unitInch": "in",
+  "@unitInch": {
+    "description": "Unit symbol: inches."
+  },
+  "unitMeter": "m",
+  "@unitMeter": {
+    "description": "Unit symbol: meters."
+  },
+  "unitFoot": "ft",
+  "@unitFoot": {
+    "description": "Unit symbol: feet."
+  },
+  "unitCelsius": "°C",
+  "@unitCelsius": {
+    "description": "Unit symbol: degrees Celsius."
+  },
+  "unitFahrenheit": "°F",
+  "@unitFahrenheit": {
+    "description": "Unit symbol: degrees Fahrenheit."
+  },
+  "unitHectopascal": "hPa",
+  "@unitHectopascal": {
+    "description": "Unit symbol: hectopascals."
+  },
+  "unitInchOfMercury": "inHg",
+  "@unitInchOfMercury": {
+    "description": "Unit symbol: inches of mercury."
+  },
+  "unitKilometerPerHour": "km/h",
+  "@unitKilometerPerHour": {
+    "description": "Unit symbol: kilometers per hour."
+  },
+  "unitMilePerHour": "mph",
+  "@unitMilePerHour": {
+    "description": "Unit symbol: miles per hour."
+  },
+  "unitMillimeter": "mm",
+  "@unitMillimeter": {
+    "description": "Unit symbol: millimeters."
+  },
+  "durationHoursMinutes": "{hours} h {minutes} min",
+  "@durationHoursMinutes": {
+    "description": "A duration with hours and minutes.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "description": "A duration shorter than one hour.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "moonNew": "New moon",
+  "@moonNew": {
+    "description": "Moon phase."
+  },
+  "moonWaxingCrescent": "Waxing crescent",
+  "@moonWaxingCrescent": {
+    "description": "Moon phase."
+  },
+  "moonFirstQuarter": "First quarter",
+  "@moonFirstQuarter": {
+    "description": "Moon phase."
+  },
+  "moonWaxingGibbous": "Waxing gibbous",
+  "@moonWaxingGibbous": {
+    "description": "Moon phase."
+  },
+  "moonFull": "Full moon",
+  "@moonFull": {
+    "description": "Moon phase."
+  },
+  "moonWaningGibbous": "Waning gibbous",
+  "@moonWaningGibbous": {
+    "description": "Moon phase."
+  },
+  "moonLastQuarter": "Last quarter",
+  "@moonLastQuarter": {
+    "description": "Moon phase."
+  },
+  "moonWaningCrescent": "Waning crescent",
+  "@moonWaningCrescent": {
+    "description": "Moon phase."
+  },
+  "privacyPrivate": "Only me",
+  "@privacyPrivate": {
+    "description": "Location privacy level: nobody else sees the place."
+  },
+  "privacyFriends": "Friends",
+  "@privacyFriends": {
+    "description": "Location privacy level: friends only (social features come later)."
+  },
+  "privacyApproximate": "Approximate area",
+  "@privacyApproximate": {
+    "description": "Location privacy level: shifted a few km."
+  },
+  "privacyExact": "Exact spot",
+  "@privacyExact": {
+    "description": "Location privacy level: the real place name."
+  },
+  "privacyPrivateDescription": "Cards never show where you fished.",
+  "@privacyPrivateDescription": {
+    "description": "Explains the private level."
+  },
+  "privacyFriendsDescription": "For now, works like “Only me”. Friends arrive in a future version.",
+  "@privacyFriendsDescription": {
+    "description": "Explains the friends level in the MVP."
+  },
+  "privacyApproximateDescription": "Cards show only the region, like the city. The spot is shifted a few kilometers.",
+  "@privacyApproximateDescription": {
+    "description": "Explains the approximate level."
+  },
+  "privacyExactDescription": "Cards show the name of the place. Coordinates are never shown.",
+  "@privacyExactDescription": {
+    "description": "Explains the exact level."
+  },
+  "unitsMetric": "Metric",
+  "@unitsMetric": {
+    "description": "Metric unit system."
+  },
+  "unitsImperial": "Imperial",
+  "@unitsImperial": {
+    "description": "Imperial unit system."
+  },
+  "unitsMetricExample": "kg, cm, m, °C",
+  "@unitsMetricExample": {
+    "description": "Examples of metric units."
+  },
+  "unitsImperialExample": "lb, in, ft, °F",
+  "@unitsImperialExample": {
+    "description": "Examples of imperial units."
+  },
+  "baitTypeNatural": "Natural bait",
+  "@baitTypeNatural": {
+    "description": "Bait type."
+  },
+  "baitTypeArtificial": "Lure",
+  "@baitTypeArtificial": {
+    "description": "Bait type."
+  },
+  "baitTypeFly": "Fly",
+  "@baitTypeFly": {
+    "description": "Bait type (fly fishing)."
+  },
+  "gearTypeCombo": "Rod and reel",
+  "@gearTypeCombo": {
+    "description": "Gear type."
+  },
+  "gearTypeRod": "Rod",
+  "@gearTypeRod": {
+    "description": "Gear type."
+  },
+  "gearTypeReel": "Reel",
+  "@gearTypeReel": {
+    "description": "Gear type."
+  },
+  "gearTypeLine": "Line",
+  "@gearTypeLine": {
+    "description": "Gear type."
+  },
+  "tackleTypeOther": "Other",
+  "@tackleTypeOther": {
+    "description": "Bait or gear type: other."
   }
 }

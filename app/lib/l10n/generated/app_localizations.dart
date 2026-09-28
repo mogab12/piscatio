@@ -105,6 +105,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Piscatio'**
   String get appTitle;
+
+  /// Bottom tab with the start-trip button.
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing'**
+  String get navFish;
+
+  /// Bottom tab with past trips.
+  ///
+  /// In en, this message translates to:
+  /// **'Logbook'**
+  String get navLogbook;
+
+  /// Bottom tab with settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// Unit symbol: grams.
+  ///
+  /// In en, this message translates to:
+  /// **'g'**
+  String get unitGram;
+
+  /// Unit symbol: kilograms.
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get unitKilogram;
+
+  /// Unit symbol: ounces.
+  ///
+  /// In en, this message translates to:
+  /// **'oz'**
+  String get unitOunce;
+
+  /// Unit symbol: pounds.
+  ///
+  /// In en, this message translates to:
+  /// **'lb'**
+  String get unitPound;
+
+  /// Unit symbol: centimeters.
+  ///
+  /// In en, this message translates to:
+  /// **'cm'**
+  String get unitCentimeter;
+
+  /// Unit symbol: inches.
+  ///
+  /// In en, this message translates to:
+  /// **'in'**
+  String get unitInch;
+
+  /// Unit symbol: meters.
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get unitMeter;
+
+  /// Unit symbol: feet.
+  ///
+  /// In en, this message translates to:
+  /// **'ft'**
+  String get unitFoot;
+
+  /// Unit symbol: degrees Celsius.
+  ///
+  /// In en, this message translates to:
+  /// **'°C'**
+  String get unitCelsius;
+
+  /// Unit symbol: degrees Fahrenheit.
+  ///
+  /// In en, this message translates to:
+  /// **'°F'**
+  String get unitFahrenheit;
+
+  /// Unit symbol: hectopascals.
+  ///
+  /// In en, this message translates to:
+  /// **'hPa'**
+  String get unitHectopascal;
+
+  /// Unit symbol: inches of mercury.
+  ///
+  /// In en, this message translates to:
+  /// **'inHg'**
+  String get unitInchOfMercury;
+
+  /// Unit symbol: kilometers per hour.
+  ///
+  /// In en, this message translates to:
+  /// **'km/h'**
+  String get unitKilometerPerHour;
+
+  /// Unit symbol: miles per hour.
+  ///
+  /// In en, this message translates to:
+  /// **'mph'**
+  String get unitMilePerHour;
+
+  /// Unit symbol: millimeters.
+  ///
+  /// In en, this message translates to:
+  /// **'mm'**
+  String get unitMillimeter;
+
+  /// A duration with hours and minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
+  String durationHoursMinutes(int hours, int minutes);
+
+  /// A duration shorter than one hour.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String durationMinutes(int minutes);
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'New moon'**
+  String get moonNew;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Waxing crescent'**
+  String get moonWaxingCrescent;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'First quarter'**
+  String get moonFirstQuarter;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Waxing gibbous'**
+  String get moonWaxingGibbous;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Full moon'**
+  String get moonFull;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Waning gibbous'**
+  String get moonWaningGibbous;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Last quarter'**
+  String get moonLastQuarter;
+
+  /// Moon phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Waning crescent'**
+  String get moonWaningCrescent;
+
+  /// Location privacy level: nobody else sees the place.
+  ///
+  /// In en, this message translates to:
+  /// **'Only me'**
+  String get privacyPrivate;
+
+  /// Location privacy level: friends only (social features come later).
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get privacyFriends;
+
+  /// Location privacy level: shifted a few km.
+  ///
+  /// In en, this message translates to:
+  /// **'Approximate area'**
+  String get privacyApproximate;
+
+  /// Location privacy level: the real place name.
+  ///
+  /// In en, this message translates to:
+  /// **'Exact spot'**
+  String get privacyExact;
+
+  /// Explains the private level.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards never show where you fished.'**
+  String get privacyPrivateDescription;
+
+  /// Explains the friends level in the MVP.
+  ///
+  /// In en, this message translates to:
+  /// **'For now, works like “Only me”. Friends arrive in a future version.'**
+  String get privacyFriendsDescription;
+
+  /// Explains the approximate level.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards show only the region, like the city. The spot is shifted a few kilometers.'**
+  String get privacyApproximateDescription;
+
+  /// Explains the exact level.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards show the name of the place. Coordinates are never shown.'**
+  String get privacyExactDescription;
+
+  /// Metric unit system.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric'**
+  String get unitsMetric;
+
+  /// Imperial unit system.
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial'**
+  String get unitsImperial;
+
+  /// Examples of metric units.
+  ///
+  /// In en, this message translates to:
+  /// **'kg, cm, m, °C'**
+  String get unitsMetricExample;
+
+  /// Examples of imperial units.
+  ///
+  /// In en, this message translates to:
+  /// **'lb, in, ft, °F'**
+  String get unitsImperialExample;
+
+  /// Bait type.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural bait'**
+  String get baitTypeNatural;
+
+  /// Bait type.
+  ///
+  /// In en, this message translates to:
+  /// **'Lure'**
+  String get baitTypeArtificial;
+
+  /// Bait type (fly fishing).
+  ///
+  /// In en, this message translates to:
+  /// **'Fly'**
+  String get baitTypeFly;
+
+  /// Gear type.
+  ///
+  /// In en, this message translates to:
+  /// **'Rod and reel'**
+  String get gearTypeCombo;
+
+  /// Gear type.
+  ///
+  /// In en, this message translates to:
+  /// **'Rod'**
+  String get gearTypeRod;
+
+  /// Gear type.
+  ///
+  /// In en, this message translates to:
+  /// **'Reel'**
+  String get gearTypeReel;
+
+  /// Gear type.
+  ///
+  /// In en, this message translates to:
+  /// **'Line'**
+  String get gearTypeLine;
+
+  /// Bait or gear type: other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get tackleTypeOther;
 }
 
 class _AppLocalizationsDelegate
