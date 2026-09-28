@@ -1635,6 +1635,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notes'**
   String get cardFieldNotes;
+
+  /// Bottom navigation tab: logbook statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get navStats;
+
+  /// Title of the statistics screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your numbers'**
+  String get statsTitle;
+
+  /// Statistics screen with no trips yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Your numbers show up after your first trip.'**
+  String get statsEmpty;
+
+  /// Label under the number of trips.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{trip} other{trips}}'**
+  String statsTripsLabel(int count);
+
+  /// Share of catches released, e.g. '65% released'.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent} released'**
+  String statsReleased(String percent);
+
+  /// Catches per hour fished, e.g. '0.8 per hour fished'.
+  ///
+  /// In en, this message translates to:
+  /// **'{rate} per hour fished'**
+  String statsPerHour(String rate);
+
+  /// Title of the chart of catches per hour of the day.
+  ///
+  /// In en, this message translates to:
+  /// **'Catches by time of day'**
+  String get statsByHourTitle;
+
+  /// Summary under the hour chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Most catches between {start} and {end}'**
+  String statsPeakHour(String start, String end);
+
+  /// Screen reader label of one bar of the hour chart.
+  ///
+  /// In en, this message translates to:
+  /// **'{time}: {count, plural, =1{1 catch} other{{count} catches}}'**
+  String statsHourBar(String time, int count);
+
+  /// Statistics section title.
+  ///
+  /// In en, this message translates to:
+  /// **'Most caught species'**
+  String get statsSpeciesTitle;
+
+  /// Statistics section title.
+  ///
+  /// In en, this message translates to:
+  /// **'Baits that catch the most'**
+  String get statsBaitsTitle;
+
+  /// Statistics section title.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal bests'**
+  String get statsRecordsTitle;
+
+  /// Statistics section title: the trip with the most catches.
+  ///
+  /// In en, this message translates to:
+  /// **'Best trip'**
+  String get statsBestTrip;
+
+  /// The best trip's date and catch count.
+  ///
+  /// In en, this message translates to:
+  /// **'{date}: {count, plural, =1{1 catch} other{{count} catches}}'**
+  String statsBestTripValue(String date, int count);
+
+  /// Number of catches next to a species or bait.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 catch} other{{count} catches}}'**
+  String statsCount(int count);
+
+  /// Title of the bait list screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Baits'**
+  String get tackleBaits;
+
+  /// Title of the gear list screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Gear'**
+  String get tackleGear;
+
+  /// Dialog title when editing a bait.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit bait'**
+  String get tackleEditBait;
+
+  /// Dialog title when editing gear.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit gear'**
+  String get tackleEditGear;
+
+  /// Action that archives a bait or gear.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get tackleArchive;
+
+  /// Action that brings an archived bait or gear back.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get tackleRestore;
+
+  /// Section with archived baits or gear.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get tackleArchived;
+
+  /// Explains what archiving does.
+  ///
+  /// In en, this message translates to:
+  /// **'They stay on older catches, but leave the pickers.'**
+  String get tackleArchivedNote;
+
+  /// Empty bait list.
+  ///
+  /// In en, this message translates to:
+  /// **'No baits yet. Add the ones you use most.'**
+  String get tackleEmptyBaits;
+
+  /// Empty gear list.
+  ///
+  /// In en, this message translates to:
+  /// **'No gear yet. Add your rods, reels and lines.'**
+  String get tackleEmptyGear;
+
+  /// Settings section.
+  ///
+  /// In en, this message translates to:
+  /// **'Baits and gear'**
+  String get settingsSectionTackle;
+
+  /// Settings row subtitle: how many active baits.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{None yet} =1{1 bait} other{{count} baits}}'**
+  String settingsBaitsCount(int count);
+
+  /// Settings row subtitle: how many active gear items.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{None yet} =1{1 item} other{{count} items}}'**
+  String settingsGearCount(int count);
+
+  /// Settings section.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get settingsSectionData;
+
+  /// Settings action that shares a JSON file with everything logged.
+  ///
+  /// In en, this message translates to:
+  /// **'Export data'**
+  String get settingsExport;
+
+  /// Subtitle of the export action.
+  ///
+  /// In en, this message translates to:
+  /// **'A JSON file with your trips, catches and baits. Photos stay on the phone.'**
+  String get settingsExportHint;
+
+  /// Error when exporting fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not export. Try again.'**
+  String get settingsExportFailed;
+
+  /// Settings action that deletes everything.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data'**
+  String get settingsWipe;
+
+  /// Subtitle of the delete-all action.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips, catches, photos and baits. This can\'t be undone.'**
+  String get settingsWipeHint;
+
+  /// Title of the delete-all confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data?'**
+  String get wipeTitle;
+
+  /// Body of the delete-all confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you logged leaves this phone: trips, catches, photos, baits and settings. Export first if you want to keep a copy.'**
+  String get wipeBody;
+
+  /// Confirm button of the delete-all dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything'**
+  String get wipeConfirm;
 }
 
 class _AppLocalizationsDelegate

@@ -1182,5 +1182,207 @@
   "cardFieldNotes": "Notes",
   "@cardFieldNotes": {
     "description": "Field label on the tag card for the user's caption."
+  },
+  "navStats": "Stats",
+  "@navStats": {
+    "description": "Bottom navigation tab: logbook statistics."
+  },
+  "statsTitle": "Your numbers",
+  "@statsTitle": {
+    "description": "Title of the statistics screen."
+  },
+  "statsEmpty": "Your numbers show up after your first trip.",
+  "@statsEmpty": {
+    "description": "Statistics screen with no trips yet."
+  },
+  "statsTripsLabel": "{count, plural, =1{trip} other{trips}}",
+  "@statsTripsLabel": {
+    "description": "Label under the number of trips.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsReleased": "{percent} released",
+  "@statsReleased": {
+    "description": "Share of catches released, e.g. '65% released'.",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "statsPerHour": "{rate} per hour fished",
+  "@statsPerHour": {
+    "description": "Catches per hour fished, e.g. '0.8 per hour fished'.",
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "statsByHourTitle": "Catches by time of day",
+  "@statsByHourTitle": {
+    "description": "Title of the chart of catches per hour of the day."
+  },
+  "statsPeakHour": "Most catches between {start} and {end}",
+  "@statsPeakHour": {
+    "description": "Summary under the hour chart.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "statsHourBar": "{time}: {count, plural, =1{1 catch} other{{count} catches}}",
+  "@statsHourBar": {
+    "description": "Screen reader label of one bar of the hour chart.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsSpeciesTitle": "Most caught species",
+  "@statsSpeciesTitle": {
+    "description": "Statistics section title."
+  },
+  "statsBaitsTitle": "Baits that catch the most",
+  "@statsBaitsTitle": {
+    "description": "Statistics section title."
+  },
+  "statsRecordsTitle": "Personal bests",
+  "@statsRecordsTitle": {
+    "description": "Statistics section title."
+  },
+  "statsBestTrip": "Best trip",
+  "@statsBestTrip": {
+    "description": "Statistics section title: the trip with the most catches."
+  },
+  "statsBestTripValue": "{date}: {count, plural, =1{1 catch} other{{count} catches}}",
+  "@statsBestTripValue": {
+    "description": "The best trip's date and catch count.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsCount": "{count, plural, =1{1 catch} other{{count} catches}}",
+  "@statsCount": {
+    "description": "Number of catches next to a species or bait.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tackleBaits": "Baits",
+  "@tackleBaits": {
+    "description": "Title of the bait list screen."
+  },
+  "tackleGear": "Gear",
+  "@tackleGear": {
+    "description": "Title of the gear list screen."
+  },
+  "tackleEditBait": "Edit bait",
+  "@tackleEditBait": {
+    "description": "Dialog title when editing a bait."
+  },
+  "tackleEditGear": "Edit gear",
+  "@tackleEditGear": {
+    "description": "Dialog title when editing gear."
+  },
+  "tackleArchive": "Archive",
+  "@tackleArchive": {
+    "description": "Action that archives a bait or gear."
+  },
+  "tackleRestore": "Restore",
+  "@tackleRestore": {
+    "description": "Action that brings an archived bait or gear back."
+  },
+  "tackleArchived": "Archived",
+  "@tackleArchived": {
+    "description": "Section with archived baits or gear."
+  },
+  "tackleArchivedNote": "They stay on older catches, but leave the pickers.",
+  "@tackleArchivedNote": {
+    "description": "Explains what archiving does."
+  },
+  "tackleEmptyBaits": "No baits yet. Add the ones you use most.",
+  "@tackleEmptyBaits": {
+    "description": "Empty bait list."
+  },
+  "tackleEmptyGear": "No gear yet. Add your rods, reels and lines.",
+  "@tackleEmptyGear": {
+    "description": "Empty gear list."
+  },
+  "settingsSectionTackle": "Baits and gear",
+  "@settingsSectionTackle": {
+    "description": "Settings section."
+  },
+  "settingsBaitsCount": "{count, plural, =0{None yet} =1{1 bait} other{{count} baits}}",
+  "@settingsBaitsCount": {
+    "description": "Settings row subtitle: how many active baits.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsGearCount": "{count, plural, =0{None yet} =1{1 item} other{{count} items}}",
+  "@settingsGearCount": {
+    "description": "Settings row subtitle: how many active gear items.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSectionData": "Your data",
+  "@settingsSectionData": {
+    "description": "Settings section."
+  },
+  "settingsExport": "Export data",
+  "@settingsExport": {
+    "description": "Settings action that shares a JSON file with everything logged."
+  },
+  "settingsExportHint": "A JSON file with your trips, catches and baits. Photos stay on the phone.",
+  "@settingsExportHint": {
+    "description": "Subtitle of the export action."
+  },
+  "settingsExportFailed": "Could not export. Try again.",
+  "@settingsExportFailed": {
+    "description": "Error when exporting fails."
+  },
+  "settingsWipe": "Delete all data",
+  "@settingsWipe": {
+    "description": "Settings action that deletes everything."
+  },
+  "settingsWipeHint": "Trips, catches, photos and baits. This can't be undone.",
+  "@settingsWipeHint": {
+    "description": "Subtitle of the delete-all action."
+  },
+  "wipeTitle": "Delete all data?",
+  "@wipeTitle": {
+    "description": "Title of the delete-all confirmation."
+  },
+  "wipeBody": "Everything you logged leaves this phone: trips, catches, photos, baits and settings. Export first if you want to keep a copy.",
+  "@wipeBody": {
+    "description": "Body of the delete-all confirmation."
+  },
+  "wipeConfirm": "Delete everything",
+  "@wipeConfirm": {
+    "description": "Confirm button of the delete-all dialog."
   }
 }

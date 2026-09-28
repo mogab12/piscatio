@@ -83,13 +83,16 @@ class LogbookStats {
   }
 
   /// The hour of day with the most catches; null without catches.
-  int? get peakHour {
+  int? get peakHour => peakOf(byHour);
+
+  /// Index of the largest bucket (the earliest on ties); null if all zero.
+  static int? peakOf(List<int> buckets) {
     var best = -1;
     var bestCount = 0;
-    for (var h = 0; h < byHour.length; h++) {
-      if (byHour[h] > bestCount) {
+    for (var h = 0; h < buckets.length; h++) {
+      if (buckets[h] > bestCount) {
         best = h;
-        bestCount = byHour[h];
+        bestCount = buckets[h];
       }
     }
     return best < 0 ? null : best;

@@ -11,6 +11,7 @@ import '../../domain/models/catch.dart';
 import '../../domain/models/enums.dart';
 import '../../domain/models/tackle.dart';
 import '../../domain/services/units.dart';
+import 'tackle_dialog.dart';
 
 /// Optional catch fields: weight, length, released/kept, bait, gear, depth
 /// and notes. Typed in the user's units, reported in SI.
@@ -285,9 +286,9 @@ class _CatchDetailsFormState extends ConsumerState<CatchDetailsForm> {
       ],
     );
     if (picked != newItem || !context.mounted) return picked;
-    final created = await showDialog<(String, BaitType)>(
+    final created = await showDialog<TackleEdit<BaitType>>(
       context: context,
-      builder: (context) => _NewTackleDialog<BaitType>(
+      builder: (context) => TackleDialog<BaitType>(
         title: l10n.tackleNewBait,
         types: BaitType.values,
         typeLabel: f.baitType,
@@ -297,7 +298,7 @@ class _CatchDetailsFormState extends ConsumerState<CatchDetailsForm> {
     if (created == null) return null;
     final bait = await ref
         .read(tackleRepositoryProvider)
-        .addBait(created.$1, created.$2);
+        .addBait(created.name, created.type);
     return bait.id;
   }
 
@@ -317,9 +318,9 @@ class _CatchDetailsFormState extends ConsumerState<CatchDetailsForm> {
       ],
     );
     if (picked != newItem || !context.mounted) return picked;
-    final created = await showDialog<(String, GearType)>(
+    final created = await showDialog<TackleEdit<GearType>>(
       context: context,
-      builder: (context) => _NewTackleDialog<GearType>(
+      builder: (context) => TackleDialog<GearType>(
         title: l10n.tackleNewGear,
         types: GearType.values,
         typeLabel: f.gearType,
@@ -329,7 +330,7 @@ class _CatchDetailsFormState extends ConsumerState<CatchDetailsForm> {
     if (created == null) return null;
     final item = await ref
         .read(tackleRepositoryProvider)
-        .addGear(created.$1, created.$2);
+        .addGear(created.name, created.type);
     return item.id;
   }
 }
@@ -405,82 +406,6 @@ class _PickerRow extends StatelessWidget {
       subtitle: Text(value ?? placeholder),
       trailing: const Icon(Icons.chevron_right_rounded),
       onTap: onTap,
-    );
-  }
-}
-
-class _NewTackleDialog<T> extends StatefulWidget {
-  const _NewTackleDialog({
-    required this.title,
-    required this.types,
-    required this.typeLabel,
-    required this.initialType,
-  });
-
-  final String title;
-  final List<T> types;
-  final String Function(T) typeLabel;
-  final T initialType;
-
-  @override
-  State<_NewTackleDialog<T>> createState() => _NewTackleDialogState<T>();
-}
-
-class _NewTackleDialogState<T> extends State<_NewTackleDialog<T>> {
-  final _name = TextEditingController();
-  late T _type = widget.initialType;
-
-  @override
-  void dispose() {
-    _name.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return AlertDialog(
-      title: Text(widget.title),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _name,
-              autofocus: true,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: l10n.tackleName),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final t in widget.types)
-                  ChoiceChip(
-                    label: Text(widget.typeLabel(t)),
-                    selected: _type == t,
-                    onSelected: (_) => setState(() => _type = t),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.actionCancel),
-        ),
-        FilledButton(
-          onPressed: _name.text.trim().isEmpty
-              ? null
-              : () => Navigator.of(context).pop((_name.text.trim(), _type)),
-          child: Text(l10n.actionSave),
-        ),
-      ],
     );
   }
 }

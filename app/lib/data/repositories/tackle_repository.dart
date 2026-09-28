@@ -69,10 +69,11 @@ class TackleRepository {
     return row.toModel();
   }
 
-  Future<void> renameBait(String id, String name) =>
+  Future<void> updateBait(String id, String name, BaitType type) =>
       (_db.update(_db.baits)..where((b) => b.id.equals(id))).write(
         BaitsCompanion(
           name: Value(_validName(name)),
+          type: Value(type),
           updatedAt: Value(_clock.now()),
           syncStatus: const Value(SyncStatus.pending),
         ),
@@ -88,10 +89,11 @@ class TackleRepository {
         ),
       );
 
-  Future<void> renameGear(String id, String name) =>
+  Future<void> updateGear(String id, String name, GearType type) =>
       (_db.update(_db.gearItems)..where((g) => g.id.equals(id))).write(
         GearItemsCompanion(
           name: Value(_validName(name)),
+          type: Value(type),
           updatedAt: Value(_clock.now()),
           syncStatus: const Value(SyncStatus.pending),
         ),

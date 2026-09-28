@@ -12,7 +12,9 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/quick_catch/presentation/quick_catch_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/settings/presentation/tackle_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
+import '../../features/stats/presentation/stats_screen.dart';
 import '../../features/summary/presentation/trip_summary_screen.dart';
 import '../providers.dart';
 import 'app_routes.dart';
@@ -70,8 +72,30 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: AppRoutes.stats,
+                builder: (context, state) => const StatsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: AppRoutes.settings,
                 builder: (context, state) => const SettingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'baits',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) =>
+                        const TackleScreen(kind: TackleKind.bait),
+                  ),
+                  GoRoute(
+                    path: 'gear',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) =>
+                        const TackleScreen(kind: TackleKind.gear),
+                  ),
+                ],
               ),
             ],
           ),

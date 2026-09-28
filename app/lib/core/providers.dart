@@ -158,3 +158,13 @@ final baitsProvider = StreamProvider<List<Bait>>(
 final gearProvider = StreamProvider<List<Gear>>(
   (ref) => ref.watch(tackleRepositoryProvider).watchGear(),
 );
+
+/// Including archived ones: past catches still name them.
+final allBaitsProvider = StreamProvider<List<Bait>>(
+  (ref) =>
+      ref.watch(tackleRepositoryProvider).watchBaits(includeArchived: true),
+);
+
+final allGearProvider = StreamProvider<List<Gear>>(
+  (ref) => ref.watch(tackleRepositoryProvider).watchGear(includeArchived: true),
+);

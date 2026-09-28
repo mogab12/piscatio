@@ -2,7 +2,10 @@ abstract final class AppRoutes {
   static const onboarding = '/onboarding';
   static const home = '/home';
   static const history = '/history';
+  static const stats = '/stats';
   static const settings = '/settings';
+  static const baits = '/settings/baits';
+  static const gear = '/settings/gear';
   static const activeTrip = '/trip/active';
 
   static String trip(String id) => '/trip/$id';

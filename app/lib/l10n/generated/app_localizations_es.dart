@@ -893,4 +893,177 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cardFieldNotes => 'Notas';
+
+  @override
+  String get navStats => 'Números';
+
+  @override
+  String get statsTitle => 'Tus números';
+
+  @override
+  String get statsEmpty => 'Tus números aparecen después de tu primera salida.';
+
+  @override
+  String statsTripsLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'salidas',
+      one: 'salida',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String statsReleased(String percent) {
+    return '$percent liberados';
+  }
+
+  @override
+  String statsPerHour(String rate) {
+    return '$rate por hora de pesca';
+  }
+
+  @override
+  String get statsByHourTitle => 'Capturas por hora del día';
+
+  @override
+  String statsPeakHour(String start, String end) {
+    return 'Más capturas entre $start y $end';
+  }
+
+  @override
+  String statsHourBar(String time, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count capturas',
+      one: '1 captura',
+    );
+    return '$time: $_temp0';
+  }
+
+  @override
+  String get statsSpeciesTitle => 'Especies más pescadas';
+
+  @override
+  String get statsBaitsTitle => 'Carnadas que más pescan';
+
+  @override
+  String get statsRecordsTitle => 'Récords personales';
+
+  @override
+  String get statsBestTrip => 'Mejor salida';
+
+  @override
+  String statsBestTripValue(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count capturas',
+      one: '1 captura',
+    );
+    return '$date: $_temp0';
+  }
+
+  @override
+  String statsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count capturas',
+      one: '1 captura',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tackleBaits => 'Carnadas';
+
+  @override
+  String get tackleGear => 'Equipos';
+
+  @override
+  String get tackleEditBait => 'Editar carnada';
+
+  @override
+  String get tackleEditGear => 'Editar equipo';
+
+  @override
+  String get tackleArchive => 'Archivar';
+
+  @override
+  String get tackleRestore => 'Restaurar';
+
+  @override
+  String get tackleArchived => 'Archivados';
+
+  @override
+  String get tackleArchivedNote =>
+      'Siguen en las capturas antiguas, pero salen de las listas.';
+
+  @override
+  String get tackleEmptyBaits =>
+      'Aún no hay carnadas. Agrega las que más usas.';
+
+  @override
+  String get tackleEmptyGear =>
+      'Aún no hay equipos. Agrega cañas, carretes y líneas.';
+
+  @override
+  String get settingsSectionTackle => 'Carnadas y equipos';
+
+  @override
+  String settingsBaitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count carnadas',
+      one: '1 carnada',
+      zero: 'Ninguna aún',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsGearCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count equipos',
+      one: '1 equipo',
+      zero: 'Ninguno aún',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsSectionData => 'Tus datos';
+
+  @override
+  String get settingsExport => 'Exportar datos';
+
+  @override
+  String get settingsExportHint =>
+      'Archivo JSON con salidas, capturas y carnadas. Las fotos quedan en el teléfono.';
+
+  @override
+  String get settingsExportFailed => 'No se pudo exportar. Inténtalo de nuevo.';
+
+  @override
+  String get settingsWipe => 'Borrar todos los datos';
+
+  @override
+  String get settingsWipeHint =>
+      'Salidas, capturas, fotos y carnadas. No se puede deshacer.';
+
+  @override
+  String get wipeTitle => '¿Borrar todos los datos?';
+
+  @override
+  String get wipeBody =>
+      'Todo lo que registraste sale de este teléfono: salidas, capturas, fotos, carnadas y ajustes. Exporta antes si quieres guardar una copia.';
+
+  @override
+  String get wipeConfirm => 'Borrar todo';
 }

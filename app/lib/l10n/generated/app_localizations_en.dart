@@ -886,4 +886,175 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cardFieldNotes => 'Notes';
+
+  @override
+  String get navStats => 'Stats';
+
+  @override
+  String get statsTitle => 'Your numbers';
+
+  @override
+  String get statsEmpty => 'Your numbers show up after your first trip.';
+
+  @override
+  String statsTripsLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'trips',
+      one: 'trip',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String statsReleased(String percent) {
+    return '$percent released';
+  }
+
+  @override
+  String statsPerHour(String rate) {
+    return '$rate per hour fished';
+  }
+
+  @override
+  String get statsByHourTitle => 'Catches by time of day';
+
+  @override
+  String statsPeakHour(String start, String end) {
+    return 'Most catches between $start and $end';
+  }
+
+  @override
+  String statsHourBar(String time, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count catches',
+      one: '1 catch',
+    );
+    return '$time: $_temp0';
+  }
+
+  @override
+  String get statsSpeciesTitle => 'Most caught species';
+
+  @override
+  String get statsBaitsTitle => 'Baits that catch the most';
+
+  @override
+  String get statsRecordsTitle => 'Personal bests';
+
+  @override
+  String get statsBestTrip => 'Best trip';
+
+  @override
+  String statsBestTripValue(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count catches',
+      one: '1 catch',
+    );
+    return '$date: $_temp0';
+  }
+
+  @override
+  String statsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count catches',
+      one: '1 catch',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tackleBaits => 'Baits';
+
+  @override
+  String get tackleGear => 'Gear';
+
+  @override
+  String get tackleEditBait => 'Edit bait';
+
+  @override
+  String get tackleEditGear => 'Edit gear';
+
+  @override
+  String get tackleArchive => 'Archive';
+
+  @override
+  String get tackleRestore => 'Restore';
+
+  @override
+  String get tackleArchived => 'Archived';
+
+  @override
+  String get tackleArchivedNote =>
+      'They stay on older catches, but leave the pickers.';
+
+  @override
+  String get tackleEmptyBaits => 'No baits yet. Add the ones you use most.';
+
+  @override
+  String get tackleEmptyGear => 'No gear yet. Add your rods, reels and lines.';
+
+  @override
+  String get settingsSectionTackle => 'Baits and gear';
+
+  @override
+  String settingsBaitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count baits',
+      one: '1 bait',
+      zero: 'None yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingsGearCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+      zero: 'None yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsSectionData => 'Your data';
+
+  @override
+  String get settingsExport => 'Export data';
+
+  @override
+  String get settingsExportHint =>
+      'A JSON file with your trips, catches and baits. Photos stay on the phone.';
+
+  @override
+  String get settingsExportFailed => 'Could not export. Try again.';
+
+  @override
+  String get settingsWipe => 'Delete all data';
+
+  @override
+  String get settingsWipeHint =>
+      'Trips, catches, photos and baits. This can\'t be undone.';
+
+  @override
+  String get wipeTitle => 'Delete all data?';
+
+  @override
+  String get wipeBody =>
+      'Everything you logged leaves this phone: trips, catches, photos, baits and settings. Export first if you want to keep a copy.';
+
+  @override
+  String get wipeConfirm => 'Delete everything';
 }

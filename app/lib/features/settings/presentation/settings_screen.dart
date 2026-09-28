@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/formatting/formatters_provider.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/locale.dart';
 import '../../../core/providers.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/choice_sheet.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../domain/models/enums.dart';
 import '../../../domain/services/units.dart';
+import '../application/data_controller.dart';
 import '../application/preferences.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -17,6 +20,45 @@ class SettingsScreen extends ConsumerWidget {
 
   /// Value used in the language sheet for "follow the device".
   static const _deviceLanguage = '';
+
+  Future<void> _export(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final failed = context.l10n.settingsExportFailed;
+    try {
+      await ref.read(dataControllerProvider).exportAndShare();
+    } on Exception {
+      messenger.showSnackBar(SnackBar(content: Text(failed)));
+    }
+  }
+
+  Future<void> _wipe(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.wipeTitle),
+        content: Text(l10n.wipeBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.actionCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.wipeConfirm),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    PaintingBinding.instance.imageCache.clear();
+    // Settings are gone too: the router sends the app back to onboarding.
+    await ref.read(dataControllerProvider).wipeAll();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -126,6 +168,48 @@ class SettingsScreen extends ConsumerWidget {
                 );
                 if (picked != null) await prefs.chooseDefaultPrivacy(picked);
               },
+            ),
+            SectionLabel(l10n.settingsSectionTackle),
+            ListTile(
+              leading: const Icon(Icons.set_meal_outlined),
+              title: Text(l10n.tackleBaits),
+              subtitle: Text(
+                l10n.settingsBaitsCount(
+                  (ref.watch(baitsProvider).value ?? const []).length,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.push(AppRoutes.baits),
+            ),
+            ListTile(
+              leading: const Icon(Icons.phishing_outlined),
+              title: Text(l10n.tackleGear),
+              subtitle: Text(
+                l10n.settingsGearCount(
+                  (ref.watch(gearProvider).value ?? const []).length,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.push(AppRoutes.gear),
+            ),
+            SectionLabel(l10n.settingsSectionData),
+            ListTile(
+              leading: const Icon(Icons.file_download_outlined),
+              title: Text(l10n.settingsExport),
+              subtitle: Text(l10n.settingsExportHint),
+              onTap: () => _export(context, ref),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.delete_forever_outlined,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              title: Text(
+                l10n.settingsWipe,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              subtitle: Text(l10n.settingsWipeHint),
+              onTap: () => _wipe(context, ref),
             ),
             SectionLabel(l10n.settingsSectionAbout),
             ListTile(
