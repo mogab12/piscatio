@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "appTitle": "Piscatio",
+  "@appTitle": {
+    "description": "App name. Brand, do not translate."
+  }
+}
