@@ -811,4 +811,79 @@ class AppLocalizationsEn extends AppLocalizations {
   String summaryRecordLine(String species, String measure) {
     return '$species, $measure';
   }
+
+  @override
+  String get bootStepDatabase => 'Opening your logbook…';
+
+  @override
+  String get bootStepCatalog => 'Loading the species…';
+
+  @override
+  String get bootSlow => 'This is taking longer than usual.';
+
+  @override
+  String get bootFailedTitle => 'The app could not open';
+
+  @override
+  String get bootFailedBody =>
+      'Take a screenshot of this screen and send it to us. Your data stays on the phone.';
+
+  @override
+  String get bootRetry => 'Try again';
+
+  @override
+  String get bootCopyDetails => 'Copy details';
+
+  @override
+  String get brandTagline => 'Fishing log';
+
+  @override
+  String get cardSectionStyle => 'Style';
+
+  @override
+  String get cardSectionColor => 'Color';
+
+  @override
+  String get cardSectionPhoto => 'Photo';
+
+  @override
+  String get cardSectionDetails => 'Details';
+
+  @override
+  String get cardSectionCaption => 'Caption';
+
+  @override
+  String get cardColorRed => 'Red';
+
+  @override
+  String get cardColorOrange => 'Orange';
+
+  @override
+  String get cardColorChartreuse => 'Chartreuse';
+
+  @override
+  String get cardColorBlue => 'Blue';
+
+  @override
+  String get cardNoPhoto => 'No photo';
+
+  @override
+  String get cardNoPhotos => 'No photos to use on the card.';
+
+  @override
+  String cardPhotoOption(String number) {
+    return 'Photo $number';
+  }
+
+  @override
+  String get cardShowWeather => 'Weather and moon';
+
+  @override
+  String get cardShowBait => 'Bait';
+
+  @override
+  String get cardCaptionHint => 'Write a caption (optional)';
+
+  @override
+  String get cardFieldNotes => 'Notes';
 }

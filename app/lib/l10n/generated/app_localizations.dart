@@ -1491,6 +1491,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{species}, {measure}'**
   String summaryRecordLine(String species, String measure);
+
+  /// Boot screen: the database is being opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening your logbook…'**
+  String get bootStepDatabase;
+
+  /// Boot screen: the species catalog is being loaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the species…'**
+  String get bootStepCatalog;
+
+  /// Boot screen: shown when startup takes too long.
+  ///
+  /// In en, this message translates to:
+  /// **'This is taking longer than usual.'**
+  String get bootSlow;
+
+  /// Boot screen title when startup fails.
+  ///
+  /// In en, this message translates to:
+  /// **'The app could not open'**
+  String get bootFailedTitle;
+
+  /// Boot screen text when startup fails, above the error details.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a screenshot of this screen and send it to us. Your data stays on the phone.'**
+  String get bootFailedBody;
+
+  /// Boot screen button to retry startup.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get bootRetry;
+
+  /// Boot screen button that copies the error details.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy details'**
+  String get bootCopyDetails;
+
+  /// Tagline under the app name on cards and in the brand lockup.
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing log'**
+  String get brandTagline;
+
+  /// Card editor tab: style and format.
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get cardSectionStyle;
+
+  /// Card editor tab: accent color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get cardSectionColor;
+
+  /// Card editor tab: which photo the card uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get cardSectionPhoto;
+
+  /// Card editor tab: which details the card shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get cardSectionDetails;
+
+  /// Card editor tab: an optional text written by the user.
+  ///
+  /// In en, this message translates to:
+  /// **'Caption'**
+  String get cardSectionCaption;
+
+  /// Card accent color option.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get cardColorRed;
+
+  /// Card accent color option.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get cardColorOrange;
+
+  /// Card accent color option: the yellow-green of fishing lures.
+  ///
+  /// In en, this message translates to:
+  /// **'Chartreuse'**
+  String get cardColorChartreuse;
+
+  /// Card accent color option.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get cardColorBlue;
+
+  /// Card editor option to make the card without a photo.
+  ///
+  /// In en, this message translates to:
+  /// **'No photo'**
+  String get cardNoPhoto;
+
+  /// Card editor photo tab when the trip or catch has no photos.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos to use on the card.'**
+  String get cardNoPhotos;
+
+  /// Screen reader label of a photo thumbnail in the card editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo {number}'**
+  String cardPhotoOption(String number);
+
+  /// Card editor switch: show weather and moon on the card.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather and moon'**
+  String get cardShowWeather;
+
+  /// Card editor switch: show the bait on the card.
+  ///
+  /// In en, this message translates to:
+  /// **'Bait'**
+  String get cardShowBait;
+
+  /// Hint of the caption field in the card editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a caption (optional)'**
+  String get cardCaptionHint;
+
+  /// Field label on the tag card for the user's caption.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get cardFieldNotes;
 }
 
 class _AppLocalizationsDelegate

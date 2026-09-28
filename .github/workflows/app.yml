@@ -80,7 +80,26 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Build APK (arm64, signed with debug key)
+      # One fixed test key for every CI build, so each new APK installs over
+      # the previous one (a fresh debug key per runner would block updates).
+      # The keystore file is the secret; its password below only unlocks it.
+      # The store (Play) key will be a different one.
+      - name: Test signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.PISCATIO_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/piscatio-test.jks"
+            echo "PISCATIO_KEYSTORE_PATH=$RUNNER_TEMP/piscatio-test.jks" >> "$GITHUB_ENV"
+          else
+            echo "::warning::PISCATIO_KEYSTORE_B64 is not set; the APK is signed with a throwaway debug key and will not install over earlier builds."
+          fi
+
+      - name: Build APK (arm64)
+        env:
+          PISCATIO_KEYSTORE_PASSWORD: piscatio-test
+          PISCATIO_KEY_ALIAS: piscatio-test
+          PISCATIO_KEY_PASSWORD: piscatio-test
         run: |
           flutter pub get
           flutter build apk --release --split-per-abi --target-platform android-arm64

@@ -1081,5 +1081,106 @@
         "type": "String"
       }
     }
+  },
+  "bootStepDatabase": "Opening your logbook…",
+  "@bootStepDatabase": {
+    "description": "Boot screen: the database is being opened."
+  },
+  "bootStepCatalog": "Loading the species…",
+  "@bootStepCatalog": {
+    "description": "Boot screen: the species catalog is being loaded."
+  },
+  "bootSlow": "This is taking longer than usual.",
+  "@bootSlow": {
+    "description": "Boot screen: shown when startup takes too long."
+  },
+  "bootFailedTitle": "The app could not open",
+  "@bootFailedTitle": {
+    "description": "Boot screen title when startup fails."
+  },
+  "bootFailedBody": "Take a screenshot of this screen and send it to us. Your data stays on the phone.",
+  "@bootFailedBody": {
+    "description": "Boot screen text when startup fails, above the error details."
+  },
+  "bootRetry": "Try again",
+  "@bootRetry": {
+    "description": "Boot screen button to retry startup."
+  },
+  "bootCopyDetails": "Copy details",
+  "@bootCopyDetails": {
+    "description": "Boot screen button that copies the error details."
+  },
+  "brandTagline": "Fishing log",
+  "@brandTagline": {
+    "description": "Tagline under the app name on cards and in the brand lockup."
+  },
+  "cardSectionStyle": "Style",
+  "@cardSectionStyle": {
+    "description": "Card editor tab: style and format."
+  },
+  "cardSectionColor": "Color",
+  "@cardSectionColor": {
+    "description": "Card editor tab: accent color."
+  },
+  "cardSectionPhoto": "Photo",
+  "@cardSectionPhoto": {
+    "description": "Card editor tab: which photo the card uses."
+  },
+  "cardSectionDetails": "Details",
+  "@cardSectionDetails": {
+    "description": "Card editor tab: which details the card shows."
+  },
+  "cardSectionCaption": "Caption",
+  "@cardSectionCaption": {
+    "description": "Card editor tab: an optional text written by the user."
+  },
+  "cardColorRed": "Red",
+  "@cardColorRed": {
+    "description": "Card accent color option."
+  },
+  "cardColorOrange": "Orange",
+  "@cardColorOrange": {
+    "description": "Card accent color option."
+  },
+  "cardColorChartreuse": "Chartreuse",
+  "@cardColorChartreuse": {
+    "description": "Card accent color option: the yellow-green of fishing lures."
+  },
+  "cardColorBlue": "Blue",
+  "@cardColorBlue": {
+    "description": "Card accent color option."
+  },
+  "cardNoPhoto": "No photo",
+  "@cardNoPhoto": {
+    "description": "Card editor option to make the card without a photo."
+  },
+  "cardNoPhotos": "No photos to use on the card.",
+  "@cardNoPhotos": {
+    "description": "Card editor photo tab when the trip or catch has no photos."
+  },
+  "cardPhotoOption": "Photo {number}",
+  "@cardPhotoOption": {
+    "description": "Screen reader label of a photo thumbnail in the card editor.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "cardShowWeather": "Weather and moon",
+  "@cardShowWeather": {
+    "description": "Card editor switch: show weather and moon on the card."
+  },
+  "cardShowBait": "Bait",
+  "@cardShowBait": {
+    "description": "Card editor switch: show the bait on the card."
+  },
+  "cardCaptionHint": "Write a caption (optional)",
+  "@cardCaptionHint": {
+    "description": "Hint of the caption field in the card editor."
+  },
+  "cardFieldNotes": "Notes",
+  "@cardFieldNotes": {
+    "description": "Field label on the tag card for the user's caption."
   }
 }

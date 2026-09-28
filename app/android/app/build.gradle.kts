@@ -29,11 +29,30 @@ android {
         versionName = flutter.versionName
     }
 
+    // Test builds from CI are signed with one fixed key (from repository
+    // secrets), so a new APK installs over the previous one. Without it
+    // (local builds, forks) the debug key is used. The store key will be a
+    // separate one.
+    val testKeystore = System.getenv("PISCATIO_KEYSTORE_PATH")
+    signingConfigs {
+        if (testKeystore != null) {
+            create("test") {
+                storeFile = file(testKeystore)
+                storePassword = System.getenv("PISCATIO_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("PISCATIO_KEY_ALIAS")
+                keyPassword = System.getenv("PISCATIO_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig =
+                if (testKeystore != null) {
+                    signingConfigs.getByName("test")
+                } else {
+                    signingConfigs.getByName("debug")
+                }
         }
     }
 }

@@ -1,16 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'app.dart';
-import 'core/clock.dart';
-import 'core/providers.dart';
-import 'data/db/app_database.dart';
-import 'data/repositories/settings_repository.dart';
-import 'data/seed/species_seeder.dart';
+import 'core/bootstrap.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
     yield LicenseEntryWithLineBreaks([
@@ -20,16 +14,8 @@ Future<void> main() async {
       'Courier Prime',
     ], await rootBundle.loadString('assets/fonts/OFL-CourierPrime.txt'));
   });
-  final db = AppDatabase.open();
-  await SpeciesSeeder(
-    db,
-    SettingsRepository(db),
-    const SystemClock(),
-  ).apply(await rootBundle.loadString('assets/seed/species.json'));
-  runApp(
-    ProviderScope(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
-      child: const PiscatioApp(),
-    ),
-  );
+  installReadableErrorWidget();
+  // Nothing is awaited before the first frame: the database opens behind
+  // the boot screen, which reports a slow step or an error on screen.
+  runApp(const BootstrapApp());
 }

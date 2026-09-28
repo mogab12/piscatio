@@ -814,4 +814,79 @@ class AppLocalizationsPt extends AppLocalizations {
   String summaryRecordLine(String species, String measure) {
     return '$species, $measure';
   }
+
+  @override
+  String get bootStepDatabase => 'Abrindo o diário…';
+
+  @override
+  String get bootStepCatalog => 'Carregando as espécies…';
+
+  @override
+  String get bootSlow => 'Está demorando mais que o normal.';
+
+  @override
+  String get bootFailedTitle => 'O app não conseguiu abrir';
+
+  @override
+  String get bootFailedBody =>
+      'Tire um print desta tela e mande para a gente. Seus dados continuam no celular.';
+
+  @override
+  String get bootRetry => 'Tentar de novo';
+
+  @override
+  String get bootCopyDetails => 'Copiar detalhes';
+
+  @override
+  String get brandTagline => 'Diário de pesca';
+
+  @override
+  String get cardSectionStyle => 'Estilo';
+
+  @override
+  String get cardSectionColor => 'Cor';
+
+  @override
+  String get cardSectionPhoto => 'Foto';
+
+  @override
+  String get cardSectionDetails => 'Detalhes';
+
+  @override
+  String get cardSectionCaption => 'Legenda';
+
+  @override
+  String get cardColorRed => 'Vermelho';
+
+  @override
+  String get cardColorOrange => 'Laranja';
+
+  @override
+  String get cardColorChartreuse => 'Limão';
+
+  @override
+  String get cardColorBlue => 'Azul';
+
+  @override
+  String get cardNoPhoto => 'Sem foto';
+
+  @override
+  String get cardNoPhotos => 'Sem fotos para usar no card.';
+
+  @override
+  String cardPhotoOption(String number) {
+    return 'Foto $number';
+  }
+
+  @override
+  String get cardShowWeather => 'Clima e lua';
+
+  @override
+  String get cardShowBait => 'Isca';
+
+  @override
+  String get cardCaptionHint => 'Escreva uma legenda (opcional)';
+
+  @override
+  String get cardFieldNotes => 'Observações';
 }
