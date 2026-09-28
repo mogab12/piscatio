@@ -693,6 +693,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Time ruler, no catches yet} =1{Time ruler with 1 catch marked} other{Time ruler with {count} catches marked}}'**
   String rulerSemantics(int count);
+
+  /// Title of the quick capture screen.
+  ///
+  /// In en, this message translates to:
+  /// **'New catch'**
+  String get quickCatchTitle;
+
+  /// Photo step title.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo first'**
+  String get quickCatchPhotoTitle;
+
+  /// Photo step hint about EXIF removal.
+  ///
+  /// In en, this message translates to:
+  /// **'Location data is removed from the photo before it is saved.'**
+  String get quickCatchPhotoHint;
+
+  /// Open the camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get quickCatchTakePhoto;
+
+  /// Pick a photo from the gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get quickCatchGallery;
+
+  /// Continue without a photo.
+  ///
+  /// In en, this message translates to:
+  /// **'No photo'**
+  String get quickCatchNoPhoto;
+
+  /// Species step title.
+  ///
+  /// In en, this message translates to:
+  /// **'Which fish?'**
+  String get quickCatchSpeciesTitle;
+
+  /// Change the chosen species.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get quickCatchChangeSpecies;
+
+  /// Expandable optional fields.
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get quickCatchMoreDetails;
+
+  /// What the optional area contains.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight, length, bait, gear, depth'**
+  String get quickCatchMoreDetailsHint;
+
+  /// Save the catch.
+  ///
+  /// In en, this message translates to:
+  /// **'Save catch'**
+  String get quickCatchSave;
+
+  /// Snackbar after saving a catch.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch saved'**
+  String get catchSaved;
+
+  /// Photo processing failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not use this photo. The catch was saved without it.'**
+  String get photoImportFailed;
+
+  /// Hint of the species search field.
+  ///
+  /// In en, this message translates to:
+  /// **'Search: traíra, tararira, bass…'**
+  String get speciesSearchHint;
+
+  /// Tooltip to clear the search.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get speciesSearchClear;
+
+  /// Heading: species the user catches most.
+  ///
+  /// In en, this message translates to:
+  /// **'Your most caught'**
+  String get speciesMostUsed;
+
+  /// Heading: full species list.
+  ///
+  /// In en, this message translates to:
+  /// **'All species'**
+  String get speciesAll;
+
+  /// Save without species.
+  ///
+  /// In en, this message translates to:
+  /// **'I don’t know the species'**
+  String get speciesUnknownAction;
+
+  /// Synonym that matched the search.
+  ///
+  /// In en, this message translates to:
+  /// **'Also: {name}'**
+  String speciesAlsoKnownAs(String name);
+
+  /// Empty search result.
+  ///
+  /// In en, this message translates to:
+  /// **'No species found with that name.'**
+  String get speciesNoResults;
+
+  /// Create a custom species.
+  ///
+  /// In en, this message translates to:
+  /// **'Add “{name}” as a species'**
+  String speciesAddCustom(String name);
+
+  /// Weight field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get catchWeight;
+
+  /// Ounces field label (imperial).
+  ///
+  /// In en, this message translates to:
+  /// **'Ounces'**
+  String get catchWeightOunces;
+
+  /// Fish length field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Length'**
+  String get catchLength;
+
+  /// Water depth field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Depth'**
+  String get catchDepth;
+
+  /// Question: was the fish released.
+  ///
+  /// In en, this message translates to:
+  /// **'Released?'**
+  String get catchReleasedQuestion;
+
+  /// The fish was released.
+  ///
+  /// In en, this message translates to:
+  /// **'Released'**
+  String get catchReleasedYes;
+
+  /// The fish was kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Kept'**
+  String get catchReleasedNo;
+
+  /// Bait field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Bait'**
+  String get catchBait;
+
+  /// Gear field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Gear'**
+  String get catchGear;
+
+  /// Placeholder for bait.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose bait'**
+  String get catchChooseBait;
+
+  /// Placeholder for gear.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose gear'**
+  String get catchChooseGear;
+
+  /// No bait/gear selected.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get catchNone;
+
+  /// Notes field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get catchNotes;
+
+  /// Create a bait.
+  ///
+  /// In en, this message translates to:
+  /// **'New bait'**
+  String get tackleNewBait;
+
+  /// Create a gear item.
+  ///
+  /// In en, this message translates to:
+  /// **'New gear'**
+  String get tackleNewGear;
+
+  /// Name field for bait/gear.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get tackleName;
+
+  /// Invalid number in a field.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a number, like 2.5'**
+  String get errorInvalidNumber;
 }
 
 class _AppLocalizationsDelegate

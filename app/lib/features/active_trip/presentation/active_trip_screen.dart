@@ -84,6 +84,28 @@ class _ActiveTripView extends ConsumerWidget {
     await controller.finishTrip(trip.id);
   }
 
+  /// Opens the capture flow; once saved, offers Undo for a few seconds.
+  Future<void> _capture(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final repository = ref.read(catchRepositoryProvider);
+    // A pending Undo would float over the capture screen's buttons.
+    messenger.hideCurrentSnackBar();
+    final savedId = await context.push<String>(AppRoutes.capture(trip.id));
+    if (savedId == null) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(l10n.catchSaved),
+          action: SnackBarAction(
+            label: l10n.actionUndo,
+            onPressed: () => repository.deleteCatch(savedId),
+          ),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -133,7 +155,7 @@ class _ActiveTripView extends ConsumerWidget {
         ),
         child: ActionSlab(
           label: l10n.addCatchAction,
-          onPressed: () => context.push(AppRoutes.capture(trip.id)),
+          onPressed: () => _capture(context, ref),
         ),
       ),
     );

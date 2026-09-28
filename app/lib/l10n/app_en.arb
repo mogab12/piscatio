@@ -459,5 +459,167 @@
         "type": "int"
       }
     }
+  },
+  "quickCatchTitle": "New catch",
+  "@quickCatchTitle": {
+    "description": "Title of the quick capture screen."
+  },
+  "quickCatchPhotoTitle": "Photo first",
+  "@quickCatchPhotoTitle": {
+    "description": "Photo step title."
+  },
+  "quickCatchPhotoHint": "Location data is removed from the photo before it is saved.",
+  "@quickCatchPhotoHint": {
+    "description": "Photo step hint about EXIF removal."
+  },
+  "quickCatchTakePhoto": "Take photo",
+  "@quickCatchTakePhoto": {
+    "description": "Open the camera."
+  },
+  "quickCatchGallery": "Gallery",
+  "@quickCatchGallery": {
+    "description": "Pick a photo from the gallery."
+  },
+  "quickCatchNoPhoto": "No photo",
+  "@quickCatchNoPhoto": {
+    "description": "Continue without a photo."
+  },
+  "quickCatchSpeciesTitle": "Which fish?",
+  "@quickCatchSpeciesTitle": {
+    "description": "Species step title."
+  },
+  "quickCatchChangeSpecies": "Change",
+  "@quickCatchChangeSpecies": {
+    "description": "Change the chosen species."
+  },
+  "quickCatchMoreDetails": "More details",
+  "@quickCatchMoreDetails": {
+    "description": "Expandable optional fields."
+  },
+  "quickCatchMoreDetailsHint": "Weight, length, bait, gear, depth",
+  "@quickCatchMoreDetailsHint": {
+    "description": "What the optional area contains."
+  },
+  "quickCatchSave": "Save catch",
+  "@quickCatchSave": {
+    "description": "Save the catch."
+  },
+  "catchSaved": "Catch saved",
+  "@catchSaved": {
+    "description": "Snackbar after saving a catch."
+  },
+  "photoImportFailed": "Could not use this photo. The catch was saved without it.",
+  "@photoImportFailed": {
+    "description": "Photo processing failed."
+  },
+  "speciesSearchHint": "Search: traíra, tararira, bass…",
+  "@speciesSearchHint": {
+    "description": "Hint of the species search field."
+  },
+  "speciesSearchClear": "Clear search",
+  "@speciesSearchClear": {
+    "description": "Tooltip to clear the search."
+  },
+  "speciesMostUsed": "Your most caught",
+  "@speciesMostUsed": {
+    "description": "Heading: species the user catches most."
+  },
+  "speciesAll": "All species",
+  "@speciesAll": {
+    "description": "Heading: full species list."
+  },
+  "speciesUnknownAction": "I don’t know the species",
+  "@speciesUnknownAction": {
+    "description": "Save without species."
+  },
+  "speciesAlsoKnownAs": "Also: {name}",
+  "@speciesAlsoKnownAs": {
+    "description": "Synonym that matched the search.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesNoResults": "No species found with that name.",
+  "@speciesNoResults": {
+    "description": "Empty search result."
+  },
+  "speciesAddCustom": "Add “{name}” as a species",
+  "@speciesAddCustom": {
+    "description": "Create a custom species.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "catchWeight": "Weight",
+  "@catchWeight": {
+    "description": "Weight field label."
+  },
+  "catchWeightOunces": "Ounces",
+  "@catchWeightOunces": {
+    "description": "Ounces field label (imperial)."
+  },
+  "catchLength": "Length",
+  "@catchLength": {
+    "description": "Fish length field label."
+  },
+  "catchDepth": "Depth",
+  "@catchDepth": {
+    "description": "Water depth field label."
+  },
+  "catchReleasedQuestion": "Released?",
+  "@catchReleasedQuestion": {
+    "description": "Question: was the fish released."
+  },
+  "catchReleasedYes": "Released",
+  "@catchReleasedYes": {
+    "description": "The fish was released."
+  },
+  "catchReleasedNo": "Kept",
+  "@catchReleasedNo": {
+    "description": "The fish was kept."
+  },
+  "catchBait": "Bait",
+  "@catchBait": {
+    "description": "Bait field label."
+  },
+  "catchGear": "Gear",
+  "@catchGear": {
+    "description": "Gear field label."
+  },
+  "catchChooseBait": "Choose bait",
+  "@catchChooseBait": {
+    "description": "Placeholder for bait."
+  },
+  "catchChooseGear": "Choose gear",
+  "@catchChooseGear": {
+    "description": "Placeholder for gear."
+  },
+  "catchNone": "None",
+  "@catchNone": {
+    "description": "No bait/gear selected."
+  },
+  "catchNotes": "Notes",
+  "@catchNotes": {
+    "description": "Notes field label."
+  },
+  "tackleNewBait": "New bait",
+  "@tackleNewBait": {
+    "description": "Create a bait."
+  },
+  "tackleNewGear": "New gear",
+  "@tackleNewGear": {
+    "description": "Create a gear item."
+  },
+  "tackleName": "Name",
+  "@tackleName": {
+    "description": "Name field for bait/gear."
+  },
+  "errorInvalidNumber": "Enter a number, like 2.5",
+  "@errorInvalidNumber": {
+    "description": "Invalid number in a field."
   }
 }

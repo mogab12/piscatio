@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:piscatio/core/location/location_service.dart';
+import 'package:piscatio/core/media/photo_source.dart';
+import 'package:piscatio/data/media/photo_importer.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 
 class FakeLocationService implements LocationService {
@@ -22,3 +26,25 @@ class FakeLocationService implements LocationService {
 }
 
 const pantanal = LocationFix(GeoPoint(-16.52, -56.41), 12);
+
+/// Returns a fixed file for camera and gallery (null = user cancelled).
+class FakePhotoSource implements PhotoSource {
+  FakePhotoSource([this.path = 'test/fixtures/exif_gps.jpg']);
+
+  String? path;
+  final picks = <PhotoOrigin>[];
+
+  @override
+  Future<String?> pick(PhotoOrigin origin) async {
+    picks.add(origin);
+    return path;
+  }
+}
+
+/// Stands in for the native re-encoder (a platform plugin): passes bytes
+/// through so the Dart metadata stripper still runs.
+class PassThroughImageProcessor implements ImageProcessor {
+  @override
+  Future<ProcessedImage?> process(String sourcePath) async =>
+      ProcessedImage(File(sourcePath).readAsBytesSync(), 64, 48);
+}

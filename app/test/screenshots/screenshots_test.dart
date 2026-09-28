@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:piscatio/core/media/photo_source.dart';
 import 'package:piscatio/core/providers.dart';
+import 'package:piscatio/data/media/photo_importer.dart';
 import 'package:piscatio/domain/models/catch.dart';
 import 'package:piscatio/domain/models/enums.dart';
 
+import '../helpers/fakes.dart';
 import '../helpers/pump_app.dart';
 import '../helpers/screenshots.dart';
 
@@ -119,6 +123,54 @@ void main() {
     await tester.tap(find.text('Voltar à pescaria'));
     await app.settle(tester);
     await saveScreenshot(tester, 'active_trip');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
+
+  testWidgets('quick catch', (tester) async {
+    usePhoneSurface(tester);
+    final app = await TestApp.start(
+      tester,
+      overrides: [
+        photoSourceProvider.overrideWithValue(FakePhotoSource()),
+        imageProcessorProvider.overrideWithValue(PassThroughImageProcessor()),
+      ],
+    );
+    await app.run(tester, () async {
+      await app.read(settingsRepositoryProvider).completeOnboarding();
+      final trip = await app
+          .read(tripRepositoryProvider)
+          .startTrip(timezone: 'UTC', privacy: PrivacyLevel.private);
+      final catches = app.read(catchRepositoryProvider);
+      for (final sp in [
+        'cichla-kelberi',
+        'cichla-kelberi',
+        'hoplias-malabaricus',
+        'salminus-brasiliensis',
+        'pseudoplatystoma-corruscans',
+      ]) {
+        await catches.addCatch(tripId: trip.id, speciesId: sp);
+      }
+    });
+    await app.pumpApp(tester);
+    await tester.tap(find.text('Voltar à pescaria'));
+    await app.settle(tester);
+    await tester.tap(find.text('+ Captura'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'capture_1_photo');
+    await tester.tap(find.text('Sem foto'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'capture_2_species');
+    await tester.enterText(find.byType(TextField), 'surubi');
+    await app.settle(tester);
+    await saveScreenshot(tester, 'capture_3_search');
+    await tester.tap(find.text('Pintado'));
+    await app.settle(tester);
+    await tester.tap(find.text('Mais detalhes'));
+    await app.settle(tester);
+    await tester.enterText(find.widgetWithText(TextField, 'Peso'), '8,4');
+    await tester.enterText(find.widgetWithText(TextField, 'Comprimento'), '92');
+    await app.settle(tester);
+    await saveScreenshot(tester, 'capture_4_confirm');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
 }

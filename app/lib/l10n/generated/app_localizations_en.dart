@@ -356,4 +356,124 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get quickCatchTitle => 'New catch';
+
+  @override
+  String get quickCatchPhotoTitle => 'Photo first';
+
+  @override
+  String get quickCatchPhotoHint =>
+      'Location data is removed from the photo before it is saved.';
+
+  @override
+  String get quickCatchTakePhoto => 'Take photo';
+
+  @override
+  String get quickCatchGallery => 'Gallery';
+
+  @override
+  String get quickCatchNoPhoto => 'No photo';
+
+  @override
+  String get quickCatchSpeciesTitle => 'Which fish?';
+
+  @override
+  String get quickCatchChangeSpecies => 'Change';
+
+  @override
+  String get quickCatchMoreDetails => 'More details';
+
+  @override
+  String get quickCatchMoreDetailsHint => 'Weight, length, bait, gear, depth';
+
+  @override
+  String get quickCatchSave => 'Save catch';
+
+  @override
+  String get catchSaved => 'Catch saved';
+
+  @override
+  String get photoImportFailed =>
+      'Could not use this photo. The catch was saved without it.';
+
+  @override
+  String get speciesSearchHint => 'Search: traíra, tararira, bass…';
+
+  @override
+  String get speciesSearchClear => 'Clear search';
+
+  @override
+  String get speciesMostUsed => 'Your most caught';
+
+  @override
+  String get speciesAll => 'All species';
+
+  @override
+  String get speciesUnknownAction => 'I don’t know the species';
+
+  @override
+  String speciesAlsoKnownAs(String name) {
+    return 'Also: $name';
+  }
+
+  @override
+  String get speciesNoResults => 'No species found with that name.';
+
+  @override
+  String speciesAddCustom(String name) {
+    return 'Add “$name” as a species';
+  }
+
+  @override
+  String get catchWeight => 'Weight';
+
+  @override
+  String get catchWeightOunces => 'Ounces';
+
+  @override
+  String get catchLength => 'Length';
+
+  @override
+  String get catchDepth => 'Depth';
+
+  @override
+  String get catchReleasedQuestion => 'Released?';
+
+  @override
+  String get catchReleasedYes => 'Released';
+
+  @override
+  String get catchReleasedNo => 'Kept';
+
+  @override
+  String get catchBait => 'Bait';
+
+  @override
+  String get catchGear => 'Gear';
+
+  @override
+  String get catchChooseBait => 'Choose bait';
+
+  @override
+  String get catchChooseGear => 'Choose gear';
+
+  @override
+  String get catchNone => 'None';
+
+  @override
+  String get catchNotes => 'Notes';
+
+  @override
+  String get tackleNewBait => 'New bait';
+
+  @override
+  String get tackleNewGear => 'New gear';
+
+  @override
+  String get tackleName => 'Name';
+
+  @override
+  String get errorInvalidNumber => 'Enter a number, like 2.5';
 }

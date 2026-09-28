@@ -97,8 +97,16 @@ class TestApp {
   Future<T> run<T>(WidgetTester tester, Future<T> Function() body) async =>
       (await tester.runAsync(body)) as T;
 
+  /// Tests run on a portrait phone surface (360×780 dp), like the users.
+  static void usePhone(WidgetTester tester) {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+  }
+
   /// Pumps the whole app (router, onboarding redirect…).
   Future<void> pumpApp(WidgetTester tester) async {
+    usePhone(tester);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -114,6 +122,7 @@ class TestApp {
     Widget screen, {
     Locale locale = const Locale('pt'),
   }) async {
+    usePhone(tester);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -138,9 +147,14 @@ class TestApp {
   }
 
   /// Lets database streams deliver and animations finish.
+  ///
+  /// Real I/O (files, database) completes on the real event loop, and each
+  /// step then continues in the fake zone, so alternate the two a few times.
   Future<void> settle(WidgetTester tester) async {
-    for (var i = 0; i < 5; i++) {
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+    for (var i = 0; i < 12; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 2)),
+      );
       await tester.pump(const Duration(milliseconds: 50));
     }
     await tester.pumpAndSettle();

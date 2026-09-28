@@ -358,4 +358,125 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get quickCatchTitle => 'Nueva captura';
+
+  @override
+  String get quickCatchPhotoTitle => 'Primero la foto';
+
+  @override
+  String get quickCatchPhotoHint =>
+      'Los datos de ubicación se quitan de la foto antes de guardarla.';
+
+  @override
+  String get quickCatchTakePhoto => 'Tomar foto';
+
+  @override
+  String get quickCatchGallery => 'Galería';
+
+  @override
+  String get quickCatchNoPhoto => 'Sin foto';
+
+  @override
+  String get quickCatchSpeciesTitle => '¿Qué pez es?';
+
+  @override
+  String get quickCatchChangeSpecies => 'Cambiar';
+
+  @override
+  String get quickCatchMoreDetails => 'Más detalles';
+
+  @override
+  String get quickCatchMoreDetailsHint =>
+      'Peso, largo, carnada, equipo, profundidad';
+
+  @override
+  String get quickCatchSave => 'Guardar captura';
+
+  @override
+  String get catchSaved => 'Captura guardada';
+
+  @override
+  String get photoImportFailed =>
+      'No se pudo usar esta foto. La captura se guardó sin ella.';
+
+  @override
+  String get speciesSearchHint => 'Buscar: tararira, traíra, bass…';
+
+  @override
+  String get speciesSearchClear => 'Borrar búsqueda';
+
+  @override
+  String get speciesMostUsed => 'Tus más pescadas';
+
+  @override
+  String get speciesAll => 'Todas las especies';
+
+  @override
+  String get speciesUnknownAction => 'No sé la especie';
+
+  @override
+  String speciesAlsoKnownAs(String name) {
+    return 'También: $name';
+  }
+
+  @override
+  String get speciesNoResults => 'Ninguna especie con ese nombre.';
+
+  @override
+  String speciesAddCustom(String name) {
+    return 'Agregar “$name” como especie';
+  }
+
+  @override
+  String get catchWeight => 'Peso';
+
+  @override
+  String get catchWeightOunces => 'Onzas';
+
+  @override
+  String get catchLength => 'Largo';
+
+  @override
+  String get catchDepth => 'Profundidad';
+
+  @override
+  String get catchReleasedQuestion => '¿Liberado?';
+
+  @override
+  String get catchReleasedYes => 'Lo liberé';
+
+  @override
+  String get catchReleasedNo => 'Me lo quedé';
+
+  @override
+  String get catchBait => 'Carnada';
+
+  @override
+  String get catchGear => 'Equipo';
+
+  @override
+  String get catchChooseBait => 'Elegir carnada';
+
+  @override
+  String get catchChooseGear => 'Elegir equipo';
+
+  @override
+  String get catchNone => 'Ninguno';
+
+  @override
+  String get catchNotes => 'Notas';
+
+  @override
+  String get tackleNewBait => 'Nueva carnada';
+
+  @override
+  String get tackleNewGear => 'Nuevo equipo';
+
+  @override
+  String get tackleName => 'Nombre';
+
+  @override
+  String get errorInvalidNumber => 'Escribe un número, como 2,5';
 }
