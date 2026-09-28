@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../domain/models/enums.dart';
 import '../../domain/services/moon.dart';
 import '../../domain/services/units.dart';
+import '../../domain/services/weather_summary.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// Turns SI values into localized text: numbers by `intl` in the active
@@ -54,6 +55,27 @@ class Formatters {
       quantity(lengthQuantity(millimeters, units));
 
   String depth(int millimeters) => quantity(depthQuantity(millimeters, units));
+
+  String temperature(double celsius) =>
+      quantity(temperatureQuantity(celsius, units));
+
+  String pressure(double hpa) => quantity(pressureQuantity(hpa, units));
+
+  String windSpeed(double kmh) => quantity(windSpeedQuantity(kmh, units));
+
+  String precipitation(double mm) => quantity(precipitationQuantity(mm, units));
+
+  /// Where the wind comes from: N, NE, E… in the active language.
+  String compass(double degrees) => switch (compassOctant(degrees)) {
+    0 => l10n.compassN,
+    1 => l10n.compassNE,
+    2 => l10n.compassE,
+    3 => l10n.compassSE,
+    4 => l10n.compassS,
+    5 => l10n.compassSW,
+    6 => l10n.compassW,
+    _ => l10n.compassNW,
+  };
 
   /// Clock time in the device's local zone, e.g. `06:42` or `6:42 AM`.
   String time(DateTime utc) => DateFormat.jm(_locale).format(utc.toLocal());

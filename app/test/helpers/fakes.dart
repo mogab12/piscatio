@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:piscatio/core/location/location_service.dart';
 import 'package:piscatio/core/media/photo_source.dart';
 import 'package:piscatio/data/media/photo_importer.dart';
+import 'package:piscatio/data/remote/place_name_service.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 
 class FakeLocationService implements LocationService {
@@ -47,4 +48,23 @@ class PassThroughImageProcessor implements ImageProcessor {
   @override
   Future<ProcessedImage?> process(String sourcePath) async =>
       ProcessedImage(File(sourcePath).readAsBytesSync(), 64, 48);
+}
+
+/// Geocoder stand-in: answers [region] and records what it was asked.
+class FakePlaceNameService implements PlaceNameService {
+  FakePlaceNameService({this.region = 'Cuiabá, MT'});
+
+  String? region;
+  Exception? error;
+  final asked = <GeoPoint>[];
+
+  @override
+  Future<String?> regionFor(
+    GeoPoint point, {
+    required String languageCode,
+  }) async {
+    asked.add(point);
+    if (error != null) throw error!;
+    return region;
+  }
 }

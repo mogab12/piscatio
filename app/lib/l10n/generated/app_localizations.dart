@@ -1095,6 +1095,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{hours} h'**
   String durationHours(int hours);
+
+  /// Weather not published yet (NASA POWER delay).
+  ///
+  /// In en, this message translates to:
+  /// **'This trip’s weather is ready 2 to 3 days later.'**
+  String get weatherPending;
+
+  /// Weather could not be obtained.
+  ///
+  /// In en, this message translates to:
+  /// **'No weather for this trip (no location or no data).'**
+  String get weatherUnavailable;
+
+  /// Weather label.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get weatherTemperature;
+
+  /// Weather label (no trend known).
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure'**
+  String get weatherPressure;
+
+  /// Pressure dropped over the 3 hours before the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure falling'**
+  String get weatherPressureFalling;
+
+  /// Pressure rose over the 3 hours before the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure rising'**
+  String get weatherPressureRising;
+
+  /// Pressure barely changed before the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure steady'**
+  String get weatherPressureSteady;
+
+  /// Weather label.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind'**
+  String get weatherWind;
+
+  /// Weather label: total rain during the trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get weatherRain;
+
+  /// Weather data credit.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather: NASA POWER'**
+  String get weatherSource;
+
+  /// Compass point: north.
+  ///
+  /// In en, this message translates to:
+  /// **'N'**
+  String get compassN;
+
+  /// Compass point: northeast.
+  ///
+  /// In en, this message translates to:
+  /// **'NE'**
+  String get compassNE;
+
+  /// Compass point: east.
+  ///
+  /// In en, this message translates to:
+  /// **'E'**
+  String get compassE;
+
+  /// Compass point: southeast.
+  ///
+  /// In en, this message translates to:
+  /// **'SE'**
+  String get compassSE;
+
+  /// Compass point: south.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get compassS;
+
+  /// Compass point: southwest.
+  ///
+  /// In en, this message translates to:
+  /// **'SW'**
+  String get compassSW;
+
+  /// Compass point: west.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get compassW;
+
+  /// Compass point: northwest.
+  ///
+  /// In en, this message translates to:
+  /// **'NW'**
+  String get compassNW;
+
+  /// Settings row crediting the weather source.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather data'**
+  String get settingsWeatherData;
+
+  /// Weather data attribution.
+  ///
+  /// In en, this message translates to:
+  /// **'NASA POWER Project, NASA Langley Research Center. CC BY 4.0.'**
+  String get settingsWeatherDataCredit;
 }
 
 class _AppLocalizationsDelegate

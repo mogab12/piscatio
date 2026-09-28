@@ -16,6 +16,7 @@ import '../../common/catch_tile.dart';
 import '../../common/confirm_delete.dart';
 import '../../common/species_label.dart';
 import '../../trip/application/trip_controller.dart';
+import '../../weather/presentation/weather_panel.dart';
 
 class TripDetailScreen extends ConsumerWidget {
   const TripDetailScreen({super.key, required this.tripId});
@@ -237,8 +238,12 @@ class _TripHeader extends ConsumerWidget {
                 icon: Icons.lock_outline_rounded,
                 text: f.privacyLevel(trip.privacyLevel),
               ),
+              if (trip.locationRegion != null)
+                _Fact(icon: Icons.place_outlined, text: trip.locationRegion!),
             ],
           ),
+          const SizedBox(height: 20),
+          WeatherPanel(tripId: trip.id),
         ],
       ),
     );

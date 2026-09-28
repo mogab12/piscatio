@@ -579,4 +579,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String durationHours(int hours) {
     return '$hours h';
   }
+
+  @override
+  String get weatherPending =>
+      'This trip’s weather is ready 2 to 3 days later.';
+
+  @override
+  String get weatherUnavailable =>
+      'No weather for this trip (no location or no data).';
+
+  @override
+  String get weatherTemperature => 'Temperature';
+
+  @override
+  String get weatherPressure => 'Pressure';
+
+  @override
+  String get weatherPressureFalling => 'Pressure falling';
+
+  @override
+  String get weatherPressureRising => 'Pressure rising';
+
+  @override
+  String get weatherPressureSteady => 'Pressure steady';
+
+  @override
+  String get weatherWind => 'Wind';
+
+  @override
+  String get weatherRain => 'Rain';
+
+  @override
+  String get weatherSource => 'Weather: NASA POWER';
+
+  @override
+  String get compassN => 'N';
+
+  @override
+  String get compassNE => 'NE';
+
+  @override
+  String get compassE => 'E';
+
+  @override
+  String get compassSE => 'SE';
+
+  @override
+  String get compassS => 'S';
+
+  @override
+  String get compassSW => 'SW';
+
+  @override
+  String get compassW => 'W';
+
+  @override
+  String get compassNW => 'NW';
+
+  @override
+  String get settingsWeatherData => 'Weather data';
+
+  @override
+  String get settingsWeatherDataCredit =>
+      'NASA POWER Project, NASA Langley Research Center. CC BY 4.0.';
 }

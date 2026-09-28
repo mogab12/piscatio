@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/background.dart';
 import '../../../core/device.dart';
 import '../../../core/location/location_service.dart';
 import '../../../core/providers.dart';
@@ -47,16 +48,37 @@ class TripController {
     await _ref
         .read(tripRepositoryProvider)
         .setLocation(tripId, fix.point, accuracyMeters: fix.accuracyMeters);
+    await _ref.read(backgroundWorkProvider).placeNameFor(tripId);
   }
 
-  Future<void> finishTrip(String tripId) =>
-      _ref.read(tripRepositoryProvider).finishTrip(tripId);
+  /// Ends the trip and queues its weather (published 2–3 days later).
+  Future<void> finishTrip(String tripId) async {
+    await _ref.read(tripRepositoryProvider).finishTrip(tripId);
+    await _ref.read(backgroundWorkProvider).weatherFor(tripId);
+  }
 
-  Future<void> deleteTrip(String tripId) =>
-      _ref.read(tripRepositoryProvider).deleteTrip(tripId);
+  Future<void> deleteTrip(String tripId) async {
+    await _ref.read(tripRepositoryProvider).deleteTrip(tripId);
+    await _ref.read(backgroundWorkProvider).cancelFor(tripId);
+  }
 
-  Future<void> updateTrip(Trip trip) =>
-      _ref.read(tripRepositoryProvider).updateTrip(trip);
+  /// Saves edits; new times or place mean new weather, and a place without
+  /// region gets one looked up.
+  Future<void> updateTrip(Trip trip) async {
+    final repo = _ref.read(tripRepositoryProvider);
+    final before = await repo.getTrip(trip.id);
+    await repo.updateTrip(trip);
+    final work = _ref.read(backgroundWorkProvider);
+    final changedWhenOrWhere =
+        before == null ||
+        before.startedAt != trip.startedAt ||
+        before.endedAt != trip.endedAt ||
+        before.location != trip.location;
+    if (!trip.isActive && changedWhenOrWhere) await work.weatherFor(trip.id);
+    if (trip.location != null && (trip.locationRegion ?? '').isEmpty) {
+      await work.placeNameFor(trip.id);
+    }
+  }
 
   Future<void> setPrivacy(Trip trip, PrivacyLevel level) =>
       updateTrip(trip.copyWith(privacyLevel: level));

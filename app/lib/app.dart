@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/background.dart';
 import 'core/locale.dart';
 import 'core/providers.dart';
 import 'core/router/app_router.dart';
@@ -19,6 +20,9 @@ class PiscatioApp extends ConsumerWidget {
       // First frame while the database opens: plain surface, no text.
       return const ColoredBox(color: Color(0xFF0B2A33));
     }
+    // Keeps the job queue running (weather, place names) while the app is
+    // alive.
+    ref.watch(jobSchedulerProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,

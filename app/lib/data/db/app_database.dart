@@ -3,7 +3,9 @@ import 'package:drift_flutter/drift_flutter.dart';
 
 import '../../domain/models/enums.dart';
 import '../../domain/models/species.dart';
+import '../../domain/models/weather.dart';
 import '../../domain/services/moon.dart';
+import 'app_database.steps.dart';
 import 'converters.dart';
 import 'tables.dart';
 
@@ -20,6 +22,7 @@ part 'app_database.g.dart';
     Catches,
     CatchPhotos,
     Settings,
+    Jobs,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -29,14 +32,25 @@ class AppDatabase extends _$AppDatabase {
   factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'piscatio'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();
       await _createIndexes();
+      await _createJobIndex();
     },
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        // v1 never wrote weather rows, so the reshaped table (job columns
+        // moved to `jobs`, POWER fields added) is simply recreated.
+        await m.deleteTable('weather_snapshots');
+        await m.createTable(schema.weatherSnapshots);
+        await m.createTable(schema.jobs);
+        await _createJobIndex();
+      },
+    ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
@@ -60,9 +74,13 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  Future<void> _createJobIndex() =>
+      customStatement('CREATE INDEX idx_jobs_due ON jobs (next_attempt_at)');
+
   /// Physically removes every user record ("delete all my data"). The
   /// species catalog is kept, custom species are removed.
   Future<void> wipeUserData() => transaction(() async {
+    await delete(jobs).go();
     await delete(catchPhotos).go();
     await delete(catches).go();
     await delete(weatherSnapshots).go();

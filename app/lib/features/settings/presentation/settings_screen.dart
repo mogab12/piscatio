@@ -129,6 +129,11 @@ class SettingsScreen extends ConsumerWidget {
             ),
             SectionLabel(l10n.settingsSectionAbout),
             ListTile(
+              leading: const Icon(Icons.cloud_outlined),
+              title: Text(l10n.settingsWeatherData),
+              subtitle: Text(l10n.settingsWeatherDataCredit),
+            ),
+            ListTile(
               leading: const Icon(Icons.description_outlined),
               title: Text(l10n.settingsLicenses),
               onTap: () => showLicensePage(

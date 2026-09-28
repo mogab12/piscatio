@@ -5,8 +5,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:piscatio/app.dart';
+import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/clock.dart';
 import 'package:piscatio/core/device.dart';
 import 'package:piscatio/core/ids.dart';
@@ -14,6 +16,7 @@ import 'package:piscatio/core/location/location_service.dart';
 import 'package:piscatio/core/providers.dart';
 import 'package:piscatio/core/theme/app_theme.dart';
 import 'package:piscatio/data/db/app_database.dart';
+import 'package:piscatio/data/jobs/job_scheduler.dart';
 import 'package:piscatio/data/media/photo_storage.dart';
 import 'package:piscatio/l10n/generated/app_localizations.dart';
 
@@ -33,10 +36,12 @@ class TestApp {
     this.container,
     this.location,
     this.photoRoot,
+    this.places,
   );
 
   final AppDatabase db;
   final FakeLocationService location;
+  final FakePlaceNameService places;
 
   /// Temporary folder standing in for the app documents directory.
   final Directory photoRoot;
@@ -68,9 +73,22 @@ class TestApp {
     final clock = FixedClock(DateTime.utc(2026, 9, 12, 9));
     final ids = SequentialIdGenerator();
     location ??= FakeLocationService(fix: pantanal);
+    final places = FakePlaceNameService();
     final photoRoot = Directory.systemTemp.createTempSync('piscatio_photos');
     final container = ProviderContainer(
       overrides: [
+        // No real network in tests: weather requests fail as "offline".
+        httpClientProvider.overrideWithValue(
+          MockClient((_) async => http.Response('offline', 503)),
+        ),
+        placeNameServiceProvider.overrideWithValue(places),
+        // A scheduler that is never started: no timers or lifecycle hooks.
+        jobSchedulerProvider.overrideWith(
+          (ref) => JobScheduler(
+            ref.watch(jobRunnerProvider),
+            connectionRestored: const Stream.empty(),
+          ),
+        ),
         locationServiceProvider.overrideWithValue(location),
         deviceTimezoneProvider.overrideWith((ref) => 'America/Sao_Paulo'),
         nowTickerProvider.overrideWith((ref) => Stream.value(clock.now())),
@@ -83,7 +101,7 @@ class TestApp {
         ...overrides,
       ],
     );
-    return TestApp._(db, clock, ids, container, location, photoRoot);
+    return TestApp._(db, clock, ids, container, location, photoRoot, places);
   }
 
   T read<T>(ProviderListenable<T> provider) => container.read(provider);

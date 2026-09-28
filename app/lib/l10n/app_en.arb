@@ -763,5 +763,85 @@
         "type": "int"
       }
     }
+  },
+  "weatherPending": "This trip’s weather is ready 2 to 3 days later.",
+  "@weatherPending": {
+    "description": "Weather not published yet (NASA POWER delay)."
+  },
+  "weatherUnavailable": "No weather for this trip (no location or no data).",
+  "@weatherUnavailable": {
+    "description": "Weather could not be obtained."
+  },
+  "weatherTemperature": "Temperature",
+  "@weatherTemperature": {
+    "description": "Weather label."
+  },
+  "weatherPressure": "Pressure",
+  "@weatherPressure": {
+    "description": "Weather label (no trend known)."
+  },
+  "weatherPressureFalling": "Pressure falling",
+  "@weatherPressureFalling": {
+    "description": "Pressure dropped over the 3 hours before the trip."
+  },
+  "weatherPressureRising": "Pressure rising",
+  "@weatherPressureRising": {
+    "description": "Pressure rose over the 3 hours before the trip."
+  },
+  "weatherPressureSteady": "Pressure steady",
+  "@weatherPressureSteady": {
+    "description": "Pressure barely changed before the trip."
+  },
+  "weatherWind": "Wind",
+  "@weatherWind": {
+    "description": "Weather label."
+  },
+  "weatherRain": "Rain",
+  "@weatherRain": {
+    "description": "Weather label: total rain during the trip."
+  },
+  "weatherSource": "Weather: NASA POWER",
+  "@weatherSource": {
+    "description": "Weather data credit."
+  },
+  "compassN": "N",
+  "@compassN": {
+    "description": "Compass point: north."
+  },
+  "compassNE": "NE",
+  "@compassNE": {
+    "description": "Compass point: northeast."
+  },
+  "compassE": "E",
+  "@compassE": {
+    "description": "Compass point: east."
+  },
+  "compassSE": "SE",
+  "@compassSE": {
+    "description": "Compass point: southeast."
+  },
+  "compassS": "S",
+  "@compassS": {
+    "description": "Compass point: south."
+  },
+  "compassSW": "SW",
+  "@compassSW": {
+    "description": "Compass point: southwest."
+  },
+  "compassW": "W",
+  "@compassW": {
+    "description": "Compass point: west."
+  },
+  "compassNW": "NW",
+  "@compassNW": {
+    "description": "Compass point: northwest."
+  },
+  "settingsWeatherData": "Weather data",
+  "@settingsWeatherData": {
+    "description": "Settings row crediting the weather source."
+  },
+  "settingsWeatherDataCredit": "NASA POWER Project, NASA Langley Research Center. CC BY 4.0.",
+  "@settingsWeatherDataCredit": {
+    "description": "Weather data attribution."
   }
 }

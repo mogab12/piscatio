@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../domain/models/enums.dart';
+import '../../domain/models/weather.dart';
 import '../../domain/services/moon.dart';
 import 'converters.dart';
 
@@ -37,17 +38,12 @@ class Trips extends Table with SyncColumns {
   Set<Column<Object>> get primaryKey => {id};
 }
 
-enum WeatherStatus { pending, ok, unavailable }
-
-/// Weather for a trip, fetched by the job queue. Derived data: not synced.
+/// Weather for a trip, filled by the job queue. Derived data: not synced.
 @DataClassName('WeatherRow')
 class WeatherSnapshots extends Table {
   TextColumn get tripId =>
       text().references(Trips, #id, onDelete: KeyAction.cascade)();
   TextColumn get status => textEnum<WeatherStatus>()();
-  IntColumn get attempts => integer().withDefault(const Constant(0))();
-  DateTimeColumn get nextAttemptAt => dateTime().nullable()();
-  TextColumn get lastError => text().nullable()();
   TextColumn get source => text().nullable()();
   DateTimeColumn get fetchedAt => dateTime().nullable()();
   RealColumn get temperatureC => real().nullable()();
@@ -55,10 +51,8 @@ class WeatherSnapshots extends Table {
   RealColumn get pressureTrend3hHpa => real().nullable()();
   RealColumn get windSpeedKmh => real().nullable()();
   RealColumn get windDirectionDeg => real().nullable()();
-  RealColumn get windGustKmh => real().nullable()();
-  RealColumn get cloudCoverPct => real().nullable()();
   RealColumn get precipitationMm => real().nullable()();
-  IntColumn get weatherCode => integer().nullable()();
+  RealColumn get humidityPct => real().nullable()();
 
   /// Hourly series covering the trip, so each catch gets its own conditions.
   TextColumn get hourlyJson => text().nullable()();
@@ -66,6 +60,33 @@ class WeatherSnapshots extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {tripId};
+}
+
+/// Work that needs the network. Rows exist only while pending: a finished
+/// job is deleted. Retried on app start, resume and when the connection
+/// returns, honoring [nextAttemptAt].
+enum JobKind { weather, placeName }
+
+@DataClassName('JobRow')
+class Jobs extends Table {
+  TextColumn get id => text()();
+  TextColumn get kind => textEnum<JobKind>()();
+
+  /// What the job is about (a trip id for both current kinds).
+  TextColumn get subjectId => text()();
+  IntColumn get attempts => integer().withDefault(const Constant(0))();
+  DateTimeColumn get nextAttemptAt => dateTime()();
+  TextColumn get lastError => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+
+  @override
+  List<Set<Column<Object>>> get uniqueKeys => [
+    {kind, subjectId},
+  ];
 }
 
 @DataClassName('SpeciesRow')

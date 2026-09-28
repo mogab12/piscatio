@@ -190,6 +190,19 @@ class TripRepository {
     );
   }
 
+  /// Sets the region found by geocoding, unless the user already typed one.
+  Future<void> fillRegion(String id, String region) async {
+    await (_db.update(
+      _db.trips,
+    )..where((t) => t.id.equals(id) & t.locationRegion.isNull())).write(
+      TripsCompanion(
+        locationRegion: Value(region),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value(SyncStatus.pending),
+      ),
+    );
+  }
+
   /// Saves user edits. Recomputes the moon if the start time changed.
   Future<void> updateTrip(Trip trip) {
     if (trip.endedAt != null && !trip.endedAt!.isAfter(trip.startedAt)) {

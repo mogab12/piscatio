@@ -1079,41 +1079,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
         type: DriftSqlType.string,
         requiredDuringInsert: true,
       ).withConverter<WeatherStatus>($WeatherSnapshotsTable.$converterstatus);
-  static const VerificationMeta _attemptsMeta = const VerificationMeta(
-    'attempts',
-  );
-  @override
-  late final GeneratedColumn<int> attempts = GeneratedColumn<int>(
-    'attempts',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  static const VerificationMeta _nextAttemptAtMeta = const VerificationMeta(
-    'nextAttemptAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> nextAttemptAt =
-      GeneratedColumn<DateTime>(
-        'next_attempt_at',
-        aliasedName,
-        true,
-        type: DriftSqlType.dateTime,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _lastErrorMeta = const VerificationMeta(
-    'lastError',
-  );
-  @override
-  late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
-    'last_error',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _sourceMeta = const VerificationMeta('source');
   @override
   late final GeneratedColumn<String> source = GeneratedColumn<String>(
@@ -1189,28 +1154,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _windGustKmhMeta = const VerificationMeta(
-    'windGustKmh',
-  );
-  @override
-  late final GeneratedColumn<double> windGustKmh = GeneratedColumn<double>(
-    'wind_gust_kmh',
-    aliasedName,
-    true,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _cloudCoverPctMeta = const VerificationMeta(
-    'cloudCoverPct',
-  );
-  @override
-  late final GeneratedColumn<double> cloudCoverPct = GeneratedColumn<double>(
-    'cloud_cover_pct',
-    aliasedName,
-    true,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _precipitationMmMeta = const VerificationMeta(
     'precipitationMm',
   );
@@ -1222,15 +1165,15 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _weatherCodeMeta = const VerificationMeta(
-    'weatherCode',
+  static const VerificationMeta _humidityPctMeta = const VerificationMeta(
+    'humidityPct',
   );
   @override
-  late final GeneratedColumn<int> weatherCode = GeneratedColumn<int>(
-    'weather_code',
+  late final GeneratedColumn<double> humidityPct = GeneratedColumn<double>(
+    'humidity_pct',
     aliasedName,
     true,
-    type: DriftSqlType.int,
+    type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
   static const VerificationMeta _hourlyJsonMeta = const VerificationMeta(
@@ -1259,9 +1202,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
   List<GeneratedColumn> get $columns => [
     tripId,
     status,
-    attempts,
-    nextAttemptAt,
-    lastError,
     source,
     fetchedAt,
     temperatureC,
@@ -1269,10 +1209,8 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
     pressureTrend3hHpa,
     windSpeedKmh,
     windDirectionDeg,
-    windGustKmh,
-    cloudCoverPct,
     precipitationMm,
-    weatherCode,
+    humidityPct,
     hourlyJson,
     updatedAt,
   ];
@@ -1295,27 +1233,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
       );
     } else if (isInserting) {
       context.missing(_tripIdMeta);
-    }
-    if (data.containsKey('attempts')) {
-      context.handle(
-        _attemptsMeta,
-        attempts.isAcceptableOrUnknown(data['attempts']!, _attemptsMeta),
-      );
-    }
-    if (data.containsKey('next_attempt_at')) {
-      context.handle(
-        _nextAttemptAtMeta,
-        nextAttemptAt.isAcceptableOrUnknown(
-          data['next_attempt_at']!,
-          _nextAttemptAtMeta,
-        ),
-      );
-    }
-    if (data.containsKey('last_error')) {
-      context.handle(
-        _lastErrorMeta,
-        lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta),
-      );
     }
     if (data.containsKey('source')) {
       context.handle(
@@ -1374,24 +1291,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
         ),
       );
     }
-    if (data.containsKey('wind_gust_kmh')) {
-      context.handle(
-        _windGustKmhMeta,
-        windGustKmh.isAcceptableOrUnknown(
-          data['wind_gust_kmh']!,
-          _windGustKmhMeta,
-        ),
-      );
-    }
-    if (data.containsKey('cloud_cover_pct')) {
-      context.handle(
-        _cloudCoverPctMeta,
-        cloudCoverPct.isAcceptableOrUnknown(
-          data['cloud_cover_pct']!,
-          _cloudCoverPctMeta,
-        ),
-      );
-    }
     if (data.containsKey('precipitation_mm')) {
       context.handle(
         _precipitationMmMeta,
@@ -1401,12 +1300,12 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
         ),
       );
     }
-    if (data.containsKey('weather_code')) {
+    if (data.containsKey('humidity_pct')) {
       context.handle(
-        _weatherCodeMeta,
-        weatherCode.isAcceptableOrUnknown(
-          data['weather_code']!,
-          _weatherCodeMeta,
+        _humidityPctMeta,
+        humidityPct.isAcceptableOrUnknown(
+          data['humidity_pct']!,
+          _humidityPctMeta,
         ),
       );
     }
@@ -1443,18 +1342,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
           data['${effectivePrefix}status'],
         )!,
       ),
-      attempts: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}attempts'],
-      )!,
-      nextAttemptAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}next_attempt_at'],
-      ),
-      lastError: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}last_error'],
-      ),
       source: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}source'],
@@ -1483,21 +1370,13 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
         DriftSqlType.double,
         data['${effectivePrefix}wind_direction_deg'],
       ),
-      windGustKmh: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}wind_gust_kmh'],
-      ),
-      cloudCoverPct: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}cloud_cover_pct'],
-      ),
       precipitationMm: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}precipitation_mm'],
       ),
-      weatherCode: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}weather_code'],
+      humidityPct: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}humidity_pct'],
       ),
       hourlyJson: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -1522,9 +1401,6 @@ class $WeatherSnapshotsTable extends WeatherSnapshots
 class WeatherRow extends DataClass implements Insertable<WeatherRow> {
   final String tripId;
   final WeatherStatus status;
-  final int attempts;
-  final DateTime? nextAttemptAt;
-  final String? lastError;
   final String? source;
   final DateTime? fetchedAt;
   final double? temperatureC;
@@ -1532,10 +1408,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
   final double? pressureTrend3hHpa;
   final double? windSpeedKmh;
   final double? windDirectionDeg;
-  final double? windGustKmh;
-  final double? cloudCoverPct;
   final double? precipitationMm;
-  final int? weatherCode;
+  final double? humidityPct;
 
   /// Hourly series covering the trip, so each catch gets its own conditions.
   final String? hourlyJson;
@@ -1543,9 +1417,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
   const WeatherRow({
     required this.tripId,
     required this.status,
-    required this.attempts,
-    this.nextAttemptAt,
-    this.lastError,
     this.source,
     this.fetchedAt,
     this.temperatureC,
@@ -1553,10 +1424,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     this.pressureTrend3hHpa,
     this.windSpeedKmh,
     this.windDirectionDeg,
-    this.windGustKmh,
-    this.cloudCoverPct,
     this.precipitationMm,
-    this.weatherCode,
+    this.humidityPct,
     this.hourlyJson,
     required this.updatedAt,
   });
@@ -1568,13 +1437,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       map['status'] = Variable<String>(
         $WeatherSnapshotsTable.$converterstatus.toSql(status),
       );
-    }
-    map['attempts'] = Variable<int>(attempts);
-    if (!nullToAbsent || nextAttemptAt != null) {
-      map['next_attempt_at'] = Variable<DateTime>(nextAttemptAt);
-    }
-    if (!nullToAbsent || lastError != null) {
-      map['last_error'] = Variable<String>(lastError);
     }
     if (!nullToAbsent || source != null) {
       map['source'] = Variable<String>(source);
@@ -1597,17 +1459,11 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     if (!nullToAbsent || windDirectionDeg != null) {
       map['wind_direction_deg'] = Variable<double>(windDirectionDeg);
     }
-    if (!nullToAbsent || windGustKmh != null) {
-      map['wind_gust_kmh'] = Variable<double>(windGustKmh);
-    }
-    if (!nullToAbsent || cloudCoverPct != null) {
-      map['cloud_cover_pct'] = Variable<double>(cloudCoverPct);
-    }
     if (!nullToAbsent || precipitationMm != null) {
       map['precipitation_mm'] = Variable<double>(precipitationMm);
     }
-    if (!nullToAbsent || weatherCode != null) {
-      map['weather_code'] = Variable<int>(weatherCode);
+    if (!nullToAbsent || humidityPct != null) {
+      map['humidity_pct'] = Variable<double>(humidityPct);
     }
     if (!nullToAbsent || hourlyJson != null) {
       map['hourly_json'] = Variable<String>(hourlyJson);
@@ -1620,13 +1476,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     return WeatherSnapshotsCompanion(
       tripId: Value(tripId),
       status: Value(status),
-      attempts: Value(attempts),
-      nextAttemptAt: nextAttemptAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nextAttemptAt),
-      lastError: lastError == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastError),
       source: source == null && nullToAbsent
           ? const Value.absent()
           : Value(source),
@@ -1648,18 +1497,12 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       windDirectionDeg: windDirectionDeg == null && nullToAbsent
           ? const Value.absent()
           : Value(windDirectionDeg),
-      windGustKmh: windGustKmh == null && nullToAbsent
-          ? const Value.absent()
-          : Value(windGustKmh),
-      cloudCoverPct: cloudCoverPct == null && nullToAbsent
-          ? const Value.absent()
-          : Value(cloudCoverPct),
       precipitationMm: precipitationMm == null && nullToAbsent
           ? const Value.absent()
           : Value(precipitationMm),
-      weatherCode: weatherCode == null && nullToAbsent
+      humidityPct: humidityPct == null && nullToAbsent
           ? const Value.absent()
-          : Value(weatherCode),
+          : Value(humidityPct),
       hourlyJson: hourlyJson == null && nullToAbsent
           ? const Value.absent()
           : Value(hourlyJson),
@@ -1677,9 +1520,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       status: $WeatherSnapshotsTable.$converterstatus.fromJson(
         serializer.fromJson<String>(json['status']),
       ),
-      attempts: serializer.fromJson<int>(json['attempts']),
-      nextAttemptAt: serializer.fromJson<DateTime?>(json['nextAttemptAt']),
-      lastError: serializer.fromJson<String?>(json['lastError']),
       source: serializer.fromJson<String?>(json['source']),
       fetchedAt: serializer.fromJson<DateTime?>(json['fetchedAt']),
       temperatureC: serializer.fromJson<double?>(json['temperatureC']),
@@ -1689,10 +1529,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       ),
       windSpeedKmh: serializer.fromJson<double?>(json['windSpeedKmh']),
       windDirectionDeg: serializer.fromJson<double?>(json['windDirectionDeg']),
-      windGustKmh: serializer.fromJson<double?>(json['windGustKmh']),
-      cloudCoverPct: serializer.fromJson<double?>(json['cloudCoverPct']),
       precipitationMm: serializer.fromJson<double?>(json['precipitationMm']),
-      weatherCode: serializer.fromJson<int?>(json['weatherCode']),
+      humidityPct: serializer.fromJson<double?>(json['humidityPct']),
       hourlyJson: serializer.fromJson<String?>(json['hourlyJson']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1705,9 +1543,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       'status': serializer.toJson<String>(
         $WeatherSnapshotsTable.$converterstatus.toJson(status),
       ),
-      'attempts': serializer.toJson<int>(attempts),
-      'nextAttemptAt': serializer.toJson<DateTime?>(nextAttemptAt),
-      'lastError': serializer.toJson<String?>(lastError),
       'source': serializer.toJson<String?>(source),
       'fetchedAt': serializer.toJson<DateTime?>(fetchedAt),
       'temperatureC': serializer.toJson<double?>(temperatureC),
@@ -1715,10 +1550,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       'pressureTrend3hHpa': serializer.toJson<double?>(pressureTrend3hHpa),
       'windSpeedKmh': serializer.toJson<double?>(windSpeedKmh),
       'windDirectionDeg': serializer.toJson<double?>(windDirectionDeg),
-      'windGustKmh': serializer.toJson<double?>(windGustKmh),
-      'cloudCoverPct': serializer.toJson<double?>(cloudCoverPct),
       'precipitationMm': serializer.toJson<double?>(precipitationMm),
-      'weatherCode': serializer.toJson<int?>(weatherCode),
+      'humidityPct': serializer.toJson<double?>(humidityPct),
       'hourlyJson': serializer.toJson<String?>(hourlyJson),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1727,9 +1560,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
   WeatherRow copyWith({
     String? tripId,
     WeatherStatus? status,
-    int? attempts,
-    Value<DateTime?> nextAttemptAt = const Value.absent(),
-    Value<String?> lastError = const Value.absent(),
     Value<String?> source = const Value.absent(),
     Value<DateTime?> fetchedAt = const Value.absent(),
     Value<double?> temperatureC = const Value.absent(),
@@ -1737,20 +1567,13 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     Value<double?> pressureTrend3hHpa = const Value.absent(),
     Value<double?> windSpeedKmh = const Value.absent(),
     Value<double?> windDirectionDeg = const Value.absent(),
-    Value<double?> windGustKmh = const Value.absent(),
-    Value<double?> cloudCoverPct = const Value.absent(),
     Value<double?> precipitationMm = const Value.absent(),
-    Value<int?> weatherCode = const Value.absent(),
+    Value<double?> humidityPct = const Value.absent(),
     Value<String?> hourlyJson = const Value.absent(),
     DateTime? updatedAt,
   }) => WeatherRow(
     tripId: tripId ?? this.tripId,
     status: status ?? this.status,
-    attempts: attempts ?? this.attempts,
-    nextAttemptAt: nextAttemptAt.present
-        ? nextAttemptAt.value
-        : this.nextAttemptAt,
-    lastError: lastError.present ? lastError.value : this.lastError,
     source: source.present ? source.value : this.source,
     fetchedAt: fetchedAt.present ? fetchedAt.value : this.fetchedAt,
     temperatureC: temperatureC.present ? temperatureC.value : this.temperatureC,
@@ -1762,14 +1585,10 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     windDirectionDeg: windDirectionDeg.present
         ? windDirectionDeg.value
         : this.windDirectionDeg,
-    windGustKmh: windGustKmh.present ? windGustKmh.value : this.windGustKmh,
-    cloudCoverPct: cloudCoverPct.present
-        ? cloudCoverPct.value
-        : this.cloudCoverPct,
     precipitationMm: precipitationMm.present
         ? precipitationMm.value
         : this.precipitationMm,
-    weatherCode: weatherCode.present ? weatherCode.value : this.weatherCode,
+    humidityPct: humidityPct.present ? humidityPct.value : this.humidityPct,
     hourlyJson: hourlyJson.present ? hourlyJson.value : this.hourlyJson,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -1777,11 +1596,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     return WeatherRow(
       tripId: data.tripId.present ? data.tripId.value : this.tripId,
       status: data.status.present ? data.status.value : this.status,
-      attempts: data.attempts.present ? data.attempts.value : this.attempts,
-      nextAttemptAt: data.nextAttemptAt.present
-          ? data.nextAttemptAt.value
-          : this.nextAttemptAt,
-      lastError: data.lastError.present ? data.lastError.value : this.lastError,
       source: data.source.present ? data.source.value : this.source,
       fetchedAt: data.fetchedAt.present ? data.fetchedAt.value : this.fetchedAt,
       temperatureC: data.temperatureC.present
@@ -1799,18 +1613,12 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       windDirectionDeg: data.windDirectionDeg.present
           ? data.windDirectionDeg.value
           : this.windDirectionDeg,
-      windGustKmh: data.windGustKmh.present
-          ? data.windGustKmh.value
-          : this.windGustKmh,
-      cloudCoverPct: data.cloudCoverPct.present
-          ? data.cloudCoverPct.value
-          : this.cloudCoverPct,
       precipitationMm: data.precipitationMm.present
           ? data.precipitationMm.value
           : this.precipitationMm,
-      weatherCode: data.weatherCode.present
-          ? data.weatherCode.value
-          : this.weatherCode,
+      humidityPct: data.humidityPct.present
+          ? data.humidityPct.value
+          : this.humidityPct,
       hourlyJson: data.hourlyJson.present
           ? data.hourlyJson.value
           : this.hourlyJson,
@@ -1823,9 +1631,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     return (StringBuffer('WeatherRow(')
           ..write('tripId: $tripId, ')
           ..write('status: $status, ')
-          ..write('attempts: $attempts, ')
-          ..write('nextAttemptAt: $nextAttemptAt, ')
-          ..write('lastError: $lastError, ')
           ..write('source: $source, ')
           ..write('fetchedAt: $fetchedAt, ')
           ..write('temperatureC: $temperatureC, ')
@@ -1833,10 +1638,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
           ..write('pressureTrend3hHpa: $pressureTrend3hHpa, ')
           ..write('windSpeedKmh: $windSpeedKmh, ')
           ..write('windDirectionDeg: $windDirectionDeg, ')
-          ..write('windGustKmh: $windGustKmh, ')
-          ..write('cloudCoverPct: $cloudCoverPct, ')
           ..write('precipitationMm: $precipitationMm, ')
-          ..write('weatherCode: $weatherCode, ')
+          ..write('humidityPct: $humidityPct, ')
           ..write('hourlyJson: $hourlyJson, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1847,9 +1650,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
   int get hashCode => Object.hash(
     tripId,
     status,
-    attempts,
-    nextAttemptAt,
-    lastError,
     source,
     fetchedAt,
     temperatureC,
@@ -1857,10 +1657,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
     pressureTrend3hHpa,
     windSpeedKmh,
     windDirectionDeg,
-    windGustKmh,
-    cloudCoverPct,
     precipitationMm,
-    weatherCode,
+    humidityPct,
     hourlyJson,
     updatedAt,
   );
@@ -1870,9 +1668,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
       (other is WeatherRow &&
           other.tripId == this.tripId &&
           other.status == this.status &&
-          other.attempts == this.attempts &&
-          other.nextAttemptAt == this.nextAttemptAt &&
-          other.lastError == this.lastError &&
           other.source == this.source &&
           other.fetchedAt == this.fetchedAt &&
           other.temperatureC == this.temperatureC &&
@@ -1880,10 +1675,8 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
           other.pressureTrend3hHpa == this.pressureTrend3hHpa &&
           other.windSpeedKmh == this.windSpeedKmh &&
           other.windDirectionDeg == this.windDirectionDeg &&
-          other.windGustKmh == this.windGustKmh &&
-          other.cloudCoverPct == this.cloudCoverPct &&
           other.precipitationMm == this.precipitationMm &&
-          other.weatherCode == this.weatherCode &&
+          other.humidityPct == this.humidityPct &&
           other.hourlyJson == this.hourlyJson &&
           other.updatedAt == this.updatedAt);
 }
@@ -1891,9 +1684,6 @@ class WeatherRow extends DataClass implements Insertable<WeatherRow> {
 class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
   final Value<String> tripId;
   final Value<WeatherStatus> status;
-  final Value<int> attempts;
-  final Value<DateTime?> nextAttemptAt;
-  final Value<String?> lastError;
   final Value<String?> source;
   final Value<DateTime?> fetchedAt;
   final Value<double?> temperatureC;
@@ -1901,19 +1691,14 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
   final Value<double?> pressureTrend3hHpa;
   final Value<double?> windSpeedKmh;
   final Value<double?> windDirectionDeg;
-  final Value<double?> windGustKmh;
-  final Value<double?> cloudCoverPct;
   final Value<double?> precipitationMm;
-  final Value<int?> weatherCode;
+  final Value<double?> humidityPct;
   final Value<String?> hourlyJson;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const WeatherSnapshotsCompanion({
     this.tripId = const Value.absent(),
     this.status = const Value.absent(),
-    this.attempts = const Value.absent(),
-    this.nextAttemptAt = const Value.absent(),
-    this.lastError = const Value.absent(),
     this.source = const Value.absent(),
     this.fetchedAt = const Value.absent(),
     this.temperatureC = const Value.absent(),
@@ -1921,10 +1706,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     this.pressureTrend3hHpa = const Value.absent(),
     this.windSpeedKmh = const Value.absent(),
     this.windDirectionDeg = const Value.absent(),
-    this.windGustKmh = const Value.absent(),
-    this.cloudCoverPct = const Value.absent(),
     this.precipitationMm = const Value.absent(),
-    this.weatherCode = const Value.absent(),
+    this.humidityPct = const Value.absent(),
     this.hourlyJson = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1932,9 +1715,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
   WeatherSnapshotsCompanion.insert({
     required String tripId,
     required WeatherStatus status,
-    this.attempts = const Value.absent(),
-    this.nextAttemptAt = const Value.absent(),
-    this.lastError = const Value.absent(),
     this.source = const Value.absent(),
     this.fetchedAt = const Value.absent(),
     this.temperatureC = const Value.absent(),
@@ -1942,10 +1722,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     this.pressureTrend3hHpa = const Value.absent(),
     this.windSpeedKmh = const Value.absent(),
     this.windDirectionDeg = const Value.absent(),
-    this.windGustKmh = const Value.absent(),
-    this.cloudCoverPct = const Value.absent(),
     this.precipitationMm = const Value.absent(),
-    this.weatherCode = const Value.absent(),
+    this.humidityPct = const Value.absent(),
     this.hourlyJson = const Value.absent(),
     required DateTime updatedAt,
     this.rowid = const Value.absent(),
@@ -1955,9 +1733,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
   static Insertable<WeatherRow> custom({
     Expression<String>? tripId,
     Expression<String>? status,
-    Expression<int>? attempts,
-    Expression<DateTime>? nextAttemptAt,
-    Expression<String>? lastError,
     Expression<String>? source,
     Expression<DateTime>? fetchedAt,
     Expression<double>? temperatureC,
@@ -1965,10 +1740,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     Expression<double>? pressureTrend3hHpa,
     Expression<double>? windSpeedKmh,
     Expression<double>? windDirectionDeg,
-    Expression<double>? windGustKmh,
-    Expression<double>? cloudCoverPct,
     Expression<double>? precipitationMm,
-    Expression<int>? weatherCode,
+    Expression<double>? humidityPct,
     Expression<String>? hourlyJson,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -1976,9 +1749,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     return RawValuesInsertable({
       if (tripId != null) 'trip_id': tripId,
       if (status != null) 'status': status,
-      if (attempts != null) 'attempts': attempts,
-      if (nextAttemptAt != null) 'next_attempt_at': nextAttemptAt,
-      if (lastError != null) 'last_error': lastError,
       if (source != null) 'source': source,
       if (fetchedAt != null) 'fetched_at': fetchedAt,
       if (temperatureC != null) 'temperature_c': temperatureC,
@@ -1987,10 +1757,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
         'pressure_trend3h_hpa': pressureTrend3hHpa,
       if (windSpeedKmh != null) 'wind_speed_kmh': windSpeedKmh,
       if (windDirectionDeg != null) 'wind_direction_deg': windDirectionDeg,
-      if (windGustKmh != null) 'wind_gust_kmh': windGustKmh,
-      if (cloudCoverPct != null) 'cloud_cover_pct': cloudCoverPct,
       if (precipitationMm != null) 'precipitation_mm': precipitationMm,
-      if (weatherCode != null) 'weather_code': weatherCode,
+      if (humidityPct != null) 'humidity_pct': humidityPct,
       if (hourlyJson != null) 'hourly_json': hourlyJson,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -2000,9 +1768,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
   WeatherSnapshotsCompanion copyWith({
     Value<String>? tripId,
     Value<WeatherStatus>? status,
-    Value<int>? attempts,
-    Value<DateTime?>? nextAttemptAt,
-    Value<String?>? lastError,
     Value<String?>? source,
     Value<DateTime?>? fetchedAt,
     Value<double?>? temperatureC,
@@ -2010,10 +1775,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     Value<double?>? pressureTrend3hHpa,
     Value<double?>? windSpeedKmh,
     Value<double?>? windDirectionDeg,
-    Value<double?>? windGustKmh,
-    Value<double?>? cloudCoverPct,
     Value<double?>? precipitationMm,
-    Value<int?>? weatherCode,
+    Value<double?>? humidityPct,
     Value<String?>? hourlyJson,
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
@@ -2021,9 +1784,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     return WeatherSnapshotsCompanion(
       tripId: tripId ?? this.tripId,
       status: status ?? this.status,
-      attempts: attempts ?? this.attempts,
-      nextAttemptAt: nextAttemptAt ?? this.nextAttemptAt,
-      lastError: lastError ?? this.lastError,
       source: source ?? this.source,
       fetchedAt: fetchedAt ?? this.fetchedAt,
       temperatureC: temperatureC ?? this.temperatureC,
@@ -2031,10 +1791,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
       pressureTrend3hHpa: pressureTrend3hHpa ?? this.pressureTrend3hHpa,
       windSpeedKmh: windSpeedKmh ?? this.windSpeedKmh,
       windDirectionDeg: windDirectionDeg ?? this.windDirectionDeg,
-      windGustKmh: windGustKmh ?? this.windGustKmh,
-      cloudCoverPct: cloudCoverPct ?? this.cloudCoverPct,
       precipitationMm: precipitationMm ?? this.precipitationMm,
-      weatherCode: weatherCode ?? this.weatherCode,
+      humidityPct: humidityPct ?? this.humidityPct,
       hourlyJson: hourlyJson ?? this.hourlyJson,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -2051,15 +1809,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
       map['status'] = Variable<String>(
         $WeatherSnapshotsTable.$converterstatus.toSql(status.value),
       );
-    }
-    if (attempts.present) {
-      map['attempts'] = Variable<int>(attempts.value);
-    }
-    if (nextAttemptAt.present) {
-      map['next_attempt_at'] = Variable<DateTime>(nextAttemptAt.value);
-    }
-    if (lastError.present) {
-      map['last_error'] = Variable<String>(lastError.value);
     }
     if (source.present) {
       map['source'] = Variable<String>(source.value);
@@ -2082,17 +1831,11 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     if (windDirectionDeg.present) {
       map['wind_direction_deg'] = Variable<double>(windDirectionDeg.value);
     }
-    if (windGustKmh.present) {
-      map['wind_gust_kmh'] = Variable<double>(windGustKmh.value);
-    }
-    if (cloudCoverPct.present) {
-      map['cloud_cover_pct'] = Variable<double>(cloudCoverPct.value);
-    }
     if (precipitationMm.present) {
       map['precipitation_mm'] = Variable<double>(precipitationMm.value);
     }
-    if (weatherCode.present) {
-      map['weather_code'] = Variable<int>(weatherCode.value);
+    if (humidityPct.present) {
+      map['humidity_pct'] = Variable<double>(humidityPct.value);
     }
     if (hourlyJson.present) {
       map['hourly_json'] = Variable<String>(hourlyJson.value);
@@ -2111,9 +1854,6 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
     return (StringBuffer('WeatherSnapshotsCompanion(')
           ..write('tripId: $tripId, ')
           ..write('status: $status, ')
-          ..write('attempts: $attempts, ')
-          ..write('nextAttemptAt: $nextAttemptAt, ')
-          ..write('lastError: $lastError, ')
           ..write('source: $source, ')
           ..write('fetchedAt: $fetchedAt, ')
           ..write('temperatureC: $temperatureC, ')
@@ -2121,10 +1861,8 @@ class WeatherSnapshotsCompanion extends UpdateCompanion<WeatherRow> {
           ..write('pressureTrend3hHpa: $pressureTrend3hHpa, ')
           ..write('windSpeedKmh: $windSpeedKmh, ')
           ..write('windDirectionDeg: $windDirectionDeg, ')
-          ..write('windGustKmh: $windGustKmh, ')
-          ..write('cloudCoverPct: $cloudCoverPct, ')
           ..write('precipitationMm: $precipitationMm, ')
-          ..write('weatherCode: $weatherCode, ')
+          ..write('humidityPct: $humidityPct, ')
           ..write('hourlyJson: $hourlyJson, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -6143,6 +5881,529 @@ class SettingsCompanion extends UpdateCompanion<SettingRow> {
   }
 }
 
+class $JobsTable extends Jobs with TableInfo<$JobsTable, JobRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $JobsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<JobKind, String> kind =
+      GeneratedColumn<String>(
+        'kind',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<JobKind>($JobsTable.$converterkind);
+  static const VerificationMeta _subjectIdMeta = const VerificationMeta(
+    'subjectId',
+  );
+  @override
+  late final GeneratedColumn<String> subjectId = GeneratedColumn<String>(
+    'subject_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _attemptsMeta = const VerificationMeta(
+    'attempts',
+  );
+  @override
+  late final GeneratedColumn<int> attempts = GeneratedColumn<int>(
+    'attempts',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _nextAttemptAtMeta = const VerificationMeta(
+    'nextAttemptAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> nextAttemptAt =
+      GeneratedColumn<DateTime>(
+        'next_attempt_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _lastErrorMeta = const VerificationMeta(
+    'lastError',
+  );
+  @override
+  late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
+    'last_error',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    kind,
+    subjectId,
+    attempts,
+    nextAttemptAt,
+    lastError,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'jobs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<JobRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('subject_id')) {
+      context.handle(
+        _subjectIdMeta,
+        subjectId.isAcceptableOrUnknown(data['subject_id']!, _subjectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_subjectIdMeta);
+    }
+    if (data.containsKey('attempts')) {
+      context.handle(
+        _attemptsMeta,
+        attempts.isAcceptableOrUnknown(data['attempts']!, _attemptsMeta),
+      );
+    }
+    if (data.containsKey('next_attempt_at')) {
+      context.handle(
+        _nextAttemptAtMeta,
+        nextAttemptAt.isAcceptableOrUnknown(
+          data['next_attempt_at']!,
+          _nextAttemptAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_nextAttemptAtMeta);
+    }
+    if (data.containsKey('last_error')) {
+      context.handle(
+        _lastErrorMeta,
+        lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {kind, subjectId},
+  ];
+  @override
+  JobRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return JobRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      kind: $JobsTable.$converterkind.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}kind'],
+        )!,
+      ),
+      subjectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subject_id'],
+      )!,
+      attempts: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}attempts'],
+      )!,
+      nextAttemptAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}next_attempt_at'],
+      )!,
+      lastError: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_error'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $JobsTable createAlias(String alias) {
+    return $JobsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<JobKind, String, String> $converterkind =
+      const EnumNameConverter<JobKind>(JobKind.values);
+}
+
+class JobRow extends DataClass implements Insertable<JobRow> {
+  final String id;
+  final JobKind kind;
+
+  /// What the job is about (a trip id for both current kinds).
+  final String subjectId;
+  final int attempts;
+  final DateTime nextAttemptAt;
+  final String? lastError;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const JobRow({
+    required this.id,
+    required this.kind,
+    required this.subjectId,
+    required this.attempts,
+    required this.nextAttemptAt,
+    this.lastError,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    {
+      map['kind'] = Variable<String>($JobsTable.$converterkind.toSql(kind));
+    }
+    map['subject_id'] = Variable<String>(subjectId);
+    map['attempts'] = Variable<int>(attempts);
+    map['next_attempt_at'] = Variable<DateTime>(nextAttemptAt);
+    if (!nullToAbsent || lastError != null) {
+      map['last_error'] = Variable<String>(lastError);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  JobsCompanion toCompanion(bool nullToAbsent) {
+    return JobsCompanion(
+      id: Value(id),
+      kind: Value(kind),
+      subjectId: Value(subjectId),
+      attempts: Value(attempts),
+      nextAttemptAt: Value(nextAttemptAt),
+      lastError: lastError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastError),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory JobRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return JobRow(
+      id: serializer.fromJson<String>(json['id']),
+      kind: $JobsTable.$converterkind.fromJson(
+        serializer.fromJson<String>(json['kind']),
+      ),
+      subjectId: serializer.fromJson<String>(json['subjectId']),
+      attempts: serializer.fromJson<int>(json['attempts']),
+      nextAttemptAt: serializer.fromJson<DateTime>(json['nextAttemptAt']),
+      lastError: serializer.fromJson<String?>(json['lastError']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'kind': serializer.toJson<String>($JobsTable.$converterkind.toJson(kind)),
+      'subjectId': serializer.toJson<String>(subjectId),
+      'attempts': serializer.toJson<int>(attempts),
+      'nextAttemptAt': serializer.toJson<DateTime>(nextAttemptAt),
+      'lastError': serializer.toJson<String?>(lastError),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  JobRow copyWith({
+    String? id,
+    JobKind? kind,
+    String? subjectId,
+    int? attempts,
+    DateTime? nextAttemptAt,
+    Value<String?> lastError = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => JobRow(
+    id: id ?? this.id,
+    kind: kind ?? this.kind,
+    subjectId: subjectId ?? this.subjectId,
+    attempts: attempts ?? this.attempts,
+    nextAttemptAt: nextAttemptAt ?? this.nextAttemptAt,
+    lastError: lastError.present ? lastError.value : this.lastError,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  JobRow copyWithCompanion(JobsCompanion data) {
+    return JobRow(
+      id: data.id.present ? data.id.value : this.id,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      subjectId: data.subjectId.present ? data.subjectId.value : this.subjectId,
+      attempts: data.attempts.present ? data.attempts.value : this.attempts,
+      nextAttemptAt: data.nextAttemptAt.present
+          ? data.nextAttemptAt.value
+          : this.nextAttemptAt,
+      lastError: data.lastError.present ? data.lastError.value : this.lastError,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('JobRow(')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('subjectId: $subjectId, ')
+          ..write('attempts: $attempts, ')
+          ..write('nextAttemptAt: $nextAttemptAt, ')
+          ..write('lastError: $lastError, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    kind,
+    subjectId,
+    attempts,
+    nextAttemptAt,
+    lastError,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is JobRow &&
+          other.id == this.id &&
+          other.kind == this.kind &&
+          other.subjectId == this.subjectId &&
+          other.attempts == this.attempts &&
+          other.nextAttemptAt == this.nextAttemptAt &&
+          other.lastError == this.lastError &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class JobsCompanion extends UpdateCompanion<JobRow> {
+  final Value<String> id;
+  final Value<JobKind> kind;
+  final Value<String> subjectId;
+  final Value<int> attempts;
+  final Value<DateTime> nextAttemptAt;
+  final Value<String?> lastError;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const JobsCompanion({
+    this.id = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.subjectId = const Value.absent(),
+    this.attempts = const Value.absent(),
+    this.nextAttemptAt = const Value.absent(),
+    this.lastError = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  JobsCompanion.insert({
+    required String id,
+    required JobKind kind,
+    required String subjectId,
+    this.attempts = const Value.absent(),
+    required DateTime nextAttemptAt,
+    this.lastError = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       kind = Value(kind),
+       subjectId = Value(subjectId),
+       nextAttemptAt = Value(nextAttemptAt),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<JobRow> custom({
+    Expression<String>? id,
+    Expression<String>? kind,
+    Expression<String>? subjectId,
+    Expression<int>? attempts,
+    Expression<DateTime>? nextAttemptAt,
+    Expression<String>? lastError,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (kind != null) 'kind': kind,
+      if (subjectId != null) 'subject_id': subjectId,
+      if (attempts != null) 'attempts': attempts,
+      if (nextAttemptAt != null) 'next_attempt_at': nextAttemptAt,
+      if (lastError != null) 'last_error': lastError,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  JobsCompanion copyWith({
+    Value<String>? id,
+    Value<JobKind>? kind,
+    Value<String>? subjectId,
+    Value<int>? attempts,
+    Value<DateTime>? nextAttemptAt,
+    Value<String?>? lastError,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return JobsCompanion(
+      id: id ?? this.id,
+      kind: kind ?? this.kind,
+      subjectId: subjectId ?? this.subjectId,
+      attempts: attempts ?? this.attempts,
+      nextAttemptAt: nextAttemptAt ?? this.nextAttemptAt,
+      lastError: lastError ?? this.lastError,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(
+        $JobsTable.$converterkind.toSql(kind.value),
+      );
+    }
+    if (subjectId.present) {
+      map['subject_id'] = Variable<String>(subjectId.value);
+    }
+    if (attempts.present) {
+      map['attempts'] = Variable<int>(attempts.value);
+    }
+    if (nextAttemptAt.present) {
+      map['next_attempt_at'] = Variable<DateTime>(nextAttemptAt.value);
+    }
+    if (lastError.present) {
+      map['last_error'] = Variable<String>(lastError.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('JobsCompanion(')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('subjectId: $subjectId, ')
+          ..write('attempts: $attempts, ')
+          ..write('nextAttemptAt: $nextAttemptAt, ')
+          ..write('lastError: $lastError, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6157,6 +6418,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CatchesTable catches = $CatchesTable(this);
   late final $CatchPhotosTable catchPhotos = $CatchPhotosTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
+  late final $JobsTable jobs = $JobsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6171,6 +6433,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     catches,
     catchPhotos,
     settings,
+    jobs,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -6856,9 +7119,6 @@ typedef $$WeatherSnapshotsTableCreateCompanionBuilder =
     WeatherSnapshotsCompanion Function({
       required String tripId,
       required WeatherStatus status,
-      Value<int> attempts,
-      Value<DateTime?> nextAttemptAt,
-      Value<String?> lastError,
       Value<String?> source,
       Value<DateTime?> fetchedAt,
       Value<double?> temperatureC,
@@ -6866,10 +7126,8 @@ typedef $$WeatherSnapshotsTableCreateCompanionBuilder =
       Value<double?> pressureTrend3hHpa,
       Value<double?> windSpeedKmh,
       Value<double?> windDirectionDeg,
-      Value<double?> windGustKmh,
-      Value<double?> cloudCoverPct,
       Value<double?> precipitationMm,
-      Value<int?> weatherCode,
+      Value<double?> humidityPct,
       Value<String?> hourlyJson,
       required DateTime updatedAt,
       Value<int> rowid,
@@ -6878,9 +7136,6 @@ typedef $$WeatherSnapshotsTableUpdateCompanionBuilder =
     WeatherSnapshotsCompanion Function({
       Value<String> tripId,
       Value<WeatherStatus> status,
-      Value<int> attempts,
-      Value<DateTime?> nextAttemptAt,
-      Value<String?> lastError,
       Value<String?> source,
       Value<DateTime?> fetchedAt,
       Value<double?> temperatureC,
@@ -6888,10 +7143,8 @@ typedef $$WeatherSnapshotsTableUpdateCompanionBuilder =
       Value<double?> pressureTrend3hHpa,
       Value<double?> windSpeedKmh,
       Value<double?> windDirectionDeg,
-      Value<double?> windGustKmh,
-      Value<double?> cloudCoverPct,
       Value<double?> precipitationMm,
-      Value<int?> weatherCode,
+      Value<double?> humidityPct,
       Value<String?> hourlyJson,
       Value<DateTime> updatedAt,
       Value<int> rowid,
@@ -6938,21 +7191,6 @@ class $$WeatherSnapshotsTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<int> get attempts => $composableBuilder(
-    column: $table.attempts,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get nextAttemptAt => $composableBuilder(
-    column: $table.nextAttemptAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get lastError => $composableBuilder(
-    column: $table.lastError,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get source => $composableBuilder(
     column: $table.source,
     builder: (column) => ColumnFilters(column),
@@ -6988,23 +7226,13 @@ class $$WeatherSnapshotsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get windGustKmh => $composableBuilder(
-    column: $table.windGustKmh,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get cloudCoverPct => $composableBuilder(
-    column: $table.cloudCoverPct,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<double> get precipitationMm => $composableBuilder(
     column: $table.precipitationMm,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get weatherCode => $composableBuilder(
-    column: $table.weatherCode,
+  ColumnFilters<double> get humidityPct => $composableBuilder(
+    column: $table.humidityPct,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7056,21 +7284,6 @@ class $$WeatherSnapshotsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get attempts => $composableBuilder(
-    column: $table.attempts,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get nextAttemptAt => $composableBuilder(
-    column: $table.nextAttemptAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get lastError => $composableBuilder(
-    column: $table.lastError,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get source => $composableBuilder(
     column: $table.source,
     builder: (column) => ColumnOrderings(column),
@@ -7106,23 +7319,13 @@ class $$WeatherSnapshotsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get windGustKmh => $composableBuilder(
-    column: $table.windGustKmh,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<double> get cloudCoverPct => $composableBuilder(
-    column: $table.cloudCoverPct,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<double> get precipitationMm => $composableBuilder(
     column: $table.precipitationMm,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get weatherCode => $composableBuilder(
-    column: $table.weatherCode,
+  ColumnOrderings<double> get humidityPct => $composableBuilder(
+    column: $table.humidityPct,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -7172,17 +7375,6 @@ class $$WeatherSnapshotsTableAnnotationComposer
   GeneratedColumnWithTypeConverter<WeatherStatus, String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
-  GeneratedColumn<int> get attempts =>
-      $composableBuilder(column: $table.attempts, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get nextAttemptAt => $composableBuilder(
-    column: $table.nextAttemptAt,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get lastError =>
-      $composableBuilder(column: $table.lastError, builder: (column) => column);
-
   GeneratedColumn<String> get source =>
       $composableBuilder(column: $table.source, builder: (column) => column);
 
@@ -7214,23 +7406,13 @@ class $$WeatherSnapshotsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<double> get windGustKmh => $composableBuilder(
-    column: $table.windGustKmh,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<double> get cloudCoverPct => $composableBuilder(
-    column: $table.cloudCoverPct,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<double> get precipitationMm => $composableBuilder(
     column: $table.precipitationMm,
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get weatherCode => $composableBuilder(
-    column: $table.weatherCode,
+  GeneratedColumn<double> get humidityPct => $composableBuilder(
+    column: $table.humidityPct,
     builder: (column) => column,
   );
 
@@ -7298,9 +7480,6 @@ class $$WeatherSnapshotsTableTableManager
               ({
                 Value<String> tripId = const Value.absent(),
                 Value<WeatherStatus> status = const Value.absent(),
-                Value<int> attempts = const Value.absent(),
-                Value<DateTime?> nextAttemptAt = const Value.absent(),
-                Value<String?> lastError = const Value.absent(),
                 Value<String?> source = const Value.absent(),
                 Value<DateTime?> fetchedAt = const Value.absent(),
                 Value<double?> temperatureC = const Value.absent(),
@@ -7308,19 +7487,14 @@ class $$WeatherSnapshotsTableTableManager
                 Value<double?> pressureTrend3hHpa = const Value.absent(),
                 Value<double?> windSpeedKmh = const Value.absent(),
                 Value<double?> windDirectionDeg = const Value.absent(),
-                Value<double?> windGustKmh = const Value.absent(),
-                Value<double?> cloudCoverPct = const Value.absent(),
                 Value<double?> precipitationMm = const Value.absent(),
-                Value<int?> weatherCode = const Value.absent(),
+                Value<double?> humidityPct = const Value.absent(),
                 Value<String?> hourlyJson = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WeatherSnapshotsCompanion(
                 tripId: tripId,
                 status: status,
-                attempts: attempts,
-                nextAttemptAt: nextAttemptAt,
-                lastError: lastError,
                 source: source,
                 fetchedAt: fetchedAt,
                 temperatureC: temperatureC,
@@ -7328,10 +7502,8 @@ class $$WeatherSnapshotsTableTableManager
                 pressureTrend3hHpa: pressureTrend3hHpa,
                 windSpeedKmh: windSpeedKmh,
                 windDirectionDeg: windDirectionDeg,
-                windGustKmh: windGustKmh,
-                cloudCoverPct: cloudCoverPct,
                 precipitationMm: precipitationMm,
-                weatherCode: weatherCode,
+                humidityPct: humidityPct,
                 hourlyJson: hourlyJson,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -7340,9 +7512,6 @@ class $$WeatherSnapshotsTableTableManager
               ({
                 required String tripId,
                 required WeatherStatus status,
-                Value<int> attempts = const Value.absent(),
-                Value<DateTime?> nextAttemptAt = const Value.absent(),
-                Value<String?> lastError = const Value.absent(),
                 Value<String?> source = const Value.absent(),
                 Value<DateTime?> fetchedAt = const Value.absent(),
                 Value<double?> temperatureC = const Value.absent(),
@@ -7350,19 +7519,14 @@ class $$WeatherSnapshotsTableTableManager
                 Value<double?> pressureTrend3hHpa = const Value.absent(),
                 Value<double?> windSpeedKmh = const Value.absent(),
                 Value<double?> windDirectionDeg = const Value.absent(),
-                Value<double?> windGustKmh = const Value.absent(),
-                Value<double?> cloudCoverPct = const Value.absent(),
                 Value<double?> precipitationMm = const Value.absent(),
-                Value<int?> weatherCode = const Value.absent(),
+                Value<double?> humidityPct = const Value.absent(),
                 Value<String?> hourlyJson = const Value.absent(),
                 required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
               }) => WeatherSnapshotsCompanion.insert(
                 tripId: tripId,
                 status: status,
-                attempts: attempts,
-                nextAttemptAt: nextAttemptAt,
-                lastError: lastError,
                 source: source,
                 fetchedAt: fetchedAt,
                 temperatureC: temperatureC,
@@ -7370,10 +7534,8 @@ class $$WeatherSnapshotsTableTableManager
                 pressureTrend3hHpa: pressureTrend3hHpa,
                 windSpeedKmh: windSpeedKmh,
                 windDirectionDeg: windDirectionDeg,
-                windGustKmh: windGustKmh,
-                cloudCoverPct: cloudCoverPct,
                 precipitationMm: precipitationMm,
-                weatherCode: weatherCode,
+                humidityPct: humidityPct,
                 hourlyJson: hourlyJson,
                 updatedAt: updatedAt,
                 rowid: rowid,
@@ -10506,6 +10668,265 @@ typedef $$SettingsTableProcessedTableManager =
       SettingRow,
       PrefetchHooks Function()
     >;
+typedef $$JobsTableCreateCompanionBuilder = JobsCompanion Function({
+  required String id,
+  required JobKind kind,
+  required String subjectId,
+  Value<int> attempts,
+  required DateTime nextAttemptAt,
+  Value<String?> lastError,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<int> rowid,
+});
+typedef $$JobsTableUpdateCompanionBuilder = JobsCompanion Function({
+  Value<String> id,
+  Value<JobKind> kind,
+  Value<String> subjectId,
+  Value<int> attempts,
+  Value<DateTime> nextAttemptAt,
+  Value<String?> lastError,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$JobsTableFilterComposer extends Composer<_$AppDatabase, $JobsTable> {
+  $$JobsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<JobKind, JobKind, String> get kind =>
+      $composableBuilder(
+        column: $table.kind,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<String> get subjectId => $composableBuilder(
+    column: $table.subjectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get attempts => $composableBuilder(
+    column: $table.attempts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get nextAttemptAt => $composableBuilder(
+    column: $table.nextAttemptAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastError => $composableBuilder(
+    column: $table.lastError,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$JobsTableOrderingComposer extends Composer<_$AppDatabase, $JobsTable> {
+  $$JobsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subjectId => $composableBuilder(
+    column: $table.subjectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get attempts => $composableBuilder(
+    column: $table.attempts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get nextAttemptAt => $composableBuilder(
+    column: $table.nextAttemptAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastError => $composableBuilder(
+    column: $table.lastError,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$JobsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $JobsTable> {
+  $$JobsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<JobKind, String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<String> get subjectId =>
+      $composableBuilder(column: $table.subjectId, builder: (column) => column);
+
+  GeneratedColumn<int> get attempts =>
+      $composableBuilder(column: $table.attempts, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get nextAttemptAt => $composableBuilder(
+    column: $table.nextAttemptAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastError =>
+      $composableBuilder(column: $table.lastError, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$JobsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $JobsTable,
+          JobRow,
+          $$JobsTableFilterComposer,
+          $$JobsTableOrderingComposer,
+          $$JobsTableAnnotationComposer,
+          $$JobsTableCreateCompanionBuilder,
+          $$JobsTableUpdateCompanionBuilder,
+          (JobRow, BaseReferences<_$AppDatabase, $JobsTable, JobRow>),
+          JobRow,
+          PrefetchHooks Function()
+        > {
+  $$JobsTableTableManager(_$AppDatabase db, $JobsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$JobsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$JobsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$JobsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<JobKind> kind = const Value.absent(),
+                Value<String> subjectId = const Value.absent(),
+                Value<int> attempts = const Value.absent(),
+                Value<DateTime> nextAttemptAt = const Value.absent(),
+                Value<String?> lastError = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => JobsCompanion(
+                id: id,
+                kind: kind,
+                subjectId: subjectId,
+                attempts: attempts,
+                nextAttemptAt: nextAttemptAt,
+                lastError: lastError,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required JobKind kind,
+                required String subjectId,
+                Value<int> attempts = const Value.absent(),
+                required DateTime nextAttemptAt,
+                Value<String?> lastError = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => JobsCompanion.insert(
+                id: id,
+                kind: kind,
+                subjectId: subjectId,
+                attempts: attempts,
+                nextAttemptAt: nextAttemptAt,
+                lastError: lastError,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$JobsTable, JobRow>(table),
+                  BaseReferences<_$AppDatabase, $JobsTable, JobRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$JobsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $JobsTable,
+      JobRow,
+      $$JobsTableFilterComposer,
+      $$JobsTableOrderingComposer,
+      $$JobsTableAnnotationComposer,
+      $$JobsTableCreateCompanionBuilder,
+      $$JobsTableUpdateCompanionBuilder,
+      (JobRow, BaseReferences<_$AppDatabase, $JobsTable, JobRow>),
+      JobRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -10528,4 +10949,5 @@ class $AppDatabaseManager {
       $$CatchPhotosTableTableManager(_db, _db.catchPhotos);
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
+  $$JobsTableTableManager get jobs => $$JobsTableTableManager(_db, _db.jobs);
 }

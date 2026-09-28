@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/providers.dart';
+import 'package:piscatio/data/db/tables.dart';
 import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/features/active_trip/presentation/active_trip_screen.dart';
@@ -50,8 +52,11 @@ void main() {
     ))!;
     expect(trip.privacyLevel, PrivacyLevel.approximate);
     expect(trip.timezone, 'America/Sao_Paulo');
-    // GPS answered after the trip started and was attached.
+    // GPS answered after the trip started and was attached, then the
+    // region was looked up (with a rounded point).
     expect(trip.location, const GeoPoint(-16.52, -56.41));
+    expect(trip.locationRegion, 'Cuiabá, MT');
+    expect(app.places.asked, isNotEmpty);
     expect(find.text('Local salvo'), findsOneWidget);
     await app.dispose(tester);
   });
@@ -124,6 +129,14 @@ void main() {
     expect(
       await app.run(tester, app.read(tripRepositoryProvider).activeTrip),
       isNull,
+    );
+
+    // Weather is queued and the detail says when it will arrive.
+    final jobs = await app.run(tester, app.read(jobQueueProvider).all);
+    expect(jobs.map((j) => j.kind), contains(JobKind.weather));
+    expect(
+      find.text('O clima desta pescaria fica pronto 2 a 3 dias depois.'),
+      findsOneWidget,
     );
 
     // Regression: finishing must leave a way back, not a dead-end screen.
