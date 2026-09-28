@@ -126,6 +126,9 @@ CatchCardData buildCatchCard({
     baitLabel: bait?.name,
     released: item.released,
     photoPath: _photo(photoRoot, item.coverPhoto?.relativePath),
+    photoOptions: [
+      for (final p in item.photos) ?_photo(photoRoot, p.relativePath),
+    ],
     ruler: ruler,
     rulerUnit: rulerUnitLabel(ruler.unit, f),
     headline: [
@@ -245,6 +248,10 @@ TripCardData buildTripCard({
         ? null
         : baitsById[summary.topBaitId]?.name,
     photoPath: _photo(photoRoot, withPhoto?.coverPhoto?.relativePath),
+    photoOptions: [
+      for (final c in chronological)
+        for (final p in c.photos) ?_photo(photoRoot, p.relativePath),
+    ],
     recordCount: records.values.where((r) => r).length,
     moon: CardMoon(
       illumination: trip.moonIllumination,

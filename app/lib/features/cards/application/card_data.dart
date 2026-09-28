@@ -13,6 +13,80 @@ enum CardFormat {
   final Size size;
 }
 
+/// The card's accent, in the colors of fishing lures. Each has a shade for
+/// deep water, one for white plastic and one for stamp ink on manila.
+enum CardAccent {
+  red(Color(0xFFFF6A5E), Color(0xFFE4262C), Color(0xFFC4232B)),
+  orange(Color(0xFFFF9A3C), Color(0xFFEE7614), Color(0xFFC0580B)),
+  chartreuse(Color(0xFFD2E640), Color(0xFF9DB814), Color(0xFF5E7A0A)),
+  blue(Color(0xFF5AAEFF), Color(0xFF2B7FD6), Color(0xFF1D5AA6));
+
+  const CardAccent(this.onDark, this.onLight, this.ink);
+
+  final Color onDark;
+  final Color onLight;
+  final Color ink;
+}
+
+/// What the person chose in the card editor.
+class CardOptions {
+  const CardOptions({
+    this.accent = CardAccent.red,
+    this.showPlace = true,
+    this.showWeather = true,
+    this.showBait = true,
+    this.caption,
+    this.photoChosen = false,
+    this.photoPath,
+  });
+
+  final CardAccent accent;
+  final bool showPlace;
+
+  /// Weather and moon.
+  final bool showWeather;
+  final bool showBait;
+
+  /// Free text written by the person; empty or null shows nothing.
+  final String? caption;
+
+  /// When true, [photoPath] replaces the card's default photo (null = the
+  /// card goes without a photo).
+  final bool photoChosen;
+  final String? photoPath;
+
+  String? get _caption {
+    final c = caption?.trim();
+    return c == null || c.isEmpty ? null : c;
+  }
+
+  CardOptions copyWith({
+    CardAccent? accent,
+    bool? showPlace,
+    bool? showWeather,
+    bool? showBait,
+    String? caption,
+  }) => CardOptions(
+    accent: accent ?? this.accent,
+    showPlace: showPlace ?? this.showPlace,
+    showWeather: showWeather ?? this.showWeather,
+    showBait: showBait ?? this.showBait,
+    caption: caption ?? this.caption,
+    photoChosen: photoChosen,
+    photoPath: photoPath,
+  );
+
+  CardOptions withPhoto(String? path) => CardOptions(
+    accent: accent,
+    showPlace: showPlace,
+    showWeather: showWeather,
+    showBait: showBait,
+    caption: caption,
+    photoChosen: true,
+    photoPath: path,
+  );
+}
+
 /// Record content, already localized.
 class CardRecord {
   const CardRecord.first() : isFirst = true, improvement = null;
@@ -76,7 +150,7 @@ class CatchCardData {
     required this.catchNumber,
     required this.ruler,
     required this.rulerUnit,
-    required this.moon,
+    this.moon,
     this.headline = const [],
     this.scientificName,
     this.place,
@@ -85,11 +159,13 @@ class CatchCardData {
     this.baitLabel,
     this.released,
     this.photoPath,
+    this.photoOptions = const [],
     this.record,
     this.previousRecordLabel,
     this.wind,
     this.temperatureLabel,
     this.pressureLabel,
+    this.caption,
   });
 
   final String id;
@@ -109,6 +185,9 @@ class CatchCardData {
 
   /// Absolute path of the photo (EXIF already stripped at import).
   final String? photoPath;
+
+  /// Every photo the person may pick for this card.
+  final List<String> photoOptions;
   final RulerScale ruler;
 
   /// Unit printed at the end of the board ("cm", "lb", "h").
@@ -121,12 +200,17 @@ class CatchCardData {
 
   /// "46 cm": the best before this catch, for the board's record mark.
   final String? previousRecordLabel;
-  final CardMoon moon;
+  final CardMoon? moon;
   final CardWind? wind;
   final String? temperatureLabel;
   final String? pressureLabel;
 
-  CatchCardData withoutPlace() => CatchCardData(
+  /// The person's own words for this card.
+  final String? caption;
+
+  /// The card as the person set it up: hidden details removed, the chosen
+  /// photo and caption applied. Privacy only ever removes information.
+  CatchCardData customized(CardOptions o) => CatchCardData(
     id: id,
     speciesName: speciesName,
     scientificName: scientificName,
@@ -137,17 +221,20 @@ class CatchCardData {
     ruler: ruler,
     rulerUnit: rulerUnit,
     headline: headline,
-    moon: moon,
+    moon: o.showWeather ? moon : null,
+    place: o.showPlace ? place : null,
     lengthLabel: lengthLabel,
     weightLabel: weightLabel,
-    baitLabel: baitLabel,
+    baitLabel: o.showBait ? baitLabel : null,
     released: released,
-    photoPath: photoPath,
+    photoPath: o.photoChosen ? o.photoPath : photoPath,
+    photoOptions: photoOptions,
     record: record,
     previousRecordLabel: previousRecordLabel,
-    wind: wind,
-    temperatureLabel: temperatureLabel,
-    pressureLabel: pressureLabel,
+    wind: o.showWeather ? wind : null,
+    temperatureLabel: o.showWeather ? temperatureLabel : null,
+    pressureLabel: o.showWeather ? pressureLabel : null,
+    caption: o._caption,
   );
 }
 
@@ -183,15 +270,17 @@ class TripCardData {
     required this.speciesTally,
     required this.spanHours,
     required this.elapsedFraction,
-    required this.moon,
+    this.moon,
     this.place,
     this.biggestLabel,
     this.topBaitLabel,
     this.photoPath,
+    this.photoOptions = const [],
     this.recordCount = 0,
     this.wind,
     this.temperatureLabel,
     this.pressureLabel,
+    this.caption,
   });
 
   final String id;
@@ -215,13 +304,17 @@ class TripCardData {
   final String? biggestLabel;
   final String? topBaitLabel;
   final String? photoPath;
+
+  /// Every photo of the trip's catches, for the editor to offer.
+  final List<String> photoOptions;
   final int recordCount;
-  final CardMoon moon;
+  final CardMoon? moon;
   final CardWind? wind;
   final String? temperatureLabel;
   final String? pressureLabel;
+  final String? caption;
 
-  TripCardData withoutPlace() => TripCardData(
+  TripCardData customized(CardOptions o) => TripCardData(
     id: id,
     dateLabel: dateLabel,
     romanDate: romanDate,
@@ -233,13 +326,16 @@ class TripCardData {
     speciesTally: speciesTally,
     spanHours: spanHours,
     elapsedFraction: elapsedFraction,
-    moon: moon,
+    moon: o.showWeather ? moon : null,
+    place: o.showPlace ? place : null,
     biggestLabel: biggestLabel,
-    topBaitLabel: topBaitLabel,
-    photoPath: photoPath,
+    topBaitLabel: o.showBait ? topBaitLabel : null,
+    photoPath: o.photoChosen ? o.photoPath : photoPath,
+    photoOptions: photoOptions,
     recordCount: recordCount,
-    wind: wind,
-    temperatureLabel: temperatureLabel,
-    pressureLabel: pressureLabel,
+    wind: o.showWeather ? wind : null,
+    temperatureLabel: o.showWeather ? temperatureLabel : null,
+    pressureLabel: o.showWeather ? pressureLabel : null,
+    caption: o._caption,
   );
 }

@@ -22,10 +22,16 @@ int stableSeed(String s) {
 /// sounding (depths are italic on charts); a compass rose carries the real
 /// wind and the moon of that day; a title block holds the details.
 class ChartCatchCard extends StatelessWidget {
-  const ChartCatchCard({super.key, required this.data, required this.format});
+  const ChartCatchCard({
+    super.key,
+    required this.data,
+    required this.format,
+    this.accent = CardAccent.red,
+  });
 
   final CatchCardData data;
   final CardFormat format;
+  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +66,11 @@ class ChartCatchCard extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               child: Text(data.timeLabel, style: CardType.numbers(size * 0.75)),
             ),
-      rose: _Rose(moon: data.moon, wind: data.wind),
+      rose: _Rose(moon: data.moon, wind: data.wind, accent: accent),
       cartouche: (compact) => _Cartouche(
         title: data.speciesName,
         subtitle: data.scientificName,
+        note: data.caption,
         record: record == null
             ? null
             : record.isFirst
@@ -71,7 +78,7 @@ class ChartCatchCard extends StatelessWidget {
             : record.improvement == null
             ? l10n.cardRecord
             : l10n.cardRecordImprovement(record.improvement!),
-        rows: rows.take(compact ? 2 : 6).toList(),
+        rows: rows.take(compact ? 2 : 3).toList(),
         compact: compact,
       ),
     );
@@ -79,10 +86,16 @@ class ChartCatchCard extends StatelessWidget {
 }
 
 class ChartTripCard extends StatelessWidget {
-  const ChartTripCard({super.key, required this.data, required this.format});
+  const ChartTripCard({
+    super.key,
+    required this.data,
+    required this.format,
+    this.accent = CardAccent.red,
+  });
 
   final TripCardData data;
   final CardFormat format;
+  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
@@ -112,13 +125,14 @@ class ChartTripCard extends StatelessWidget {
         size: size,
         unitColor: CardInk.muted,
       ),
-      rose: _Rose(moon: data.moon, wind: data.wind),
+      rose: _Rose(moon: data.moon, wind: data.wind, accent: accent),
       cartouche: (compact) => _Cartouche(
         title: data.dateLabel,
+        note: data.caption,
         record: data.recordCount > 0
             ? l10n.cardRecordCount(data.recordCount)
             : null,
-        rows: rows.take(compact ? 2 : 5).toList(),
+        rows: rows.take(compact ? 2 : 3).toList(),
         legend: data.speciesTally,
         legendLimit: compact ? 2 : 4,
         compact: compact,
@@ -153,6 +167,17 @@ class _ChartLayout extends StatelessWidget {
     final story = format == CardFormat.story;
     final hasPhoto = CardPhoto.exists(photoPath);
     final margin = CardType.condensed(22);
+    final signature = CardSignature.originFor(format);
+    // Content starts under the brand and, in stories, ends above the
+    // reply bar.
+    final padding = story
+        ? EdgeInsets.fromLTRB(
+            _pad,
+            signature.dy + 176,
+            _pad,
+            CardSafeArea.storyBottom,
+          )
+        : EdgeInsets.fromLTRB(_pad, signature.dy + 140, _pad, _pad);
     return Stack(
       children: [
         Positioned.fill(
@@ -183,14 +208,14 @@ class _ChartLayout extends StatelessWidget {
           bottom: 4,
           child: Text(edition, style: margin),
         ),
-        const Positioned(
-          right: ChartBorderPainter.inset,
-          bottom: 5,
-          child: BrandMark(size: 20, color: CardInk.muted),
+        Positioned(
+          left: signature.dx + (story ? 16 : 20),
+          top: signature.dy + (story ? 0 : 12),
+          child: CardSignature(format: format),
         ),
         Positioned.fill(
           child: Padding(
-            padding: const EdgeInsets.all(_pad),
+            padding: padding,
             child: story ? _story(hasPhoto) : _square(hasPhoto),
           ),
         ),
@@ -203,14 +228,16 @@ class _ChartLayout extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 40),
-          SizedBox(height: 400, child: _soundingBox(400)),
-          const Spacer(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: SizedBox(width: 470, height: 540, child: rose),
+          SizedBox(height: 300, child: _soundingBox(300)),
+          const SizedBox(height: 24),
+          // The rose takes what the title block leaves.
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(width: 420, child: rose),
+            ),
           ),
-          const Spacer(),
+          const SizedBox(height: 24),
           cartouche(false),
         ],
       );
@@ -219,18 +246,18 @@ class _ChartLayout extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(child: _Inset(path: photoPath!)),
-        const SizedBox(height: 40),
+        const SizedBox(height: 32),
         SizedBox(
-          height: 390,
+          height: 280,
           child: Row(
             children: [
-              Expanded(child: _soundingBox(290)),
+              Expanded(child: _soundingBox(230)),
               const SizedBox(width: 12),
-              SizedBox(width: 340, child: rose),
+              SizedBox(width: 260, child: rose),
             ],
           ),
         ),
-        const SizedBox(height: 36),
+        const SizedBox(height: 28),
         cartouche(false),
       ],
     );
@@ -278,19 +305,21 @@ class _ChartLayout extends StatelessWidget {
 
 /// Compass rose with the wind arrow and, in the middle, the moon.
 class _Rose extends StatelessWidget {
-  const _Rose({required this.moon, required this.wind});
+  const _Rose({required this.moon, required this.wind, required this.accent});
 
-  final CardMoon moon;
+  final CardMoon? moon;
   final CardWind? wind;
+  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final moon = this.moon;
     return LayoutBuilder(
       builder: (context, box) {
         // Captions under the ring, like notes beside a chart's rose.
         final noteSize = (box.maxWidth * 0.075).clamp(22.0, 32.0);
-        final captions = wind == null ? 1 : 2;
+        final captions = (wind == null ? 0 : 1) + (moon == null ? 0 : 1);
         final side = [
           box.maxWidth,
           box.maxHeight - noteSize * 1.45 * captions - 12,
@@ -314,7 +343,7 @@ class _Rose extends StatelessWidget {
                     child: CustomPaint(
                       painter: CompassRosePainter(
                         ink: CardInk.muted,
-                        accent: CardInk.redOnDark,
+                        accent: accent.onDark,
                         letterStyle: CardType.condensed(
                           side * 0.075,
                           color: CardInk.foam,
@@ -329,23 +358,24 @@ class _Rose extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox.square(
-                    dimension: r * 0.62,
-                    child: CustomPaint(
-                      painter: MoonPainter(
-                        illumination: moon.illumination,
-                        waxing: moon.waxing,
-                        southern: moon.southern,
-                        lit: CardInk.foam,
-                        dark: CardInk.water3,
+                  if (moon != null)
+                    SizedBox.square(
+                      dimension: r * 0.62,
+                      child: CustomPaint(
+                        painter: MoonPainter(
+                          illumination: moon.illumination,
+                          waxing: moon.waxing,
+                          southern: moon.southern,
+                          lit: CardInk.foam,
+                          dark: CardInk.water3,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 8),
-            Text(moon.label, style: note, maxLines: 1),
+            if (captions > 0) const SizedBox(height: 8),
+            if (moon != null) Text(moon.label, style: note, maxLines: 1),
             if (wind != null) Text(wind!.label, style: note, maxLines: 1),
           ],
         );
@@ -388,6 +418,7 @@ class _Cartouche extends StatelessWidget {
     required this.rows,
     required this.compact,
     this.subtitle,
+    this.note,
     this.record,
     this.legend = const [],
     this.legendLimit = 4,
@@ -395,6 +426,9 @@ class _Cartouche extends StatelessWidget {
 
   final String title;
   final String? subtitle;
+
+  /// The person's caption, set like a handwritten note on the chart.
+  final String? note;
   final String? record;
   final List<(String, String)> rows;
   final List<(String, int)> legend;
@@ -473,6 +507,21 @@ class _Cartouche extends StatelessWidget {
                     compact ? 28 : 34,
                     style: FontStyle.italic,
                     color: CardInk.muted,
+                  ),
+                ),
+              ),
+            if (note != null)
+              Padding(
+                padding: EdgeInsets.only(top: compact ? 12 : 18),
+                child: Text(
+                  note!,
+                  maxLines: compact ? 2 : 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: CardType.text(
+                    compact ? 30 : 38,
+                    weight: FontWeight.w600,
+                    style: FontStyle.italic,
+                    color: CardInk.foam,
                   ),
                 ),
               ),

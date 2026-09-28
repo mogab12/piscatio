@@ -217,4 +217,44 @@ void main() {
       }, skip: !screenshotsEnabled);
     }
   }
+
+  // The editor's options: accent, caption, weather hidden, no photo.
+  for (final (style, accent) in [
+    (CardStyle.board, CardAccent.orange),
+    (CardStyle.chart, CardAccent.chartreuse),
+    (CardStyle.tag, CardAccent.blue),
+  ]) {
+    testWidgets('custom ${style.name}', (tester) async {
+      await shoot(
+        tester,
+        'card_custom_${style.name}_story',
+        CatchCardView(
+          data: sampleCatch(photo: _photo),
+          style: style,
+          format: CardFormat.story,
+          options: CardOptions(
+            accent: accent,
+            caption: 'Primeiro dourado da temporada, no raso da prainha',
+          ),
+        ),
+        CardFormat.story,
+        photo: _photo,
+      );
+      await shoot(
+        tester,
+        'card_custom_${style.name}_trip_square',
+        TripCardView(
+          data: sampleTrip(photo: _photo),
+          style: style,
+          format: CardFormat.square,
+          options: CardOptions(
+            accent: accent,
+            showWeather: false,
+            caption: 'Manhã de piracema',
+          ).withPhoto(null),
+        ),
+        CardFormat.square,
+      );
+    }, skip: !screenshotsEnabled);
+  }
 }

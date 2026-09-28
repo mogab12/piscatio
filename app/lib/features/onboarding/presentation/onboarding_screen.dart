@@ -10,6 +10,7 @@ import '../../../core/providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/action_slab.dart';
+import '../../../core/widgets/brand.dart';
 import '../../../domain/services/units.dart';
 import '../../settings/application/preferences.dart';
 
@@ -203,10 +204,12 @@ class _LanguageStep extends ConsumerWidget {
       actions: [ActionSlab(label: l10n.actionContinue, onPressed: onContinue)],
       children: [
         const SizedBox(height: 24),
-        ExcludeSemantics(
-          child: Text(
-            l10n.appTitle,
-            style: text.displayMedium!.copyWith(fontWeight: FontWeight.w900),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: BrandLockup(
+            size: 40,
+            color: Theme.of(context).colorScheme.onSurface,
+            floatBottom: Theme.of(context).colorScheme.surface,
           ),
         ),
         const SizedBox(height: 12),

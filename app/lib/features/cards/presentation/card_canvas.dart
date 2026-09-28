@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/formatting/l10n.dart';
+import '../../../core/widgets/brand.dart';
 import '../application/card_data.dart';
 import 'card_theme.dart';
 
@@ -71,59 +71,61 @@ class CardPhoto extends StatelessWidget {
   }
 }
 
-/// The red notch of the trip ruler plus the wordmark.
+/// Small brand mark (float + name) for imprints and printed labels.
 class BrandMark extends StatelessWidget {
   const BrandMark({
     super.key,
     this.size = 34,
     this.color = CardInk.paper,
-    this.notch = CardInk.red,
+    this.floatBottom,
   });
 
   final double size;
   final Color color;
-  final Color notch;
+
+  /// Lower half of the float, e.g. the paper it is printed on.
+  final Color? floatBottom;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CustomPaint(
-          size: Size(size * 0.62, size * 0.62),
-          painter: _NotchPainter(notch),
-        ),
-        SizedBox(width: size * 0.28),
-        Text(
-          context.l10n.brandName,
-          style: CardType.numbers(
-            size,
-            color: color,
-            weight: FontWeight.w800,
-          ).copyWith(height: 1),
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) =>
+      BrandLockup(size: size, color: color, floatBottom: floatBottom);
 }
 
-class _NotchPainter extends CustomPainter {
-  _NotchPainter(this.color);
+/// Where the brand sits on every card: top left, big enough to read in a
+/// story at a glance, with the tagline. Inside the story safe zone (clear
+/// of the platform's own header).
+class CardSignature extends StatelessWidget {
+  const CardSignature({
+    super.key,
+    required this.format,
+    this.color = CardInk.paper,
+    this.floatBottom,
+  });
 
+  final CardFormat format;
   final Color color;
+  final Color? floatBottom;
+
+  /// Top-left corner of the signature.
+  static Offset originFor(CardFormat format) => format == CardFormat.story
+      ? const Offset(72, CardSafeArea.storyTop)
+      : const Offset(60, 56);
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width / 2, size.height)
-      ..close();
-    canvas.drawPath(path, Paint()..color = color);
-  }
+  Widget build(BuildContext context) => BrandLockup(
+    size: format == CardFormat.story ? 64 : 50,
+    color: color,
+    floatBottom: floatBottom,
+    tagline: true,
+  );
+}
 
-  @override
-  bool shouldRepaint(_NotchPainter old) => old.color != color;
+/// Stories get covered by the platform's UI: the header (progress bar,
+/// profile) at the top and the reply bar at the bottom. Content stays
+/// between these lines.
+abstract final class CardSafeArea {
+  static const storyTop = 230.0;
+  static const storyBottom = 250.0;
 }
 
 /// Big number with its unit set smaller on the same baseline: "52 cm",

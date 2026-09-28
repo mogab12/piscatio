@@ -128,6 +128,37 @@ um selo genérico.
 - Gradientes: só *scrims* funcionais sob texto em cima da foto.
 - Nada de selos redondos genéricos, CAIXA ALTA decorativa ou "·" entre dados.
 
+## Marca
+
+- **Símbolo: a boia.** Vermelha acima da linha d'água, branca abaixo, antena em
+  cima e a linha descendo, inclinada no ângulo do itálico do nome. É o objeto que
+  todo pescador olha por horas; a "cabeça vermelha" da paleta vem daí.
+- **Assinatura:** boia + "Piscatio" (Archivo Expanded itálico) + "Diário de pesca".
+  Código em `core/widgets/brand.dart`; o ícone do app é gerado pelo
+  `tool/build_icons.py` com o mesmo desenho (boia com duas ondas na água funda).
+- **Nos cards:** a assinatura fica no alto à esquerda, grande o bastante para ser
+  lida num story de relance (é o que leva gente nova ao app). Não pode ser
+  escondida. Nos estilos, a marca pequena continua "impressa" nos objetos (tábua,
+  etiqueta).
+
+## Zonas seguras do story
+
+Instagram e WhatsApp cobrem o topo (barra de progresso, perfil) e a base (campo de
+resposta). Em 1080×1920, o conteúdo fica entre **230 px** do topo e **250 px** da
+base. A foto e a borda da carta podem sangrar por baixo; texto, régua, etiqueta e
+assinatura não.
+
+## Personalização dos cards
+
+No editor, em abas curtas: **Estilo** (Régua, Carta, Etiqueta; story ou
+quadrado), **Cor** (vermelho, laranja, limão e azul, as cores de iscas; cada uma
+tem um tom para a água funda, outro para o plástico branco e outro para tinta de
+carimbo no manilha), **Foto** (qualquer foto da pescaria, ou sem foto),
+**Detalhes** (local conforme a privacidade, clima e lua, isca) e **Legenda** (texto
+livre de até 80 caracteres: citação na Régua, nota em itálico no cartucho da Carta,
+campo "Observações" datilografado na Etiqueta). O dourado continua reservado para
+recordes em qualquer cor.
+
 ## Registro de iterações
 
 - 1A: tokens, tipografia e régua do tempo na pescaria ativa. Revisado por capturas

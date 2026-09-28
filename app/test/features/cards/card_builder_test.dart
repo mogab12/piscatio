@@ -12,6 +12,7 @@ import 'package:piscatio/domain/services/moon.dart';
 import 'package:piscatio/domain/services/ruler_scale.dart';
 import 'package:piscatio/domain/services/units.dart';
 import 'package:piscatio/features/cards/application/card_builder.dart';
+import 'package:piscatio/features/cards/application/card_data.dart';
 import 'package:piscatio/l10n/generated/app_localizations_pt.dart';
 
 final _t0 = DateTime.utc(2026, 9, 12, 9);
@@ -96,7 +97,7 @@ void main() {
       expect(card.baitLabel, 'Tuvira');
       expect(card.romanDate, '12.IX.2026');
       // The trip is in the southern hemisphere: only that bit is kept.
-      expect(card.moon.southern, isTrue);
+      expect(card.moon!.southern, isTrue);
     });
 
     test('first of the species; weight board when there is no length', () {
@@ -152,9 +153,36 @@ void main() {
         species: _dourado,
         f: _f,
         lang: 'pt',
-      ).withoutPlace();
+      ).customized(const CardOptions(showPlace: false));
       expect(hidden.place, isNull);
       expect(hidden.speciesName, 'Dourado');
+    });
+
+    test('customizing only removes details, applies photo and caption', () {
+      final item = _c('a', mm: 400, baitId: 'x');
+      final card = buildCatchCard(
+        item: item,
+        trip: _trip(),
+        allCatches: [item],
+        species: _dourado,
+        f: _f,
+        lang: 'pt',
+        bait: const Bait(id: 'x', name: 'Tuvira', type: BaitType.natural),
+      );
+      final custom = card.customized(
+        const CardOptions(
+          showWeather: false,
+          showBait: false,
+          caption: '  Primeiro do ano  ',
+        ).withPhoto('/photos/x.jpg'),
+      );
+      expect(custom.moon, isNull);
+      expect(custom.wind, isNull);
+      expect(custom.baitLabel, isNull);
+      expect(custom.place, 'Poço do Dourado');
+      expect(custom.photoPath, '/photos/x.jpg');
+      expect(custom.caption, 'Primeiro do ano');
+      expect(card.customized(const CardOptions(caption: ' ')).caption, isNull);
     });
 
     test('weather shows only once published', () {

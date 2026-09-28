@@ -13,10 +13,16 @@ import 'chart_card.dart' show stableSeed;
 /// the darkened photo. Printed field names, typed values, a rubber stamp
 /// for records.
 class TagCatchCard extends StatelessWidget {
-  const TagCatchCard({super.key, required this.data, required this.format});
+  const TagCatchCard({
+    super.key,
+    required this.data,
+    required this.format,
+    this.accent = CardAccent.red,
+  });
 
   final CatchCardData data;
   final CardFormat format;
+  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +37,8 @@ class TagCatchCard extends StatelessWidget {
         : l10n.cardFieldKept;
     return _TagScene(
       format: format,
+      // Room for the notes field when there is a caption.
+      tagSize: Size(800, data.caption == null ? 1240 : 1390),
       photoPath: data.photoPath,
       seed: seed,
       stamp: record == null
@@ -43,7 +51,7 @@ class TagCatchCard extends StatelessWidget {
             )
           : _Stamp(
               lines: [l10n.cardRecord, ?record.improvement],
-              color: const Color(0xFFC4232B),
+              color: accent.ink,
               seed: seed,
             ),
       header: _Typed(
@@ -117,6 +125,13 @@ class TagCatchCard extends StatelessWidget {
                     seed: seed + 9,
                   ),
           ),
+        if (data.caption != null)
+          _Field(
+            label: l10n.cardFieldNotes,
+            value: data.caption!,
+            seed: seed + 10,
+            wrap: true,
+          ),
       ],
     );
   }
@@ -125,10 +140,16 @@ class TagCatchCard extends StatelessWidget {
 /// The trip version: a field register listing the catches, records typed
 /// with the red half of the ribbon.
 class TagTripCard extends StatelessWidget {
-  const TagTripCard({super.key, required this.data, required this.format});
+  const TagTripCard({
+    super.key,
+    required this.data,
+    required this.format,
+    this.accent = CardAccent.red,
+  });
 
   final TripCardData data;
   final CardFormat format;
+  final CardAccent accent;
 
   static const maxRows = 7;
 
@@ -156,10 +177,10 @@ class TagTripCard extends StatelessWidget {
           ? null
           : _Stamp(
               lines: [l10n.cardRecordCount(data.recordCount)],
-              color: const Color(0xFFC4232B),
+              color: accent.ink,
               seed: seed,
             ),
-      tagSize: const Size(800, 1320),
+      tagSize: Size(800, data.caption == null ? 1320 : 1460),
       header: _Typed(data.romanDate, seed: seed, size: 44, bold: true),
       children: [
         Padding(
@@ -220,7 +241,7 @@ class TagTripCard extends StatelessWidget {
                       c.measureLabel!,
                       seed: seed + 60 + i,
                       size: 36,
-                      color: c.isRecord ? CardInk.typedRed : CardInk.typed,
+                      color: c.isRecord ? accent.ink : CardInk.typed,
                       bold: c.isRecord,
                     ),
                   ),
@@ -254,6 +275,15 @@ class TagTripCard extends StatelessWidget {
             ),
           ],
         ),
+        if (data.caption != null) ...[
+          const SizedBox(height: 22),
+          _Field(
+            label: l10n.cardFieldNotes,
+            value: data.caption!,
+            seed: seed + 93,
+            wrap: true,
+          ),
+        ],
       ],
     );
   }
@@ -283,22 +313,21 @@ class _TagScene extends StatelessWidget {
   Widget build(BuildContext context) {
     final story = format == CardFormat.story;
     final canvas = format.size;
-    // Leave room above the tag for the string.
+    // Stories: above the reply bar, and below the brand with room for the
+    // string. Squares have no platform chrome on top.
+    final bottom = story ? CardSafeArea.storyBottom : 40.0;
+    final topReserve = story ? 440.0 : 180.0;
     final scale = math.min(
       story ? 0.9 : 0.8,
-      (canvas.height - (story ? 110 : 40) - 110) / tagSize.height,
+      (canvas.height - bottom - topReserve) / tagSize.height,
     );
     // A slight, seeded tilt: always between 2.5 and 4.5 degrees.
     final tilt = -(2.5 + (seed % 20) / 10) * math.pi / 180;
-    final center = story
-        ? Offset(
-            canvas.width / 2 + 10,
-            canvas.height - 110 - tagSize.height * scale / 2,
-          )
-        : Offset(
-            canvas.width / 2 + 20,
-            canvas.height - 40 - tagSize.height * scale / 2,
-          );
+    final center = Offset(
+      canvas.width / 2 + (story ? 10 : 30),
+      canvas.height - bottom - tagSize.height * scale / 2,
+    );
+    final signature = CardSignature.originFor(format);
     final holeLocal =
         (TagPainter.holeCenterFor(tagSize) - tagSize.center(Offset.zero)) *
         scale;
@@ -311,6 +340,11 @@ class _TagScene extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(child: CardPhoto(path: photoPath, darken: 0.55)),
+        Positioned(
+          left: signature.dx,
+          top: signature.dy,
+          child: CardSignature(format: format),
+        ),
         Positioned(
           left: center.dx - tagSize.width / 2,
           top: center.dy - tagSize.height / 2,
@@ -380,7 +414,11 @@ class _Tag extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const BrandMark(size: 30, color: printed),
+                  const BrandMark(
+                    size: 30,
+                    color: printed,
+                    floatBottom: CardInk.manila,
+                  ),
                   const Spacer(),
                   header,
                 ],
@@ -416,6 +454,7 @@ class _Typed extends StatelessWidget {
     this.bold = false,
     this.color = CardInk.typed,
     this.ellipsis = false,
+    this.wrap = false,
   });
 
   final String text;
@@ -425,6 +464,9 @@ class _Typed extends StatelessWidget {
   final bool bold;
   final Color color;
   final bool ellipsis;
+
+  /// Free text: wraps onto up to three lines.
+  final bool wrap;
 
   @override
   Widget build(BuildContext context) {
@@ -441,8 +483,12 @@ class _Typed extends StatelessWidget {
           ),
       ],
     );
-    if (ellipsis) {
-      return Text.rich(span, maxLines: 1, overflow: TextOverflow.ellipsis);
+    if (ellipsis || wrap) {
+      return Text.rich(
+        span,
+        maxLines: wrap ? 3 : 1,
+        overflow: TextOverflow.ellipsis,
+      );
     }
     return FittedBox(
       fit: BoxFit.scaleDown,
@@ -459,12 +505,14 @@ class _Field extends StatelessWidget {
     required this.value,
     required this.seed,
     this.italic = false,
+    this.wrap = false,
   });
 
   final String label;
   final String value;
   final int seed;
   final bool italic;
+  final bool wrap;
 
   @override
   Widget build(BuildContext context) {
@@ -481,7 +529,13 @@ class _Field extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          _Typed(value, seed: seed, italic: italic),
+          _Typed(
+            value,
+            seed: seed,
+            italic: italic,
+            wrap: wrap,
+            size: wrap ? 38 : 46,
+          ),
           const SizedBox(height: 4),
           Container(height: 1.5, color: CardInk.water.withValues(alpha: 0.3)),
         ],

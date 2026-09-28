@@ -10,6 +10,7 @@ import '../../../core/router/app_routes.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/theme/typography.dart';
 import '../../../core/widgets/action_slab.dart';
+import '../../../core/widgets/brand.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../domain/models/trip.dart';
 import '../../common/trip_row.dart';
@@ -55,11 +56,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   PiscatioSizes.gutter,
                   8,
                 ),
-                child: ExcludeSemantics(
-                  child: Text(
-                    l10n.appTitle,
-                    style: Theme.of(context).textTheme.displaySmall!
-                        .copyWith(fontSize: 26, fontWeight: FontWeight.w900),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: BrandLockup(
+                    size: 24,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    floatBottom: Theme.of(context).colorScheme.surface,
                   ),
                 ),
               ),

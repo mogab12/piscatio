@@ -6,14 +6,20 @@ import '../card_canvas.dart';
 import '../card_theme.dart';
 import '../painters/board_painter.dart';
 
-/// Board: the photo, and at the bottom the measuring board with a red
-/// notch at the fish's length. A record shows as the previous best's gold
-/// mark on the same scale: the gap between the marks is the improvement.
+/// Board: the photo, and at the bottom the measuring board with a notch at
+/// the fish's length. A record shows as the previous best's gold mark on
+/// the same scale: the gap between the marks is the improvement.
 class BoardCatchCard extends StatelessWidget {
-  const BoardCatchCard({super.key, required this.data, required this.format});
+  const BoardCatchCard({
+    super.key,
+    required this.data,
+    required this.format,
+    this.accent = CardAccent.red,
+  });
 
   final CatchCardData data;
   final CardFormat format;
+  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class BoardCatchCard extends StatelessWidget {
                   ? null
                   : l10n.cardPreviousRecord(data.previousRecordLabel!),
             ),
-          BoardMark(s.fraction(s.value), CardInk.red),
+          BoardMark(s.fraction(s.value), accent.onLight),
         ],
         numberStyle: CardType.condensed(
           story ? 34 : 30,
@@ -48,9 +54,9 @@ class BoardCatchCard extends StatelessWidget {
         printStyle: CardType.condensed(story ? 26 : 23),
         unitLabel: data.rulerUnit,
         brand: l10n.brandName,
-        brandNotch: CardInk.red,
       ),
       children: [
+        if (data.caption != null) _Caption(data.caption!, story: story),
         if (record != null)
           _RecordLine(
             record.isFirst
@@ -63,7 +69,7 @@ class BoardCatchCard extends StatelessWidget {
         if (data.headline.isNotEmpty)
           CardHeadline(
             parts: data.headline,
-            size: story ? (hasPhoto ? 270 : 340) : 210,
+            size: story ? (hasPhoto ? 250 : 320) : 200,
           )
         else
           FittedBox(
@@ -71,16 +77,16 @@ class BoardCatchCard extends StatelessWidget {
             alignment: Alignment.bottomLeft,
             child: Text(
               data.timeLabel,
-              style: CardType.numbers(story ? 240 : 180),
+              style: CardType.numbers(story ? 220 : 170),
             ),
           ),
-        SizedBox(height: story ? 28 : 20),
+        SizedBox(height: story ? 26 : 18),
         Text(
           data.speciesName,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: CardType.text(
-            story ? 82 : 64,
+            story ? 80 : 62,
             weight: FontWeight.w700,
             height: 1.02,
             letterSpacing: story ? -1.6 : -1.2,
@@ -100,13 +106,14 @@ class BoardCatchCard extends StatelessWidget {
               ),
             ),
           ),
-        SizedBox(height: story ? 32 : 22),
+        SizedBox(height: story ? 30 : 20),
         _Facts(
           story: story,
           facts: [
             data.dateLabel,
             if (data.headline.isNotEmpty) data.timeLabel,
             ?secondary,
+            ?data.baitLabel,
             ?data.place,
           ],
         ),
@@ -118,10 +125,16 @@ class BoardCatchCard extends StatelessWidget {
 /// Board for a trip: the board becomes the trip's time scale (hours from
 /// the start), shaded as far as it lasted, with a notch per catch.
 class BoardTripCard extends StatelessWidget {
-  const BoardTripCard({super.key, required this.data, required this.format});
+  const BoardTripCard({
+    super.key,
+    required this.data,
+    required this.format,
+    this.accent = CardAccent.red,
+  });
 
   final TripCardData data;
   final CardFormat format;
+  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +148,7 @@ class BoardTripCard extends StatelessWidget {
         ticks: hourTicks(data.spanHours),
         marks: [
           for (final c in data.catches)
-            BoardMark(c.offset, c.isRecord ? CardInk.gold : CardInk.red),
+            BoardMark(c.offset, c.isRecord ? CardInk.gold : accent.onLight),
         ],
         numberStyle: CardType.condensed(
           story ? 34 : 30,
@@ -144,12 +157,12 @@ class BoardTripCard extends StatelessWidget {
         printStyle: CardType.condensed(story ? 26 : 23),
         unitLabel: l10n.cardHoursUnit,
         brand: l10n.brandName,
-        brandNotch: CardInk.red,
         fillFraction: data.elapsedFraction,
         fillColor: const Color(0xFFDDE7E5),
         notchScale: 0.55,
       ),
       children: [
+        if (data.caption != null) _Caption(data.caption!, story: story),
         if (data.recordCount > 0)
           _RecordLine(l10n.cardRecordCount(data.recordCount), story: story),
         CardHeadline(
@@ -159,9 +172,9 @@ class BoardTripCard extends StatelessWidget {
               l10n.catchCountLabel(data.catchCount),
             ),
           ],
-          size: story ? (hasPhoto ? 270 : 340) : 210,
+          size: story ? (hasPhoto ? 250 : 320) : 200,
         ),
-        SizedBox(height: story ? 36 : 24),
+        SizedBox(height: story ? 34 : 22),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -179,7 +192,7 @@ class BoardTripCard extends StatelessWidget {
           ],
         ),
         if (data.biggestLabel != null && story) ...[
-          const SizedBox(height: 28),
+          const SizedBox(height: 26),
           Text.rich(
             TextSpan(
               children: [
@@ -197,7 +210,7 @@ class BoardTripCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ],
-        SizedBox(height: story ? 32 : 22),
+        SizedBox(height: story ? 30 : 20),
         _Facts(
           story: story,
           facts: [data.dateLabel, data.timeRangeLabel, ?data.place],
@@ -207,7 +220,8 @@ class BoardTripCard extends StatelessWidget {
   }
 }
 
-/// Photo, scrim, the text block and the board along the bottom.
+/// Photo, scrims, the brand, the text block and the board along the
+/// bottom (above the reply bar in stories).
 class _BoardLayout extends StatelessWidget {
   const _BoardLayout({
     required this.format,
@@ -225,33 +239,58 @@ class _BoardLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final story = format == CardFormat.story;
     final margin = story ? 72.0 : 60.0;
+    final bottom = story ? CardSafeArea.storyBottom : margin;
     final boardHeight = story ? 210.0 : 160.0;
     final hasPhoto = CardPhoto.exists(photoPath);
+    final signature = CardSignature.originFor(format);
     return Stack(
       children: [
         Positioned.fill(child: CardPhoto(path: photoPath)),
-        if (hasPhoto)
-          // Functional scrim: only where the text sits.
+        if (hasPhoto) ...[
+          // Functional scrims: under the brand and under the text only.
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  stops: story ? const [0.28, 0.6, 0.86] : const [0, 0.5, 0.86],
+                  stops: story ? const [0, 0.24] : const [0, 0.3],
                   colors: [
+                    CardInk.water.withValues(alpha: 0.62),
                     CardInk.water.withValues(alpha: 0),
-                    CardInk.water.withValues(alpha: 0.72),
-                    CardInk.water.withValues(alpha: 0.94),
                   ],
                 ),
               ),
             ),
           ),
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: story
+                      ? const [0.26, 0.56, 0.8]
+                      : const [0.1, 0.5, 0.86],
+                  colors: [
+                    CardInk.water.withValues(alpha: 0),
+                    CardInk.water.withValues(alpha: 0.74),
+                    CardInk.water.withValues(alpha: 0.95),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+        Positioned(
+          left: signature.dx,
+          top: signature.dy,
+          child: CardSignature(format: format),
+        ),
         Positioned(
           left: margin,
           right: margin,
-          bottom: margin + boardHeight + (story ? 64 : 40),
+          bottom: bottom + boardHeight + (story ? 60 : 38),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,11 +300,36 @@ class _BoardLayout extends StatelessWidget {
         Positioned(
           left: margin - 28,
           right: margin - 28,
-          bottom: margin,
+          bottom: bottom,
           height: boardHeight,
           child: CustomPaint(painter: board),
         ),
       ],
+    );
+  }
+}
+
+/// The person's own line, set like a pull quote above the numbers.
+class _Caption extends StatelessWidget {
+  const _Caption(this.text, {required this.story});
+
+  final String text;
+  final bool story;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: story ? 26 : 18),
+      child: Text(
+        text,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        style: CardType.text(
+          story ? 46 : 38,
+          weight: FontWeight.w600,
+          height: 1.15,
+        ),
+      ),
     );
   }
 }

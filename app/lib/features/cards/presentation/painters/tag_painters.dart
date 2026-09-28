@@ -167,10 +167,11 @@ class StringPainter extends CustomPainter {
         ..drawPath(path, strand);
     }
     // Single strand to the top, with a gentle sag.
-    final top = Offset(knot.dx - 40, -20);
+    // Leans right, clear of the brand in the top-left corner.
+    final top = Offset(knot.dx + 90, -20);
     final rest = Path()
       ..moveTo(knot.dx, knot.dy)
-      ..quadraticBezierTo(knot.dx + 30, (knot.dy + top.dy) / 2, top.dx, top.dy);
+      ..quadraticBezierTo(knot.dx + 10, (knot.dy + top.dy) / 2, top.dx, top.dy);
     canvas
       ..drawPath(rest.shift(const Offset(4, 6)), shadow)
       ..drawPath(rest, strand..strokeWidth = 6)

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/rendering.dart';
 
+import '../../../../core/widgets/brand.dart';
 import '../../../../domain/services/ruler_scale.dart';
 
 class BoardTick {
@@ -76,7 +77,6 @@ class BoardPainter extends CustomPainter {
     required this.printStyle,
     required this.unitLabel,
     required this.brand,
-    required this.brandNotch,
     this.board = const Color(0xFFF7F9F8),
     this.ink = const Color(0xFF0B2A33),
     this.stop = const Color(0xFF2E4D56),
@@ -93,7 +93,6 @@ class BoardPainter extends CustomPainter {
   final TextStyle printStyle;
   final String unitLabel;
   final String brand;
-  final Color brandNotch;
   final Color board;
   final Color ink;
   final Color stop;
@@ -225,19 +224,22 @@ class BoardPainter extends CustomPainter {
     // Maker's mark near the stop, along the bottom edge.
     final bottomY = body.bottom - h * 0.1;
     final brandText = _text(brand, printStyle.copyWith(color: ink));
-    final tri = brandText.height * 0.5;
+    final floatH = brandText.height * 1.05;
+    final floatSize = Size(floatH * FloatPainter.aspect, floatH);
     final bx = x0 + 8;
     final by = bottomY - brandText.height;
-    canvas.drawPath(
-      Path()
-        ..moveTo(bx, by + brandText.height * 0.25)
-        ..lineTo(bx + tri * 1.1, by + brandText.height * 0.25)
-        ..lineTo(bx + tri * 0.55, by + brandText.height * 0.25 + tri)
-        ..close(),
-      Paint()..color = brandNotch,
-    );
-    brandText.paint(canvas, Offset(bx + tri * 1.1 + 8, by));
-    final brandRight = bx + tri * 1.1 + 8 + brandText.width;
+    canvas
+      ..save()
+      ..translate(bx, by - floatH * 0.04);
+    FloatPainter(
+      ink: ink,
+      top: const Color(0xFFE4262C),
+      bottom: board,
+      line: false,
+    ).paint(canvas, floatSize);
+    canvas.restore();
+    brandText.paint(canvas, Offset(bx + floatSize.width + 8, by));
+    final brandRight = bx + floatSize.width + 8 + brandText.width;
 
     // Notches and labels on top of the print.
     for (final m in marks) {

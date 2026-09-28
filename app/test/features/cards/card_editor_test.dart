@@ -71,9 +71,7 @@ Future<(TestApp, String, String, _FakeSharer)> _setup(
 }
 
 void main() {
-  testWidgets('trip card: styles, formats, place switch, share a PNG', (
-    tester,
-  ) async {
+  testWidgets('trip card: styles, formats, place, share a PNG', (tester) async {
     final (app, tripId, _, sharer) = await _setup(tester);
     await app.pumpScreen(
       tester,
@@ -84,8 +82,10 @@ void main() {
     expect(view().style, CardStyle.board);
     expect(view().format, CardFormat.story);
     // Exact privacy: the place name shows, and can be hidden.
-    expect(view().data.place, 'Poço do Dourado');
+    expect(view().shown.place, 'Poço do Dourado');
     expect(find.text('Poço do Dourado'), findsWidgets);
+    // The brand is on the card, with its tagline.
+    expect(find.text('Diário de pesca'), findsOneWidget);
 
     await tester.tap(find.text('Carta'));
     await app.settle(tester);
@@ -95,9 +95,11 @@ void main() {
     expect(view().format, CardFormat.square);
     expect(tester.getSize(find.byType(TripCardView)), CardFormat.square.size);
 
+    await tester.tap(find.text('Detalhes'));
+    await app.settle(tester);
     await tester.tap(find.text('Mostrar local'));
     await app.settle(tester);
-    expect(view().data.place, isNull);
+    expect(view().shown.place, isNull);
     expect(find.text('Poço do Dourado'), findsNothing);
 
     await tester.tap(find.text('Compartilhar'));
@@ -108,6 +110,41 @@ void main() {
     final (png, name) = sharer.shared.single;
     expect(pngSize(png), (1080, 1080));
     expect(name, 'piscatio-chart-square.png');
+    await app.dispose(tester);
+  });
+
+  testWidgets('color, details and caption make the card yours', (tester) async {
+    final (app, _, catchId, _) = await _setup(tester);
+    await app.pumpScreen(
+      tester,
+      CardEditorScreen(subject: CardSubject.catchItem, id: catchId),
+    );
+    CatchCardView view() => tester.widget(find.byType(CatchCardView));
+
+    await tester.tap(find.text('Cor'));
+    await app.settle(tester);
+    await tester.tap(find.bySemanticsLabel('Laranja'));
+    await app.settle(tester);
+    expect(view().options.accent, CardAccent.orange);
+
+    await tester.tap(find.text('Detalhes'));
+    await app.settle(tester);
+    await tester.tap(find.text('Clima e lua'));
+    await app.settle(tester);
+    expect(view().shown.moon, isNull);
+
+    await tester.tap(find.text('Legenda'));
+    await app.settle(tester);
+    await tester.enterText(find.byType(TextField), 'Primeira traíra do ano');
+    await app.settle(tester);
+    expect(view().shown.caption, 'Primeira traíra do ano');
+    // Shown on the card itself (and typed in the field).
+    expect(find.text('Primeira traíra do ano'), findsNWidgets(2));
+
+    // No photos on this catch: the photo tab says so.
+    await tester.tap(find.text('Foto'));
+    await app.settle(tester);
+    expect(find.text('Sem fotos para usar no card.'), findsOneWidget);
     await app.dispose(tester);
   });
 
@@ -149,12 +186,16 @@ void main() {
     );
     final view = tester.widget<TripCardView>(find.byType(TripCardView));
     expect(view.data.place, isNull);
+    await tester.tap(find.text('Detalhes'));
+    await app.settle(tester);
     expect(
       find.text('Esta pescaria é privada: o card não mostra onde foi.'),
       findsOneWidget,
     );
-    final toggle = tester.widget<SwitchListTile>(find.byType(SwitchListTile));
-    expect(toggle.onChanged, isNull);
+    final chip = tester.widget<FilterChip>(
+      find.widgetWithText(FilterChip, 'Mostrar local'),
+    );
+    expect(chip.onSelected, isNull);
     expect(find.text('Cuiabá, MT'), findsNothing);
     await app.dispose(tester);
   });
@@ -169,7 +210,9 @@ void main() {
       CardEditorScreen(subject: CardSubject.trip, id: tripId),
     );
     final view = tester.widget<TripCardView>(find.byType(TripCardView));
-    expect(view.data.place, 'Cuiabá, MT');
+    expect(view.shown.place, 'Cuiabá, MT');
+    await tester.tap(find.text('Detalhes'));
+    await app.settle(tester);
     expect(find.text('Mostra só a região, nunca o ponto.'), findsOneWidget);
     expect(find.text('Poço do Dourado'), findsNothing);
     await app.dispose(tester);

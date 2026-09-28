@@ -16,7 +16,10 @@ import 'card_view.dart';
 
 enum CardSubject { catchItem, trip }
 
-/// Pick a style and a format, choose whether the place shows, share.
+enum _Section { style, color, photo, details, caption }
+
+/// Make the card yours: style and format, accent color, photo, which
+/// details show, a caption. Then share.
 class CardEditorScreen extends ConsumerStatefulWidget {
   const CardEditorScreen({super.key, required this.subject, required this.id});
 
@@ -30,9 +33,17 @@ class CardEditorScreen extends ConsumerStatefulWidget {
 class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
   var _style = CardStyle.board;
   var _format = CardFormat.story;
-  var _showPlace = true;
+  var _options = const CardOptions();
+  var _section = _Section.style;
   var _sharing = false;
   final _boundary = GlobalKey();
+  final _caption = TextEditingController();
+
+  @override
+  void dispose() {
+    _caption.dispose();
+    super.dispose();
+  }
 
   String _styleName(CardStyle s) => switch (s) {
     CardStyle.board => context.l10n.cardStyleBoard,
@@ -45,10 +56,28 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     CardFormat.square => context.l10n.cardFormatSquare,
   };
 
+  String _sectionName(_Section s) => switch (s) {
+    _Section.style => context.l10n.cardSectionStyle,
+    _Section.color => context.l10n.cardSectionColor,
+    _Section.photo => context.l10n.cardSectionPhoto,
+    _Section.details => context.l10n.cardSectionDetails,
+    _Section.caption => context.l10n.cardSectionCaption,
+  };
+
+  String _accentName(CardAccent a) => switch (a) {
+    CardAccent.red => context.l10n.cardColorRed,
+    CardAccent.orange => context.l10n.cardColorOrange,
+    CardAccent.chartreuse => context.l10n.cardColorChartreuse,
+    CardAccent.blue => context.l10n.cardColorBlue,
+  };
+
+  void _set(CardOptions o) => setState(() => _options = o);
+
   Future<void> _share(String? photoPath) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final sharer = ref.read(cardSharerProvider);
+    FocusScope.of(context).unfocus();
     setState(() => _sharing = true);
     try {
       if (photoPath != null && File(photoPath).existsSync()) {
@@ -74,35 +103,47 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     final (
       Widget? card,
       String? place,
-      String? photo,
+      String? shownPhoto,
+      String? defaultPhoto,
+      List<String> photos,
       String? tripId,
     ) = switch (widget.subject) {
       CardSubject.catchItem => () {
         final data = ref.watch(catchCardDataProvider(widget.id));
         final tripId = ref.watch(catchProvider(widget.id)).value?.tripId;
-        if (data == null) return (null, null, null, tripId);
+        if (data == null) return (null, null, null, null, <String>[], tripId);
+        final view = CatchCardView(
+          data: data,
+          style: _style,
+          format: _format,
+          options: _options,
+        );
         return (
-          CatchCardView(
-            data: _showPlace ? data : data.withoutPlace(),
-            style: _style,
-            format: _format,
-          ),
+          view,
           data.place,
+          view.shown.photoPath,
           data.photoPath,
+          data.photoOptions,
           tripId,
         );
       }(),
       CardSubject.trip => () {
         final data = ref.watch(tripCardDataProvider(widget.id));
-        if (data == null) return (null, null, null, widget.id);
+        if (data == null) {
+          return (null, null, null, null, <String>[], widget.id);
+        }
+        final view = TripCardView(
+          data: data,
+          style: _style,
+          format: _format,
+          options: _options,
+        );
         return (
-          TripCardView(
-            data: _showPlace ? data : data.withoutPlace(),
-            style: _style,
-            format: _format,
-          ),
+          view,
           data.place,
+          view.shown.photoPath,
           data.photoPath,
+          data.photoOptions,
           widget.id,
         );
       }(),
@@ -118,6 +159,129 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
       _ => null,
     };
 
+    final panel = switch (_section) {
+      _Section.style => Column(
+        children: [
+          _ChipRow(
+            children: [
+              for (final s in CardStyle.values)
+                ChoiceChip(
+                  label: Text(_styleName(s)),
+                  selected: _style == s,
+                  showCheckmark: false,
+                  onSelected: (_) => setState(() => _style = s),
+                ),
+            ],
+          ),
+          _ChipRow(
+            children: [
+              for (final f in CardFormat.values)
+                ChoiceChip(
+                  label: Text(_formatName(f)),
+                  selected: _format == f,
+                  showCheckmark: false,
+                  onSelected: (_) => setState(() => _format = f),
+                ),
+            ],
+          ),
+        ],
+      ),
+      _Section.color => _ChipRow(
+        height: 96,
+        children: [
+          for (final a in CardAccent.values)
+            _Swatch(
+              color: a.onLight,
+              label: _accentName(a),
+              selected: _options.accent == a,
+              onTap: () => _set(_options.copyWith(accent: a)),
+            ),
+        ],
+      ),
+      _Section.photo =>
+        photos.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: PiscatioSizes.gutter,
+                ),
+                child: Text(
+                  l10n.cardNoPhotos,
+                  style: Theme.of(context).textTheme.bodyMedium!
+                      .copyWith(color: context.palette.muted),
+                ),
+              )
+            : _ChipRow(
+                height: 96,
+                children: [
+                  _PhotoTile(
+                    label: l10n.cardNoPhoto,
+                    selected: shownPhoto == null,
+                    onTap: () => _set(_options.withPhoto(null)),
+                  ),
+                  for (final (i, p) in photos.indexed)
+                    _PhotoTile(
+                      path: p,
+                      label: l10n.cardPhotoOption('${i + 1}'),
+                      selected: _options.photoChosen
+                          ? shownPhoto == p
+                          : defaultPhoto == p,
+                      onTap: () => _set(_options.withPhoto(p)),
+                    ),
+                ],
+              ),
+      _Section.details => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: PiscatioSizes.gutter),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 10,
+              runSpacing: 4,
+              children: [
+                FilterChip(
+                  label: Text(l10n.cardShowPlace),
+                  selected: place != null && _options.showPlace,
+                  onSelected: place == null
+                      ? null
+                      : (v) => _set(_options.copyWith(showPlace: v)),
+                ),
+                FilterChip(
+                  label: Text(l10n.cardShowWeather),
+                  selected: _options.showWeather,
+                  onSelected: (v) => _set(_options.copyWith(showWeather: v)),
+                ),
+                FilterChip(
+                  label: Text(l10n.cardShowBait),
+                  selected: _options.showBait,
+                  onSelected: (v) => _set(_options.copyWith(showBait: v)),
+                ),
+              ],
+            ),
+            if (placeNote != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                placeNote,
+                style: Theme.of(context).textTheme.bodyMedium!
+                    .copyWith(color: context.palette.muted),
+              ),
+            ],
+          ],
+        ),
+      ),
+      _Section.caption => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: PiscatioSizes.gutter),
+        child: TextField(
+          controller: _caption,
+          maxLength: 80,
+          maxLines: 2,
+          minLines: 1,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(hintText: l10n.cardCaptionHint),
+          onChanged: (v) => _set(_options.copyWith(caption: v)),
+        ),
+      ),
+    };
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.cardCreate)),
       body: card == null
@@ -130,7 +294,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                       PiscatioSizes.gutter,
                       4,
                       PiscatioSizes.gutter,
-                      16,
+                      12,
                     ),
                     child: Center(
                       child: Semantics(
@@ -165,38 +329,33 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                     ),
                   ),
                 ),
-                _ChipRow(
+                const Divider(height: 1),
+                Row(
                   children: [
-                    for (final s in CardStyle.values)
-                      ChoiceChip(
-                        label: Text(_styleName(s)),
-                        selected: _style == s,
-                        showCheckmark: false,
-                        onSelected: (_) => setState(() => _style = s),
+                    for (final s in _Section.values)
+                      Expanded(
+                        child: _SectionTab(
+                          icon: switch (s) {
+                            _Section.style =>
+                              Icons.dashboard_customize_outlined,
+                            _Section.color => Icons.palette_outlined,
+                            _Section.photo => Icons.photo_outlined,
+                            _Section.details => Icons.tune_rounded,
+                            _Section.caption => Icons.short_text_rounded,
+                          },
+                          label: _sectionName(s),
+                          selected: _section == s,
+                          onTap: () => setState(() => _section = s),
+                        ),
                       ),
                   ],
                 ),
-                _ChipRow(
-                  children: [
-                    for (final f in CardFormat.values)
-                      ChoiceChip(
-                        label: Text(_formatName(f)),
-                        selected: _format == f,
-                        showCheckmark: false,
-                        onSelected: (_) => setState(() => _format = f),
-                      ),
-                  ],
-                ),
-                SwitchListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: PiscatioSizes.gutter,
+                SizedBox(
+                  height: 136,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: panel,
                   ),
-                  title: Text(l10n.cardShowPlace),
-                  subtitle: placeNote == null ? null : Text(placeNote),
-                  value: place != null && _showPlace,
-                  onChanged: place == null
-                      ? null
-                      : (v) => setState(() => _showPlace = v),
                 ),
               ],
             ),
@@ -210,7 +369,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         child: ActionSlab(
           label: l10n.cardShare,
           icon: Icons.ios_share_rounded,
-          onPressed: card == null || _sharing ? null : () => _share(photo),
+          onPressed: card == null || _sharing ? null : () => _share(shownPhoto),
         ),
       ),
     );
@@ -218,23 +377,200 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
 }
 
 class _ChipRow extends StatelessWidget {
-  const _ChipRow({required this.children});
+  const _ChipRow({
+    required this.children,
+    this.height = PiscatioSizes.minTouch,
+  });
 
   final List<Widget> children;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
+    // Not lazy: every option is built (and reachable by screen readers).
     return SizedBox(
-      height: PiscatioSizes.minTouch,
-      child: ListView(
+      height: height,
+      child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: PiscatioSizes.gutter),
-        children: [
-          for (final (i, c) in children.indexed) ...[
-            if (i > 0) const SizedBox(width: 8),
-            Center(child: c),
+        child: Row(
+          children: [
+            for (final (i, c) in children.indexed) ...[
+              if (i > 0) const SizedBox(width: 10),
+              c,
+            ],
           ],
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One tab of the editor: icon over a short name, the selected one marked
+/// with the accent underline.
+class _SectionTab extends StatelessWidget {
+  const _SectionTab({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final color = selected ? scheme.onSurface : context.palette.muted;
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: PiscatioSizes.minTouch),
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: selected ? scheme.primary : Colors.transparent,
+                width: 3,
+              ),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 22),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium!
+                    .copyWith(color: color),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A color to pick: a disc with its name under it.
+class _Swatch extends StatelessWidget {
+  const _Swatch({
+    required this.color,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final Color color;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ink = Theme.of(context).colorScheme.onSurface;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(PiscatioRadii.field),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selected ? ink : Colors.transparent,
+                    width: 3,
+                  ),
+                ),
+                child: selected
+                    ? const Icon(Icons.check_rounded, color: Colors.white)
+                    : null,
+              ),
+              const SizedBox(height: 4),
+              Text(label, style: Theme.of(context).textTheme.labelMedium),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A photo to pick (or "no photo" when [path] is null).
+class _PhotoTile extends StatelessWidget {
+  const _PhotoTile({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.path,
+  });
+
+  final String? path;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(PiscatioRadii.thumb),
+        child: Container(
+          width: 80,
+          height: 80,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainer,
+            borderRadius: BorderRadius.circular(PiscatioRadii.thumb),
+            border: Border.all(
+              color: selected ? scheme.onSurface : Colors.transparent,
+              width: 3,
+            ),
+          ),
+          child: path == null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                )
+              : Image.file(
+                  File(path!),
+                  fit: BoxFit.cover,
+                  cacheWidth: 240,
+                  errorBuilder: (_, _, _) => const SizedBox(),
+                ),
+        ),
       ),
     );
   }
