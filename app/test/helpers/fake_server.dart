@@ -25,6 +25,18 @@ class FakeServer {
   final refuse = <String>{};
   final requests = <http.Request>[];
 
+  /// What `/api/conditions/weather` answers (null: MET is down).
+  Map<String, Object?>? weather = {
+    'time': '2026-09-12T09:00:00Z',
+    'temperature_c': 27.4,
+    'pressure_hpa': 1011.8,
+    'humidity_pct': 62.0,
+    'wind_speed_kmh': 11.2,
+    'wind_from_deg': 45.0,
+    'precipitation_next_hour_mm': 0.4,
+    'symbol': 'partlycloudy_day',
+  };
+
   static const order = [
     'trips',
     'baits',
@@ -62,6 +74,11 @@ class FakeServer {
     if (path == '/api/me/privacy-secret') {
       secret ??= (jsonDecode(r.body) as Map)['secret'] as String;
       return _json({'secret': secret});
+    }
+    if (path == '/api/conditions/weather') {
+      return weather == null
+          ? _json({'detail': 'weather_unavailable'}, 503)
+          : _json(weather!);
     }
     if (path == '/api/sync/push') return _push(r);
     if (path == '/api/sync/pull') return _pull(r);

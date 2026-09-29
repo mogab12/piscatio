@@ -1210,10 +1210,10 @@ abstract class AppLocalizations {
   /// **'Weather data'**
   String get settingsWeatherData;
 
-  /// Weather data attribution.
+  /// Settings > About: credit for the weather data sources.
   ///
   /// In en, this message translates to:
-  /// **'NASA POWER Project, NASA Langley Research Center. CC BY 4.0.'**
+  /// **'Past trips: NASA POWER Project, NASA Langley Research Center. Weather now: MET Norway. Both CC BY 4.0.'**
   String get settingsWeatherDataCredit;
 
   /// App name printed on cards as the maker's mark.
@@ -2277,6 +2277,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You will be signed out. The copy on the server stays: to erase it, delete the account.'**
   String get wipeSignedInNote;
+
+  /// Active trip: heading of the current weather row.
+  ///
+  /// In en, this message translates to:
+  /// **'Weather now'**
+  String get liveWeatherTitle;
+
+  /// Active trip: credit under the current weather (required by MET Norway).
+  ///
+  /// In en, this message translates to:
+  /// **'Data: MET Norway'**
+  String get liveWeatherSource;
+
+  /// Current weather: rain expected in the next hour.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain next hour'**
+  String get liveWeatherRainNextHour;
 }
 
 class _AppLocalizationsDelegate

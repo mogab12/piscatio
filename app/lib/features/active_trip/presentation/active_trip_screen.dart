@@ -17,6 +17,7 @@ import '../../../domain/models/catch.dart';
 import '../../../domain/models/trip.dart';
 import '../../common/catch_tile.dart';
 import '../../trip/application/trip_controller.dart';
+import '../../weather/presentation/live_weather_row.dart';
 import 'time_ruler.dart';
 
 /// The trip in progress. Built for the riverbank: one huge timer, one huge
@@ -243,6 +244,10 @@ class _Header extends ConsumerWidget {
                     : l10n.activeTripLocationSaved,
               ),
             ],
+          ),
+          LiveWeatherRow(
+            tripId: trip.id,
+            padding: const EdgeInsets.only(top: 20),
           ),
           const SizedBox(height: 28),
           Row(

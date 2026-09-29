@@ -644,7 +644,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsWeatherDataCredit =>
-      'Projeto NASA POWER, NASA Langley Research Center. CC BY 4.0.';
+      'Pescarias passadas: Projeto NASA POWER, NASA Langley Research Center. Tempo agora: MET Norway. Ambos CC BY 4.0.';
 
   @override
   String get brandName => 'Piscatio';
@@ -1289,4 +1289,13 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get wipeSignedInNote =>
       'Você sai da conta. A cópia no servidor continua: para apagá-la, exclua a conta.';
+
+  @override
+  String get liveWeatherTitle => 'Tempo agora';
+
+  @override
+  String get liveWeatherSource => 'Dados: MET Norway';
+
+  @override
+  String get liveWeatherRainNextHour => 'Chuva na próxima hora';
 }

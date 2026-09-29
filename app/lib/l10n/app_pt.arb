@@ -185,7 +185,7 @@
   "compassW": "O",
   "compassNW": "NO",
   "settingsWeatherData": "Dados de clima",
-  "settingsWeatherDataCredit": "Projeto NASA POWER, NASA Langley Research Center. CC BY 4.0.",
+  "settingsWeatherDataCredit": "Pescarias passadas: Projeto NASA POWER, NASA Langley Research Center. Tempo agora: MET Norway. Ambos CC BY 4.0.",
   "brandName": "Piscatio",
   "cardBiggestValue": "{species}, {measure}",
   "cardCatchNumber": "Nº {number}",
@@ -362,5 +362,8 @@
   "accountDeleteTitle": "Excluir sua conta?",
   "accountDeleteBody": "O servidor apaga a conta, as pescarias e as fotos. O diário neste aparelho e nos outros continua. Não dá para desfazer.",
   "accountDeleted": "Conta excluída",
-  "wipeSignedInNote": "Você sai da conta. A cópia no servidor continua: para apagá-la, exclua a conta."
+  "wipeSignedInNote": "Você sai da conta. A cópia no servidor continua: para apagá-la, exclua a conta.",
+  "liveWeatherTitle": "Tempo agora",
+  "liveWeatherSource": "Dados: MET Norway",
+  "liveWeatherRainNextHour": "Chuva na próxima hora"
 }

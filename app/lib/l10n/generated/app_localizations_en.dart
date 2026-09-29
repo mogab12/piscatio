@@ -641,7 +641,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsWeatherDataCredit =>
-      'NASA POWER Project, NASA Langley Research Center. CC BY 4.0.';
+      'Past trips: NASA POWER Project, NASA Langley Research Center. Weather now: MET Norway. Both CC BY 4.0.';
 
   @override
   String get brandName => 'Piscatio';
@@ -1288,4 +1288,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wipeSignedInNote =>
       'You will be signed out. The copy on the server stays: to erase it, delete the account.';
+
+  @override
+  String get liveWeatherTitle => 'Weather now';
+
+  @override
+  String get liveWeatherSource => 'Data: MET Norway';
+
+  @override
+  String get liveWeatherRainNextHour => 'Rain next hour';
 }

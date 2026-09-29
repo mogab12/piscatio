@@ -840,9 +840,9 @@
   "@settingsWeatherData": {
     "description": "Settings row crediting the weather source."
   },
-  "settingsWeatherDataCredit": "NASA POWER Project, NASA Langley Research Center. CC BY 4.0.",
+  "settingsWeatherDataCredit": "Past trips: NASA POWER Project, NASA Langley Research Center. Weather now: MET Norway. Both CC BY 4.0.",
   "@settingsWeatherDataCredit": {
-    "description": "Weather data attribution."
+    "description": "Settings > About: credit for the weather data sources."
   },
   "brandName": "Piscatio",
   "@brandName": {
@@ -1682,5 +1682,17 @@
   "wipeSignedInNote": "You will be signed out. The copy on the server stays: to erase it, delete the account.",
   "@wipeSignedInNote": {
     "description": "Delete all data dialog: extra line shown when signed in."
+  },
+  "liveWeatherTitle": "Weather now",
+  "@liveWeatherTitle": {
+    "description": "Active trip: heading of the current weather row."
+  },
+  "liveWeatherSource": "Data: MET Norway",
+  "@liveWeatherSource": {
+    "description": "Active trip: credit under the current weather (required by MET Norway)."
+  },
+  "liveWeatherRainNextHour": "Rain next hour",
+  "@liveWeatherRainNextHour": {
+    "description": "Current weather: rain expected in the next hour."
   }
 }
