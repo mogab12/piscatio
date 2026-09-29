@@ -56,6 +56,9 @@ class _NoActiveTrip extends StatelessWidget {
   }
 }
 
+/// How long "Undo" is offered after saving a catch.
+const undoWindow = Duration(seconds: 5);
+
 class _ActiveTripView extends ConsumerWidget {
   const _ActiveTripView({required this.trip});
 
@@ -110,6 +113,10 @@ class _ActiveTripView extends ConsumerWidget {
       ..showSnackBar(
         SnackBar(
           content: Text(l10n.catchSaved),
+          // A snack bar with an action stays until tapped unless told
+          // otherwise; Undo only makes sense for a few seconds.
+          persist: false,
+          duration: undoWindow,
           action: SnackBarAction(
             label: l10n.actionUndo,
             onPressed: () => repository.deleteCatch(savedId),

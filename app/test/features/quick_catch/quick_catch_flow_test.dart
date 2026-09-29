@@ -95,6 +95,31 @@ void main() {
     await app.dispose(tester);
   });
 
+  testWidgets('the undo bar goes away by itself, catch after catch', (
+    tester,
+  ) async {
+    final flow = await _openActiveTrip(tester);
+    final app = flow.app;
+    for (var i = 0; i < 2; i++) {
+      await tester.tap(find.text('+ Captura'));
+      await app.settle(tester);
+      await tester.tap(find.text('Sem foto'));
+      await app.settle(tester);
+      await tester.enterText(find.byType(TextField), 'dourado');
+      await app.settle(tester);
+      await tester.tap(find.text('Dourado').first);
+      await app.settle(tester);
+      await tester.tap(find.text('Salvar captura'));
+      await app.settle(tester);
+      expect(find.text('Captura salva'), findsOneWidget);
+      await tester.pump(undoWindow + const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      expect(find.text('Captura salva'), findsNothing);
+    }
+    expect(await flow.catches(tester), hasLength(2));
+    await app.dispose(tester);
+  });
+
   testWidgets('gallery photo is stored without EXIF and details in SI', (
     tester,
   ) async {
