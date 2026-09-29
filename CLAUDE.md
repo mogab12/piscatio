@@ -6,7 +6,7 @@ vira um **card** compartilhável (9:16 e 1:1). Roadmap e status: `docs/ROADMAP.m
 ## Monorepo
 
 ```
-/app        Flutter (Android + iOS) — Fase 1
+/app        Flutter (Android + iOS)
 /backend    Django + DRF + PostGIS — Fase 2 (conta, sync, fotos, clima ao vivo)
 /docs       ROADMAP e decisões
 ```
@@ -87,15 +87,7 @@ Regras:
   nunca armazenados.
 - Mudança de schema = nova versão + migração em `data/db/` + teste de migração.
 
-## Backend e sincronização
-
-Comandos (dentro de `backend/`, com PostGIS local; ver `backend/README.md`):
-
-```bash
-DJANGO_DEBUG=1 pytest
-ruff check . && ruff format --check .
-DJANGO_DEBUG=1 python manage.py makemigrations --check --dry-run
-```
+## Sincronização
 
 - O app nunca depende do servidor: sem conta tudo funciona. Sincronizar é um job
   (`JobKind.sync`) que se reagenda a cada 15 min; fotos sobem e descem em jobs
