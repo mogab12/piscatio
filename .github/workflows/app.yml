@@ -100,13 +100,17 @@ jobs:
           PISCATIO_KEYSTORE_PASSWORD: piscatio-test
           PISCATIO_KEY_ALIAS: piscatio-test
           PISCATIO_KEY_PASSWORD: piscatio-test
+          # Server address baked into the build (repository variable
+          # PISCATIO_API); the account screen can still change it.
+          PISCATIO_API: ${{ vars.PISCATIO_API || 'https://piscatio-api.onrender.com' }}
         # The run number is the version code: every build is newer than the
         # last one, so Android offers it as an update.
         run: |
           flutter pub get
           flutter build apk --release --split-per-abi \
             --target-platform android-arm64 \
-            --build-number=${{ github.run_number }}
+            --build-number=${{ github.run_number }} \
+            --dart-define=PISCATIO_API="$PISCATIO_API"
 
       - uses: actions/upload-artifact@v4
         with:

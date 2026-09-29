@@ -87,6 +87,31 @@ Regras:
   nunca armazenados.
 - Mudança de schema = nova versão + migração em `data/db/` + teste de migração.
 
+## Backend e sincronização
+
+Comandos (dentro de `backend/`, com PostGIS local; ver `backend/README.md`):
+
+```bash
+DJANGO_DEBUG=1 pytest
+ruff check . && ruff format --check .
+DJANGO_DEBUG=1 python manage.py makemigrations --check --dry-run
+```
+
+- O app nunca depende do servidor: sem conta tudo funciona. Sincronizar é um job
+  (`JobKind.sync`) que se reagenda a cada 15 min; fotos sobem e descem em jobs
+  próprios.
+- Toda escrita numa tabela do usuário grava `sync_status = pending` (inclusive
+  exclusão e restauração). `rejected` = o servidor recusou; só volta a subir na
+  próxima edição.
+- Conflito: vence o `updated_at` maior. Uma edição local pendente mais nova que a
+  do servidor não é sobrescrita pelo `pull`.
+- Token só no armazenamento seguro (`TokenStore`), nunca no banco. Sair da conta
+  mantém o diário e volta as linhas a `pending` (`forgetServer`).
+- O segredo da localização aproximada é o da conta: o primeiro aparelho define,
+  os outros adotam.
+- Tabela nova sincronizada: `SyncService` (app), `logbook/sync.py` (servidor) e o
+  `FakeServer` dos testes, no mesmo commit.
+
 ## Internacionalização
 
 - Idiomas: `en` (modelo), `pt` (conteúdo pt-BR), `es`. Padrão = idioma do aparelho,
@@ -116,8 +141,9 @@ Regras:
 - Open-Meteo gratuita **não** permite uso comercial → não usar.
 - Fase 1: **NASA POWER** (CC BY 4.0, uso comercial permitido, sem chave; atraso de
   2–3 dias). Dados preenchidos pela fila de jobs quando disponíveis. Exibir atribuição.
-- Clima ao vivo (MET Norway) fica para a Fase 2, via proxy no backend (exigência dos
-  termos deles para apps).
+- Clima agora (MET Norway) só via backend (exigência dos termos deles para apps),
+  só com conta e só para exibir (não é gravado). O app manda o ponto aproximado
+  fino; o servidor arredonda a 2 casas antes da MET. Crédito "MET Norway" na tela.
 - Fase da lua: cálculo local (`domain/services/moon`).
 
 ## Mapas
@@ -125,8 +151,10 @@ Regras:
 - OpenStreetMap via Overpass (ODbL: crédito em todo mapa e nos Ajustes). Só água e
   estradas principais, simplificadas e guardadas em `place_maps` (cache, não é dado
   do usuário: não exporta, não sincroniza, apaga com "Apagar todos os dados").
-- Fase 2: pedido pelo backend. `tool/overpass_probe.dart` (workflow `map-probe`)
-  testa a consulta real, porque o ambiente de desenvolvimento não alcança o Overpass.
+- Com conta, o pedido passa pelo backend (cache por região); sem conta ou com o
+  servidor fora, vai direto ao Overpass. `tool/overpass_probe.dart` (workflow
+  `map-probe`) testa a consulta real, porque o ambiente de desenvolvimento não
+  alcança o Overpass.
 
 ## Design
 

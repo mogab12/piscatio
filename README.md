@@ -4,6 +4,7 @@ Diário social de pescaria: registre cada pescaria, guarde as capturas e compart
 cards bonitos no Instagram e no WhatsApp. Funciona sem internet.
 
 - App Flutter (Android e iOS): [`app/`](app/)
+- Servidor (conta, sincronização, fotos, clima agora): [`backend/`](backend/)
 - Convenções do projeto: [`CLAUDE.md`](CLAUDE.md)
 - Roadmap e status: [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - Direção visual: [`docs/DESIGN.md`](docs/DESIGN.md)
@@ -13,10 +14,13 @@ cards bonitos no Instagram e no WhatsApp. Funciona sem internet.
 Fase 1 pronta (1A a 1D): pescaria ativa e captura rápida com foto sem EXIF,
 histórico, resumo pós-pescaria, recordes pessoais, clima da NASA POWER, cards em
 cinco estilos (Régua, Capa, Carta, Etiqueta e Mapa) com seis temas de cor, filtros
-de foto (nanquim, gravura, serigrafia, retícula, duotom) e mapa estilizado do local,
-estatísticas, iscas e equipamentos, pescaria passada a partir das fotos, busca de
-local por nome, exportação e exclusão de dados. Tudo funciona sem internet; a
-Fase 2 traz conta e sincronização.
+de foto e mapa estilizado do local, estatísticas, iscas e equipamentos, pescaria
+passada a partir das fotos, busca de local por nome, exportação e exclusão de
+dados.
+
+Fase 2 em teste: conta por e-mail, sincronização entre aparelhos, backup de
+fotos, clima agora na pescaria em andamento, "O que funcionou?" na aba Números e
+exclusão de conta. Sem conta, tudo continua funcionando só no celular.
 
 ## Jeito mais rápido de testar (Android, sem instalar nada)
 
@@ -41,6 +45,26 @@ segredo, cada build sai com uma chave descartável e é preciso desinstalar ante
 instalar a nova versão. Guarde a chave com cuidado: quem a tiver consegue assinar
 um APK que o celular aceita como atualização deste app de teste. A chave da loja
 será outra.
+
+## Conta e sincronização (Fase 2)
+
+A conta é opcional. Em **Ajustes → Conta → Entrar**, digite o e-mail, receba um
+código de 6 dígitos e pronto: o diário e as fotos sobem para o servidor e
+aparecem em qualquer aparelho com a mesma conta.
+
+- O banco do celular continua sendo a fonte da verdade. A sincronização roda a
+  cada 15 minutos com o app aberto, ao finalizar, registrar ou apagar uma
+  pescaria e em **Sincronizar agora**. Sem internet, espera e tenta de novo.
+- Editou nos dois aparelhos? Vence a edição mais recente.
+- **Sair** mantém o diário no celular. **Excluir conta** apaga a conta e a cópia
+  no servidor (o diário nos aparelhos continua).
+- Em **Servidor** dá para apontar para outro endereço (quem hospeda o próprio).
+
+O servidor precisa estar publicado: veja [`backend/README.md`](backend/README.md)
+(blueprint do Render em poucos cliques). O endereço padrão do app é
+`https://piscatio-api.onrender.com`; se o Render der outro nome, crie a variável
+`PISCATIO_API` do repositório (**Settings → Secrets and variables → Actions →
+Variables**) com o endereço, e os próximos APKs já saem com ele.
 
 ## Rodar a partir do código
 
@@ -119,23 +143,54 @@ SCREENSHOTS=1 flutter test test/screenshots   # PNGs em app/build/screenshots/
   área (4 km ou 650 m) que contém o ponto sem nunca estar centrada nele, e o card
   recebe só formas relativas, nunca coordenadas. O pedido ao OpenStreetMap usa o
   ponto aproximado: o pesqueiro não sai do celular.
+- Com conta, o servidor guarda o local exato para os seus aparelhos mostrarem, e
+  ninguém mais o vê. Clima agora e mapas são pedidos com o ponto aproximado, e o
+  servidor arredonda o ponto (~1 km) antes de falar com a MET Norway.
+- O token de acesso fica no armazenamento seguro do sistema (Keystore/Keychain).
 
 ## Dados de clima
 
 A Open-Meteo gratuita não permite uso comercial. O app usa a **NASA POWER**
 (CC BY 4.0, uso comercial permitido, sem chave). Os dados saem com 2 a 3 dias de
 atraso: ao finalizar, a pescaria entra numa fila que tenta de novo ao abrir o app,
-a cada 15 minutos e quando a internet volta. O crédito fica nos Ajustes. Clima ao
-vivo fica para a Fase 2, através do backend.
+a cada 15 minutos e quando a internet volta. O crédito fica nos Ajustes.
+
+Com conta, a pescaria em andamento mostra o **tempo agora** (temperatura, pressão,
+vento e chuva na próxima hora) da **MET Norway** (CC BY 4.0), pedido pelo servidor
+como os termos deles exigem. É só para ver na hora: não fica gravado.
 
 ## Dados de mapa
 
 Os mapas vêm do **OpenStreetMap** (ODbL: uso comercial permitido com crédito, que
 aparece em todo mapa e nos Ajustes), pela API pública do Overpass. Só água
 (lagos, represas, rios, córregos, mar) e as estradas principais, baixadas uma vez
-por região pela fila de jobs e guardadas no celular (algumas dezenas de KB). Na
-Fase 2 o pedido passa pelo backend, com cache próprio. O workflow `map-probe`
+por região pela fila de jobs e guardadas no celular (algumas dezenas de KB). Com
+conta, o pedido passa pelo servidor, que guarda um cache por região; sem conta,
+vai direto ao Overpass. O workflow `map-probe`
 testa a consulta real em quatro lugares sempre que o código do mapa muda.
+
+## O que testar no checkpoint 2
+
+1. **Atualização:** a partir desta versão o número da versão sobe a cada build.
+   Com a chave fixa configurada (ver "Atualizar sem desinstalar"), o APK novo
+   instala por cima do anterior.
+2. **Logo:** o nome "Piscatio" ao lado da boia, em letra pincelada, com a linha de
+   pesca passando por baixo até o anzol (no início, nos cards e na Capa).
+3. **Conta:** Ajustes → Conta → Entrar. Receba o código por e-mail (ou veja no log
+   do servidor, se o SMTP ainda não estiver configurado) e entre. O status mostra
+   "Sincronizado hoje às…".
+4. **Dois aparelhos** (ou desinstale e instale de novo): entre com a mesma conta.
+   Pescarias, capturas e fotos aparecem; uma edição num aparelho chega no outro
+   em até 15 minutos ou em "Sincronizar agora".
+5. **Modo avião:** registre uma pescaria sem internet. O status passa a "Sem
+   conexão com o servidor"; ao voltar a internet, sincroniza sozinho.
+6. **Tempo agora:** inicie uma pescaria com GPS e conta: "Tempo agora" aparece
+   abaixo do local, com o crédito da MET Norway.
+7. **O que funcionou?** (aba Números): com algumas pescarias, aparecem os horários,
+   a lua, a pressão e a isca que mais funcionaram. Com pouco dado, a seção explica
+   o que falta.
+8. **Sair e excluir:** Sair mantém o diário. Excluir conta pede confirmação e
+   apaga a cópia do servidor.
 
 ## O que testar no checkpoint 1D
 
@@ -188,8 +243,11 @@ testa a consulta real em quatro lugares sempre que o código do mapa muda.
   existir lá, e então o estilo Mapa não aparece.
 - Nome da região e busca de local usam o geocodificador do sistema (Android/iOS) e
   precisam de internet; sem ela, o nome da região fica na fila.
-- A exportação leva os dados em JSON; as fotos ficam no celular (backup de fotos
-  chega com a conta, na Fase 2).
+- A exportação leva os dados em JSON; as fotos vão para o servidor só com conta.
+- Login com Google e Apple ainda não está no app (só e-mail).
+- A sincronização roda com o app aberto (sem execução em segundo plano).
+- No plano gratuito do Render o servidor dorme sem uso: o primeiro acesso do dia
+  pode levar uns 30 segundos, e o banco gratuito expira depois de 30 dias.
 - Se o Android encerrar o app com a câmera aberta, a foto volta na próxima
   abertura e a captura continua, se houver pescaria em andamento.
 - Validado por testes automatizados e pela CI, que compila o APK.

@@ -2,7 +2,7 @@
 
 Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 
-## Fase 1 — MVP offline (atual)
+## Fase 1 — MVP offline
 
 ### 1A — Fundação e registro
 
@@ -74,17 +74,33 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
       sem centrar nele; mar preenchido pela costa; crédito ODbL
 - [x] Estilo Mapa e água real na Carta; opção "Mapa do local"
 - [x] Schema v3 (cache `place_maps`) com teste de migração
-- [ ] **Checkpoint 1D**: testar no celular
+- [x] **Checkpoint 1D**: testado no celular (pedidos para a Fase 2: atualizar
+      sem desinstalar, nome do app com mais personalidade no logo)
 
-## Fase 2 — Backend e sincronização
+## Fase 2 — Backend e sincronização (atual)
 
-- [ ] Django + DRF + PostgreSQL + PostGIS em `/backend`
-- [ ] Login (Google, Apple, e-mail)
-- [ ] Sincronização offline-first (UUID + updated_at + tombstones)
-- [ ] Backup de fotos
-- [ ] Clima ao vivo (MET Norway via proxy do backend)
-- [ ] Exclusão de conta (LGPD/GDPR)
-- [ ] "O que funcionou?": melhores horários, lua, clima e iscas por espécie
+- [x] Django + DRF + PostgreSQL + PostGIS em `/backend`, CI própria, Docker e
+      blueprint do Render (`render.yaml`)
+- [x] Login por e-mail com código de 6 dígitos (um token por aparelho, guardado
+      no armazenamento seguro do celular)
+- [ ] Login com Google e Apple no app (o servidor já aceita Google)
+- [x] Sincronização offline-first (UUID + updated_at + lápides + cursor do
+      servidor), a cada 15 min, ao finalizar/registrar/apagar e em "Sincronizar
+      agora"; vence a edição mais recente, uma edição local mais nova nunca é
+      sobrescrita
+- [x] Segredo da localização aproximada igual em todos os aparelhos da conta
+- [x] Backup de fotos (envio e download pela fila de jobs)
+- [x] Clima agora na pescaria em andamento (MET Norway via backend, ponto
+      aproximado, crédito na tela)
+- [x] Mapas pelo backend quando há conta (cache por região), direto no Overpass
+      sem conta
+- [x] Tela Conta: entrar, estado da sincronização, sair (o diário fica) e excluir
+      conta (LGPD/GDPR)
+- [x] "O que funcionou?" na aba Números: horários, lua, pressão (capturas por
+      hora pescada) e isca por espécie, com mínimo de 3 capturas em 2 pescarias
+- [x] Pedidos do checkpoint 1D: nome do logo em Shrikhand com a linha de pesca;
+      versão do APK sobe a cada build
+- [ ] **Checkpoint 2**: publicar o servidor e testar no celular
 
 ## Fase 3 — Social
 
