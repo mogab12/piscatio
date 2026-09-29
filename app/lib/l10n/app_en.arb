@@ -1786,5 +1786,9 @@
   "cardFrameNothing": "This card has no photo or map to frame.",
   "@cardFrameNothing": {
     "description": "Card editor, Frame tab: shown when there is nothing to frame."
+  },
+  "cardThemePhoto": "Theme colors on the photo",
+  "@cardThemePhoto": {
+    "description": "Card editor, Theme tab: switch that paints the photo and its filter in the theme's colors."
   }
 }

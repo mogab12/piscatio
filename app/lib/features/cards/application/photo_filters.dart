@@ -27,8 +27,8 @@ enum CardPhotoFilter {
 /// without filtering the photo again.
 ///
 /// Red holds the main mask (tone for [CardPhotoFilter.duotone], ink for
-/// the others). [CardPhotoFilter.rupestre] uses three: red for charcoal,
-/// green for ochre, blue for the stone's relief.
+/// the others). [CardPhotoFilter.rupestre] uses three: red for outlines,
+/// green for the paint level, blue for the rock's shade.
 /// Pure Dart, meant to run in an isolate.
 Uint8List applyPhotoFilter(
   CardPhotoFilter filter,
@@ -57,7 +57,7 @@ Uint8List applyPhotoFilter(
     case CardPhotoFilter.engraving:
       _engraving(y, width, height, s, put);
     case CardPhotoFilter.rupestre:
-      _rupestre(rgba, y, width, height, s, out);
+      _rupestre(y, width, height, s, out);
     case CardPhotoFilter.halftone:
       final t = _tone(blur(y, width, height, 1.5 * s));
       final cell = 10 * s;
@@ -138,174 +138,229 @@ void _engraving(
   }
 }
 
-/// Cave painting. The photo's background is found by its colors along the
-/// borders; what differs from it (usually the catch) is painted in ochre
-/// with a thick charcoal outline and charcoal details; the background stays
-/// bare stone with a faint sketch. Writes charcoal to red, ochre to green
-/// and the stone's relief (shade, pores, cracks) to blue.
-void _rupestre(
-  Uint8List rgba,
-  Float32List y,
-  int width,
-  int height,
-  double s,
-  Uint8List out,
-) {
+/// Cave painting, like a scene on a lit rock wall: the photo smoothed
+/// into painted patches (Kuwahara), their edges wobbling like a hand
+/// brush, split by tone into four pigments (charcoal, dark ochre, light
+/// ochre, bare stone), outlined in charcoal with the finer details drawn,
+/// over limestone with grain, pits, stains and torchlight fading at the
+/// edges.
+///
+/// Writes the outlines to red, the paint level to green (1 bare stone, 0.7
+/// light ochre, 0.4 dark ochre, 0.1 charcoal, soaked unevenly) and the
+/// rock's shade to blue.
+void _rupestre(Float32List y, int width, int height, double s, Uint8List out) {
   final n = width * height;
-  final t = _localTone(_tone(y), width, height, 60 * s, 0.35);
-  final background = _backgroundness(rgba, width, height, s);
-  final n1 = valueNoise(width, height, 110 * s, seed: 3, octaves: 5);
-  final n2 = valueNoise(width, height, 14 * s, seed: 5, octaves: 3);
-  final n3 = valueNoise(width, height, 3 * s, seed: 7, octaves: 2);
-  final cracks = valueNoise(width, height, 320 * s, seed: 11, octaves: 3);
-  final pores = _standardized(blur(_whiteNoise(n, 21), width, height, 1.2 * s));
+  final t = _localTone(_tone(y), width, height, 50 * s, 0.35);
+  final k = math.max((7 * s).round(), 2);
+  var painted = kuwahara(t, width, height, k);
+  painted = kuwahara(painted, width, height, math.max(k ~/ 2, 2));
+  painted = _warp(painted, width, height, 3.5 * s, 18 * s, 40);
 
-  final figure = Float32List(n);
+  // The rock.
+  final n1 = valueNoise(width, height, 200 * s, seed: 3);
+  final n2 = valueNoise(width, height, 60 * s, seed: 5, octaves: 2);
+  final g1 = valueNoise(width, height, 1.6 * s, seed: 9, octaves: 1);
+  final g2 = valueNoise(width, height, 4 * s, seed: 10, octaves: 2);
+  final bumps = Float32List(n);
   for (var i = 0; i < n; i++) {
-    figure[i] = 1 - background[i];
+    bumps[i] = n1[i] + 0.2 * n2[i];
   }
-  final soft = blur(figure, width, height, 5 * s);
+  final relief = blur(bumps, width, height, 3 * s);
+  final pitSeeds = Float32List(n);
+  final rng = math.Random(17);
+  final pitChance = 0.0015 / math.pow(math.max(s, 0.5), 2);
   for (var i = 0; i < n; i++) {
-    figure[i] = _smoothstep(0.42, 0.58, soft[i] + (n2[i] - 0.5) * 0.3);
+    if (rng.nextDouble() < pitChance) pitSeeds[i] = 1;
   }
-  final shape = blur(figure, width, height, 1.5 * s);
-  final flat = blur(
-    _median3(_median3(t, width, height), width, height),
-    width,
-    height,
-    1.0 * s,
-  );
-  final lines = xdog(
-    t,
-    width,
-    height,
-    sigma: 1.5 * s,
-    p: 22,
-    eps: 0.78,
-    phi: 9,
-  );
-  final inner = Float32List(n);
-  for (var i = 0; i < n; i++) {
-    inner[i] = 1 - lines[i];
-  }
-  final innerSoft = blur(inner, width, height, 0.8 * s);
-  final sketchFine = blur(flat, width, height, 1.8 * s);
-  final sketchCoarse = blur(flat, width, height, 2.88 * s);
-  final margin = math.max(4 * s, 2.0);
+  final pits = blur(pitSeeds, width, height, 1.3 * s);
 
+  // Pigment levels by tone, with a little noise so borders are uneven.
+  final sample = [for (var i = 0; i < n; i += 7) painted[i]]..sort();
+  double quantile(double f) =>
+      sample[(f * (sample.length - 1)).round().clamp(0, sample.length - 1)];
+  final q0 = quantile(0.16), q1 = quantile(0.46), q2 = quantile(0.88);
+  final level = Uint8List(n);
+  for (var i = 0; i < n; i++) {
+    final v = painted[i] + (n2[i] - 0.5) * 0.04;
+    level[i] = v < q0
+        ? 0
+        : v < q1
+        ? 1
+        : v < q2
+        ? 2
+        : 3;
+  }
+  _majority4(level, width, height, math.max((5 * s).round(), 3));
+  const plateaus = [0.1, 0.4, 0.7, 1.0];
+  final paint = Float32List(n);
+  final levels = Float32List(n);
+  for (var i = 0; i < n; i++) {
+    paint[i] = plateaus[level[i]];
+    levels[i] = level[i].toDouble();
+  }
+  final paintSoft = blur(paint, width, height, 1.0 * s);
+  final levelSoft = blur(levels, width, height, 1.8 * s);
+  final widthNoise = valueNoise(width, height, 50 * s, seed: 21, octaves: 2);
+
+  // Finer lines from the photo itself: eye, fins, spots.
+  final fine = blur(t, width, height, 0.9 * s);
+  final coarse = blur(t, width, height, 1.8 * s);
+  final detail = Float32List(n);
+  for (var i = 0; i < n; i++) {
+    detail[i] = _smoothstep(0.025, 0.07, coarse[i] - fine[i]);
+  }
+  final detailWobbly = _warp(detail, width, height, 1.5 * s, 12 * s, 50);
+
+  final cx = width / 2, cy = height / 2;
   for (var i = 0; i < n; i++) {
     final x = i % width;
     final row = i ~/ width;
-    final fig = figure[i];
-    final grain = (0.82 + 0.35 * (n1[i] - 0.5) + 0.7 * (n3[i] - 0.5)).clamp(
-      0.0,
-      1.0,
-    );
-    final ochre =
-        fig * (0.6 + 0.4 * (1 - _smoothstep(0.35, 0.85, flat[i]))) * grain;
-    // The outline: where the figure's edge is, drawn with a rough stick.
+    final holes = _smoothstep(0.62, 0.9, g2[i]) * 0.7;
+    final level = paintSoft[i];
+    final soaked = level < 0.97 ? math.min(level + holes * 0.3, 1.0) : level;
     final gx =
-        (shape[row * width + math.min(x + 1, width - 1)] -
-            shape[row * width + math.max(x - 1, 0)]) /
+        (levelSoft[row * width + math.min(x + 1, width - 1)] -
+            levelSoft[row * width + math.max(x - 1, 0)]) /
         2;
     final gy =
-        (shape[math.min(row + 1, height - 1) * width + x] -
-            shape[math.max(row - 1, 0) * width + x]) /
+        (levelSoft[math.min(row + 1, height - 1) * width + x] -
+            levelSoft[math.max(row - 1, 0) * width + x]) /
         2;
-    final outline = _smoothstep(
-      0.2,
-      0.5,
-      math.sqrt(gx * gx + gy * gy) * 6 * s + (n3[i] - 0.5) * 0.3,
+    final edge = math.sqrt(gx * gx + gy * gy) * 2.4 * s;
+    final w = widthNoise[i];
+    final contour = _smoothstep(
+      0.25 - 0.12 * w,
+      0.5 - 0.1 * w,
+      edge + (g2[i] - 0.5) * 0.3,
     );
-    final detail = _smoothstep(0.35, 0.65, innerSoft[i] + (n3[i] - 0.5) * 0.35);
-    final dark = 1 - _smoothstep(0.10, 0.25, flat[i]);
-    final inside = math.max(detail * 0.9, dark * 0.8) * fig;
-    final sketch = _smoothstep(0.008, 0.024, sketchCoarse[i] - sketchFine[i]);
-    final outside =
-        _smoothstep(0.25, 0.6, sketch + (n3[i] - 0.5) * 0.3) * (1 - fig) * 0.5;
-    final edgeDistance = math
-        .min(math.min(x, width - 1 - x), math.min(row, height - 1 - row))
-        .toDouble();
-    // Nothing drawn right at the edges (blurs replicate the border there).
-    final inset = _smoothstep(margin, margin * 2, edgeDistance);
-    final charcoal =
-        math.max(math.max(outline, inside), outside) *
-        (grain + 0.1).clamp(0.0, 1.0) *
-        inset;
-    final crack =
-        (1 - (cracks[i] - 0.5).abs() / 0.003).clamp(0.0, 1.0) *
-        _smoothstep(0.55, 0.8, n1[i]);
-    final relief =
-        _smoothstep(0.45, 1.0, 1 - n1[i]) * 0.20 +
-        _smoothstep(0.5, 0.9, n2[i]) * 0.06 +
-        _smoothstep(1.6, 2.6, pores[i]) * 0.35 * inset +
-        crack * 0.45;
-    out[i * 4] = (charcoal.clamp(0.0, 1.0) * 255).round();
-    out[i * 4 + 1] = (ochre.clamp(0.0, 1.0) * 255).round();
-    out[i * 4 + 2] = (relief.clamp(0.0, 0.6) * 255).round();
+    final lines =
+        math.max(contour * 0.95, detailWobbly[i] * 0.7) * (1 - holes * 0.45);
+    // Rock shade: light from the top left on the bumps, grain, pits,
+    // stains and the torch's reach.
+    final rx =
+        (relief[row * width + math.min(x + 1, width - 1)] -
+            relief[row * width + math.max(x - 1, 0)]) /
+        2;
+    final ry =
+        (relief[math.min(row + 1, height - 1) * width + x] -
+            relief[math.max(row - 1, 0) * width + x]) /
+        2;
+    final lit = (-0.6 * rx - 0.8 * ry) * 100 * s;
+    final dx = (x - cx) / cx, dy = (row - cy) / cy;
+    final reach = math.sqrt(dx * dx + dy * dy) / math.sqrt2;
+    final shade =
+        (0.16 - lit * 0.4).clamp(0.0, 0.4) * 0.35 +
+        ((g1[i] - 0.45) * 0.30 + (g2[i] - 0.45) * 0.22).clamp(0.0, 1.0) +
+        _smoothstep(0.02, 0.12, pits[i]) * 0.5 +
+        _smoothstep(0.45, 0.95, 1 - n2[i]) * 0.10 +
+        _smoothstep(0.55, 0.95, 1 - n1[i]) * 0.08 +
+        _smoothstep(0.5, 1.05, reach + (n2[i] - 0.5) * 0.12) * 0.45;
+    out[i * 4] = (lines.clamp(0.0, 1.0) * 255).round();
+    out[i * 4 + 1] = (soaked.clamp(0.0, 1.0) * 255).round();
+    out[i * 4 + 2] = (shade.clamp(0.0, 0.85) * 255).round();
     out[i * 4 + 3] = 255;
   }
 }
 
-/// How much each pixel looks like the photo's background: how common its
-/// color is along the borders (0 = only inside, 1 = typical of the edges).
-Float32List _backgroundness(Uint8List rgba, int width, int height, double s) {
-  final n = width * height;
-  final r = Float32List(n), g = Float32List(n), b = Float32List(n);
-  for (var i = 0; i < n; i++) {
-    r[i] = rgba[i * 4] / 255;
-    g[i] = rgba[i * 4 + 1] / 255;
-    b[i] = rgba[i * 4 + 2] / 255;
-  }
-  final rs = blur(r, width, height, 2 * s);
-  final gs = blur(g, width, height, 2 * s);
-  final bs = blur(b, width, height, 2 * s);
-  const bins = 10;
-  int q(double v) => (v * bins).floor().clamp(0, bins - 1);
-  final index = Int32List(n);
-  for (var i = 0; i < n; i++) {
-    final lum = 0.299 * rs[i] + 0.587 * gs[i] + 0.114 * bs[i];
-    final u = (rs[i] - gs[i]) * 0.5 + 0.5;
-    final v = (bs[i] - (rs[i] + gs[i]) / 2) * 0.5 + 0.5;
-    index[i] = (q(lum) * bins + q(u)) * bins + q(v);
-  }
-  final margin = math.max((math.min(width, height) * 0.06).round(), 1);
-  var hist = Float32List(bins * bins * bins);
-  for (var row = 0; row < height; row++) {
-    final edgeRow = row < margin || row >= height - margin;
+/// Generalized Kuwahara filter of radius [r]: each pixel takes the mean of
+/// the calmest of its four overlapping quadrants. Flat, painted patches
+/// with the edges kept. Constant time per pixel (summed-area tables).
+Float32List kuwahara(Float32List src, int width, int height, int r) {
+  final w1 = width + 1;
+  final sum = Float64List(w1 * (height + 1));
+  final sq = Float64List(w1 * (height + 1));
+  for (var y = 0; y < height; y++) {
+    var rowSum = 0.0, rowSq = 0.0;
     for (var x = 0; x < width; x++) {
-      if (edgeRow || x < margin || x >= width - margin) {
-        hist[index[row * width + x]] += 1;
-      }
+      final v = src[y * width + x];
+      rowSum += v;
+      rowSq += v * v;
+      sum[(y + 1) * w1 + x + 1] = sum[y * w1 + x + 1] + rowSum;
+      sq[(y + 1) * w1 + x + 1] = sq[y * w1 + x + 1] + rowSq;
     }
   }
-  // Similar colors count too: blur the histogram along its three axes.
-  const kernel = [0.0293, 0.3052, 1.0, 0.3052, 0.0293];
-  for (var axis = 0; axis < 3; axis++) {
-    final stride = [bins * bins, bins, 1][axis];
-    final next = Float32List(hist.length);
-    for (var i = 0; i < hist.length; i++) {
-      final pos = (i ~/ stride) % bins;
-      var sum = 0.0;
-      var weight = 0.0;
-      for (var k = -2; k <= 2; k++) {
-        final p = pos + k;
-        if (p < 0 || p >= bins) continue;
-        sum += hist[i + k * stride] * kernel[k + 2];
-        weight += kernel[k + 2];
+  final out = Float32List(src.length);
+  for (var y = 0; y < height; y++) {
+    for (var x = 0; x < width; x++) {
+      var bestMean = 0.0;
+      var bestVar = double.infinity;
+      for (var q = 0; q < 4; q++) {
+        final x0 = (q.isEven ? x - r : x).clamp(0, width - 1);
+        final y0 = (q < 2 ? y - r : y).clamp(0, height - 1);
+        final x1 = (q.isEven ? x : x + r).clamp(0, width - 1) + 1;
+        final y1 = (q < 2 ? y : y + r).clamp(0, height - 1) + 1;
+        final count = (x1 - x0) * (y1 - y0);
+        final s =
+            sum[y1 * w1 + x1] -
+            sum[y0 * w1 + x1] -
+            sum[y1 * w1 + x0] +
+            sum[y0 * w1 + x0];
+        final s2 =
+            sq[y1 * w1 + x1] -
+            sq[y0 * w1 + x1] -
+            sq[y1 * w1 + x0] +
+            sq[y0 * w1 + x0];
+        final mean = s / count;
+        final variance = s2 / count - mean * mean;
+        if (variance < bestVar) {
+          bestVar = variance;
+          bestMean = mean;
+        }
       }
-      next[i] = sum / weight;
+      out[y * width + x] = bestMean;
     }
-    hist = next;
   }
-  var peak = 0.0;
-  for (final v in hist) {
-    peak = math.max(peak, v);
+  return out;
+}
+
+/// Each pixel takes the most common of the four levels around it (a
+/// [size]-pixel box): tiny islands of paint disappear.
+void _majority4(Uint8List level, int width, int height, int size) {
+  final r = size ~/ 2;
+  final counts = [
+    for (var l = 0; l < 4; l++)
+      blur(
+        Float32List.fromList([for (final v in level) v == l ? 1.0 : 0.0]),
+        width,
+        height,
+        r / 1.5,
+      ),
+  ];
+  for (var i = 0; i < level.length; i++) {
+    var best = 0;
+    for (var l = 1; l < 4; l++) {
+      if (counts[l][i] > counts[best][i]) best = l;
+    }
+    level[i] = best;
   }
-  final out = Float32List(n);
-  if (peak == 0) return out;
-  for (var i = 0; i < n; i++) {
-    out[i] = (hist[index[i]] / peak * 4).clamp(0.0, 1.0);
+}
+
+/// [src] pushed around by a smooth random field up to [amount] pixels:
+/// straight edges wobble like a hand brush.
+Float32List _warp(
+  Float32List src,
+  int width,
+  int height,
+  double amount,
+  double scale,
+  int seed,
+) {
+  final ox = valueNoise(width, height, scale, seed: seed, octaves: 2);
+  final oy = valueNoise(width, height, scale, seed: seed + 1, octaves: 2);
+  final out = Float32List(src.length);
+  for (var y = 0; y < height; y++) {
+    for (var x = 0; x < width; x++) {
+      final i = y * width + x;
+      final fx = (x + (ox[i] - 0.5) * 2 * amount).clamp(0.0, width - 1.0);
+      final fy = (y + (oy[i] - 0.5) * 2 * amount).clamp(0.0, height - 1.0);
+      final x0 = fx.floor(), y0 = fy.floor();
+      final x1 = math.min(x0 + 1, width - 1), y1 = math.min(y0 + 1, height - 1);
+      final wx = fx - x0, wy = fy - y0;
+      final top = src[y0 * width + x0] * (1 - wx) + src[y0 * width + x1] * wx;
+      final bottom =
+          src[y1 * width + x0] * (1 - wx) + src[y1 * width + x1] * wx;
+      out[i] = top + (bottom - top) * wy;
+    }
   }
   return out;
 }
@@ -399,30 +454,6 @@ Float32List valueNoise(
   return out;
 }
 
-Float32List _whiteNoise(int n, int seed) {
-  final rng = math.Random(seed);
-  final out = Float32List(n);
-  for (var i = 0; i < n; i++) {
-    out[i] = rng.nextDouble();
-  }
-  return out;
-}
-
-/// Zero mean, unit deviation.
-Float32List _standardized(Float32List v) {
-  var sum = 0.0;
-  for (final x in v) {
-    sum += x;
-  }
-  final mean = sum / v.length;
-  var sq = 0.0;
-  for (final x in v) {
-    sq += (x - mean) * (x - mean);
-  }
-  final sd = math.max(math.sqrt(sq / v.length), 1e-6);
-  return Float32List.fromList([for (final x in v) (x - mean) / sd]);
-}
-
 double _smoothstep(double e0, double e1, double x) {
   final t = ((x - e0) / (e1 - e0)).clamp(0.0, 1.0);
   return t * t * (3 - 2 * t);
@@ -442,16 +473,45 @@ List<double> filterTint({required int base, required int first}) {
   return [...row(16), ...row(8), ...row(0), 0, 0, 0, 1, 0];
 }
 
+/// Color matrix that grades a photo toward two colors: half the photo,
+/// half its brightness mapped from [shadow] to [light]. Keeps the photo
+/// readable while it takes the theme's hues.
+List<double> photoGrade({
+  required int shadow,
+  required int light,
+  double amount = 0.5,
+}) {
+  List<double> row(int shift, int channel) {
+    final s = ((shadow >> shift) & 0xFF).toDouble();
+    final l = ((light >> shift) & 0xFF).toDouble();
+    final k = amount * (l - s) / 255;
+    return [
+      (channel == 0 ? 1 - amount : 0) + k * 0.299,
+      (channel == 1 ? 1 - amount : 0) + k * 0.587,
+      (channel == 2 ? 1 - amount : 0) + k * 0.114,
+      0,
+      amount * s,
+    ];
+  }
+
+  return [...row(16, 0), ...row(8, 1), ...row(0, 2), 0, 0, 0, 1, 0];
+}
+
 /// Color matrix that paints [color] with the separation's [channel] (0 red,
-/// 1 green, 2 blue) as its opacity: one layer of a multi-ink filter, drawn
-/// over the layers below it.
-List<double> channelInk({required int color, required int channel}) {
+/// 1 green, 2 blue) as its opacity, `scale · channel + offset` (clamped to
+/// 0–1): one layer of a multi-ink filter, drawn over the layers below it.
+List<double> channelInk({
+  required int color,
+  required int channel,
+  double scale = 1,
+  double offset = 0,
+}) {
   double c(int shift) => ((color >> shift) & 0xFF).toDouble();
   return [
     0, 0, 0, 0, c(16), //
     0, 0, 0, 0, c(8),
     0, 0, 0, 0, c(0),
-    for (var i = 0; i < 3; i++) i == channel ? 1.0 : 0.0, 0, 0,
+    for (var i = 0; i < 3; i++) i == channel ? scale : 0.0, 0, offset * 255,
   ];
 }
 

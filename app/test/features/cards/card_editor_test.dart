@@ -311,6 +311,30 @@ void main() {
     await app.dispose(tester);
   });
 
+  testWidgets('the theme can paint the photo', (tester) async {
+    final (app, _, catchId, _) = await _setup(tester, photo: true);
+    await app.pumpScreen(
+      tester,
+      CardEditorScreen(subject: CardSubject.catchItem, id: catchId),
+    );
+    CatchCardView view() => tester.widget(find.byType(CatchCardView));
+    CardCanvas canvas() => tester.widget(find.byType(CardCanvas));
+    await tester.tap(find.text('Tema'));
+    await app.settle(tester);
+    expect(view().options.photoThemed, isFalse);
+    await tester.tap(find.text('Cores do tema na foto'));
+    await app.settle(tester);
+    expect(view().options.photoThemed, isTrue);
+    expect(canvas().photoThemed, isTrue);
+    // The plain photo is graded toward the theme.
+    final filtered = find.descendant(
+      of: find.byType(CardPhoto),
+      matching: find.byType(ColorFiltered),
+    );
+    expect(filtered, findsWidgets);
+    await app.dispose(tester);
+  });
+
   testWidgets('framing: drag, pinch or slide to place the photo', (
     tester,
   ) async {

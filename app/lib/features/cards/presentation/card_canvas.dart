@@ -18,6 +18,7 @@ class CardCanvas extends StatefulWidget {
     required this.child,
     this.palette = CardPalette.redHead,
     this.photoFilter = CardPhotoFilter.none,
+    this.photoThemed = false,
     this.photoFrame = CardFrame.fill,
     this.mapFrame = CardFrame.fill,
     this.onFrame,
@@ -26,6 +27,7 @@ class CardCanvas extends StatefulWidget {
   final CardFormat format;
   final CardPalette palette;
   final CardPhotoFilter photoFilter;
+  final bool photoThemed;
   final CardFrame photoFrame;
   final CardFrame mapFrame;
 
@@ -101,6 +103,7 @@ class _CardCanvasState extends State<CardCanvas> {
       child: CardPaletteScope(
         palette: palette,
         photoFilter: widget.photoFilter,
+        photoThemed: widget.photoThemed,
         photoFrame: widget.photoFrame,
         mapFrame: widget.mapFrame,
         onFrame: widget.onFrame,
@@ -232,32 +235,29 @@ class _CardPhotoState extends State<CardPhoto> {
     final palette = context.cardPalette;
     final ground = palette.ground;
     if (!CardPhoto.exists(widget.path)) return ColoredBox(color: ground);
-    final filter = context.cardPhotoFilter;
     final frame = context.cardFrame(CardFrameTarget.photo);
     final align = Alignment(frame.focus.dx, frame.focus.dy);
-    final tint = photoTint(palette, filter);
+    final paint = photoPaint(
+      palette,
+      context.cardPhotoFilter,
+      context.cardPhotoThemed,
+    );
     final image = Image.file(
       File(widget.path!),
       fit: BoxFit.cover,
       alignment: align,
       errorBuilder: (_, _, _) => ColoredBox(color: ground),
     );
-    Widget layer(Color color, int channel) => ColorFiltered(
-      colorFilter: ColorFilter.matrix(
-        channelInk(color: color.toARGB32(), channel: channel),
-      ),
-      child: image,
-    );
-    final inks = rupestreInks(palette);
+    final tint = paint.tint;
+    final base = paint.base;
     Widget photo = Stack(
       fit: StackFit.expand,
       children: [
-        if (filter == CardPhotoFilter.rupestre) ...[
-          // The stone, its relief, the ochre, then the charcoal on top.
-          ColoredBox(color: inks.stone),
-          layer(inks.relief, 2),
-          layer(inks.ochre, 1),
-          layer(inks.charcoal, 0),
+        if (base != null) ...[
+          // Inks laid one over the other on their ground.
+          ColoredBox(color: base),
+          for (final layer in paint.layers)
+            ColorFiltered(colorFilter: layer, child: image),
         ] else if (tint == null)
           image
         else

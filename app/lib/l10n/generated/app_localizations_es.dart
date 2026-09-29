@@ -1361,4 +1361,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get cardFrameNothing =>
       'Esta tarjeta no tiene foto ni mapa para encuadrar.';
+
+  @override
+  String get cardThemePhoto => 'Colores del tema en la foto';
 }

@@ -2385,6 +2385,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This card has no photo or map to frame.'**
   String get cardFrameNothing;
+
+  /// Card editor, Theme tab: switch that paints the photo and its filter in the theme's colors.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme colors on the photo'**
+  String get cardThemePhoto;
 }
 
 class _AppLocalizationsDelegate

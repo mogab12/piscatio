@@ -318,7 +318,7 @@ void main() {
   }
 
   // Each photo filter on the three styles, in different themes.
-  for (final filter in CardPhotoFilter.values.skip(1)) {
+  for (final filter in CardPhotoFilter.values) {
     testWidgets('filter ${filter.name}', (tester) async {
       final root = Directory.systemTemp.createTempSync('piscatio_shots');
       addTearDown(() => root.deleteSync(recursive: true));
@@ -326,22 +326,26 @@ void main() {
       final path = (await tester.runAsync(
         () => service.separation(_preview, filter),
       ))!;
-      for (final (style, palette) in [
-        (CardStyle.cover, CardPalette.redHead),
-        (CardStyle.board, CardPalette.moon),
-        (CardStyle.chart, CardPalette.tucunare),
-        (CardStyle.tag, CardPalette.paper),
-        (CardStyle.cover, CardPalette.river),
+      for (final (style, palette, themed) in [
+        (CardStyle.cover, CardPalette.redHead, false),
+        (CardStyle.cover, CardPalette.redHead, true),
+        (CardStyle.board, CardPalette.moon, true),
+        (CardStyle.chart, CardPalette.tucunare, true),
+        (CardStyle.tag, CardPalette.paper, true),
+        (CardStyle.cover, CardPalette.river, true),
       ]) {
+        final look = themed ? 'theme' : 'natural';
         await shoot(
           tester,
-          'filter_${filter.name}_${style.name}_${palette.name}',
+          'filter_${filter.name}_${style.name}_${palette.name}_$look',
           CatchCardView(
             data: sampleCatch(photo: _preview),
             style: style,
             format: CardFormat.story,
-            options: CardOptions(palette: palette)
-                .withFilter(filter, filteredPath: path),
+            options: CardOptions(
+              palette: palette,
+              photoThemed: themed,
+            ).withFilter(filter, filteredPath: path),
           ),
           CardFormat.story,
           photo: path,

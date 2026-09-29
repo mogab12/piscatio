@@ -290,16 +290,33 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
           ),
         ],
       ),
-      _Section.theme => _ChipRow(
-        height: 104,
+      _Section.theme => Column(
         children: [
-          for (final p in CardPalette.values)
-            _Swatch(
-              palette: p,
-              label: _paletteName(p),
-              selected: _options.palette == p,
-              onTap: () => _set(_options.copyWith(palette: p)),
+          _ChipRow(
+            height: 96,
+            children: [
+              for (final p in CardPalette.values)
+                _Swatch(
+                  palette: p,
+                  label: _paletteName(p),
+                  selected: _options.palette == p,
+                  onTap: () => _set(_options.copyWith(palette: p)),
+                ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: PiscatioSizes.gutter,
             ),
+            child: _ToggleTile(
+              icon: Icons.format_color_fill_rounded,
+              label: l10n.cardThemePhoto,
+              value: _options.photoThemed,
+              onChanged: shownPhoto == null
+                  ? null
+                  : (v) => _set(_options.copyWith(photoThemed: v)),
+            ),
+          ),
         ],
       ),
       _Section.photo =>

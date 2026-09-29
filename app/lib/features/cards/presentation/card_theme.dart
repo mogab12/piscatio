@@ -12,6 +12,7 @@ class CardPaletteScope extends InheritedWidget {
     super.key,
     required this.palette,
     this.photoFilter = CardPhotoFilter.none,
+    this.photoThemed = false,
     this.photoFrame = CardFrame.fill,
     this.mapFrame = CardFrame.fill,
     this.onFrame,
@@ -23,6 +24,9 @@ class CardPaletteScope extends InheritedWidget {
 
   /// The photo given to the card is this filter's separation image.
   final CardPhotoFilter photoFilter;
+
+  /// The photo is painted in the palette's colors (see [photoPaint]).
+  final bool photoThemed;
 
   /// How the photo and the map are framed.
   final CardFrame photoFrame;
@@ -45,6 +49,7 @@ class CardPaletteScope extends InheritedWidget {
   bool updateShouldNotify(CardPaletteScope old) =>
       old.palette != palette ||
       old.photoFilter != photoFilter ||
+      old.photoThemed != photoThemed ||
       old.photoFrame != photoFrame ||
       old.mapFrame != mapFrame ||
       (old.onFrame == null) != (onFrame == null);
@@ -55,6 +60,8 @@ extension CardPaletteContext on BuildContext {
 
   CardPhotoFilter get cardPhotoFilter =>
       CardPaletteScope._of(this)?.photoFilter ?? CardPhotoFilter.none;
+
+  bool get cardPhotoThemed => CardPaletteScope._of(this)?.photoThemed ?? false;
 
   CardFrame cardFrame(CardFrameTarget target) {
     final scope = CardPaletteScope._of(this);
@@ -115,36 +122,134 @@ class CardFrameRegistry {
   }
 }
 
-/// Inks a one-ink filtered photo in the palette's colors: drawings in the
-/// board's ink on its white, the duotone from the palette's shadow to its
-/// light. Null for the plain photo and for layered filters ([rupestreInks]).
-ColorFilter? photoTint(CardPalette p, CardPhotoFilter filter) {
-  int argb(Color c) => c.toARGB32();
-  final matrix = switch (filter) {
-    CardPhotoFilter.none || CardPhotoFilter.rupestre => null,
-    CardPhotoFilter.duotone => filterTint(
-      base: argb(p.shadow),
-      first: argb(p.highlight),
-    ),
-    CardPhotoFilter.engraving || CardPhotoFilter.halftone => filterTint(
-      base: argb(p.board),
-      first: argb(p.boardInk),
-    ),
-  };
-  return matrix == null ? null : ColorFilter.matrix(matrix);
+/// How the card paints its photo: straight ([tint] null, no [base]),
+/// through one color matrix ([tint]), or as layers of ink over a [base]
+/// color, each reading one channel of the filter's separation.
+class PhotoPaint {
+  const PhotoPaint({this.tint, this.base, this.layers = const []});
+
+  static const plain = PhotoPaint();
+
+  final ColorFilter? tint;
+  final Color? base;
+  final List<ColorFilter> layers;
 }
 
-/// The cave painting in the theme's materials: its stone is the tag's card
-/// stock (sand, bone, moonlit grey…), the ochre its accent ink, the
-/// charcoal its typewriter ribbon.
-({Color stone, Color relief, Color ochre, Color charcoal}) rupestreInks(
-  CardPalette p,
-) {
+/// Natural inks, the same on every theme: black on paper, the earth
+/// pigments of a real cave.
+abstract final class NaturalInks {
+  static const paper = Color(0xFFF5F2EA);
+  static const ink = Color(0xFF1C1B1A);
+  static const stone = Color(0xFFDCC7A2);
+  static const stoneShade = Color(0xFF3B2A1E);
+  static const yellowOchre = Color(0xFFC4893F);
+  static const redOchre = Color(0xFF94391F);
+  static const charcoal = Color(0xFF241C18);
+}
+
+/// The two ends of a one-ink print in the theme: its accent on its ground.
+/// On dark themes the accent is the light end, so the print stays a
+/// positive (light where the photo is light).
+({Color light, Color dark}) themeInks(CardPalette p) => p.dark
+    ? (light: p.accent, dark: p.ground)
+    : (light: p.ground, dark: p.accentInk);
+
+/// The photo painted for [filter], in natural colors or, when [themed], in
+/// the palette's.
+PhotoPaint photoPaint(CardPalette p, CardPhotoFilter filter, bool themed) {
+  int argb(Color c) => c.toARGB32();
+  ColorFilter matrix(List<double> m) => ColorFilter.matrix(m);
+  switch (filter) {
+    case CardPhotoFilter.none:
+      return themed
+          ? PhotoPaint(
+              tint: matrix(
+                photoGrade(
+                  shadow: argb(p.shadow),
+                  light: argb(Color.lerp(p.highlight, p.accent, 0.25)!),
+                ),
+              ),
+            )
+          : PhotoPaint.plain;
+    case CardPhotoFilter.engraving || CardPhotoFilter.halftone:
+      final (:light, :dark) = themed
+          ? themeInks(p)
+          : (light: NaturalInks.paper, dark: NaturalInks.ink);
+      return PhotoPaint(
+        tint: matrix(filterTint(base: argb(light), first: argb(dark))),
+      );
+    case CardPhotoFilter.duotone:
+      if (!themed) {
+        return PhotoPaint(
+          tint: matrix(
+            filterTint(
+              base: argb(NaturalInks.ink),
+              first: argb(NaturalInks.paper),
+            ),
+          ),
+        );
+      }
+      // Three tones of the theme: its shadow, its accent in the middle, its
+      // light.
+      return PhotoPaint(
+        base: p.shadow,
+        layers: [
+          matrix(channelInk(color: argb(p.accent), channel: 0, scale: 2)),
+          matrix(
+            channelInk(
+              color: argb(p.highlight),
+              channel: 0,
+              scale: 2,
+              offset: -1,
+            ),
+          ),
+        ],
+      );
+    case CardPhotoFilter.rupestre:
+      final inks = rupestreInks(p, themed: themed);
+      // The paint level (green) sets how far down the pigments go: light
+      // ochre above 0.7, dark ochre above 0.4, charcoal at the bottom.
+      ColorFilter level(Color c, double top) => matrix(
+        channelInk(
+          color: argb(c),
+          channel: 1,
+          scale: -1 / 0.3,
+          offset: top / 0.3,
+        ),
+      );
+      return PhotoPaint(
+        base: inks.stone,
+        layers: [
+          level(inks.lightOchre, 1.0),
+          level(inks.darkOchre, 0.7),
+          level(inks.charcoal, 0.4),
+          matrix(channelInk(color: argb(inks.charcoal), channel: 0)),
+          matrix(channelInk(color: argb(inks.shade), channel: 2)),
+        ],
+      );
+  }
+}
+
+/// The cave painting's materials. Natural: sandstone, yellow and red
+/// ochre, charcoal. Themed: the stone is the tag's card stock (sand, bone,
+/// moonlit grey…), the ochres its accents, the charcoal its ribbon.
+({Color stone, Color shade, Color lightOchre, Color darkOchre, Color charcoal})
+rupestreInks(CardPalette p, {required bool themed}) {
+  if (!themed) {
+    return (
+      stone: NaturalInks.stone,
+      shade: NaturalInks.stoneShade,
+      lightOchre: NaturalInks.yellowOchre,
+      darkOchre: NaturalInks.redOchre,
+      charcoal: NaturalInks.charcoal,
+    );
+  }
   final stone = Color.lerp(p.stock, p.board, 0.2)!;
   return (
     stone: stone,
-    relief: Color.lerp(stone, p.typed, 0.5)!,
-    ochre: p.accentInk,
+    shade: Color.lerp(stone, p.typed, 0.65)!,
+    lightOchre: Color.lerp(p.accent, stone, 0.35)!,
+    darkOchre: Color.lerp(p.accentInk, p.typed, 0.15)!,
     charcoal: p.typed,
   );
 }

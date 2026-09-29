@@ -380,5 +380,6 @@
   "cardFramePhoto": "Zoom de la foto",
   "cardFrameMap": "Zoom del mapa",
   "cardFrameReset": "Restablecer",
-  "cardFrameNothing": "Esta tarjeta no tiene foto ni mapa para encuadrar."
+  "cardFrameNothing": "Esta tarjeta no tiene foto ni mapa para encuadrar.",
+  "cardThemePhoto": "Colores del tema en la foto"
 }

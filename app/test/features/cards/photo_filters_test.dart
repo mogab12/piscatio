@@ -80,31 +80,41 @@ void main() {
       return dx * dx + dy * dy < 1 ? 215 : 35;
     });
 
-    test('paints what differs from the borders, not the background', () {
+    test('darker parts get darker pigment, with an outline between', () {
       final out = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
-      // Ochre inside the figure, bare stone far outside.
-      expect(green(out, w, cx.round(), cy.round()), greaterThan(60));
-      expect(green(out, w, 12, 12), lessThan(10));
-      // A charcoal outline runs around the figure.
+      // Paint level (green): high on the bright fish, low on the dark.
+      expect(green(out, w, cx.round(), cy.round()), greaterThan(170));
+      expect(green(out, w, 12, 60), lessThan(120));
+      // An outline (red) runs around the fish, not through its middle.
       final across = [for (var x = 20; x < 40; x++) red(out, w, x, 60)];
       expect(across.reduce((a, b) => a > b ? a : b), greaterThan(150));
       expect(red(out, w, cx.round(), cy.round()), lessThan(60));
     });
 
-    test('the stone has relief, and it is the same every time', () {
+    test('the rock has relief, and it is the same every time', () {
       final a = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
       final b = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
       expect(a, b);
-      final relief = {for (var i = 2; i < a.length; i += 4) a[i]};
-      expect(relief.length, greaterThan(20));
+      final shade = {for (var i = 2; i < a.length; i += 4) a[i]};
+      expect(shade.length, greaterThan(20));
+      // Torchlight: the corners are darker than the middle.
+      int blue(int x, int y) => a[(y * w + x) * 4 + 2];
+      expect(blue(1, 1), greaterThan(blue(cx.round(), cy.round())));
     });
+  });
 
-    test('nothing is drawn right at the edges', () {
-      final out = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
-      for (var x = 0; x < w; x++) {
-        expect(red(out, w, x, 0), 0);
-        expect(red(out, w, x, h - 1), 0);
-      }
+  group('kuwahara', () {
+    test('keeps flat areas flat and edges sharp', () {
+      final step = Float32List.fromList([
+        for (var y = 0; y < 20; y++)
+          for (var x = 0; x < 20; x++) x < 10 ? 0.2 : 0.8,
+      ]);
+      final out = kuwahara(step, 20, 20, 3);
+      expect(out[5 * 20 + 2], closeTo(0.2, 1e-6));
+      expect(out[5 * 20 + 17], closeTo(0.8, 1e-6));
+      // Right next to the edge each side keeps its own value.
+      expect(out[5 * 20 + 9], closeTo(0.2, 1e-6));
+      expect(out[5 * 20 + 10], closeTo(0.8, 1e-6));
     });
   });
 
@@ -147,16 +157,40 @@ void main() {
   });
 
   test('channelInk paints one color with one channel as its opacity', () {
-    final m = channelInk(color: 0xFFE4262C, channel: 1);
-    List<double> apply(int r, int g, int b) => [
+    List<double> apply(List<double> m, int r, int g, int b) => [
       for (var row = 0; row < 4; row++)
-        m[row * 5] * r +
-            m[row * 5 + 1] * g +
-            m[row * 5 + 2] * b +
-            m[row * 5 + 3] * 255 +
-            m[row * 5 + 4],
+        (m[row * 5] * r +
+                m[row * 5 + 1] * g +
+                m[row * 5 + 2] * b +
+                m[row * 5 + 3] * 255 +
+                m[row * 5 + 4])
+            .clamp(0, 255)
+            .toDouble(),
     ];
-    expect(apply(200, 80, 10), [0xE4, 0x26, 0x2C, 80]);
-    expect(apply(0, 255, 0), [0xE4, 0x26, 0x2C, 255]);
+    final m = channelInk(color: 0xFFE4262C, channel: 1);
+    expect(apply(m, 200, 80, 10), [0xE4, 0x26, 0x2C, 80]);
+    // A ramp: fully opaque below the level, clear above it.
+    final ramp = channelInk(
+      color: 0xFF000000,
+      channel: 1,
+      scale: -1 / 0.3,
+      offset: 0.7 / 0.3,
+    );
+    expect(apply(ramp, 0, (0.4 * 255).round(), 0)[3], 255);
+    expect(apply(ramp, 0, (0.7 * 255).round(), 0)[3], closeTo(0, 1));
+    expect(apply(ramp, 0, (0.55 * 255).round(), 0)[3], closeTo(127.5, 1));
+  });
+
+  test('photoGrade keeps half the photo and maps its light', () {
+    final m = photoGrade(shadow: 0xFF000000, light: 0xFFFFFFFF, amount: 0);
+    // No grading: the identity.
+    expect(m.sublist(0, 5), [1, 0, 0, 0, 0]);
+    final g = photoGrade(shadow: 0xFF102030, light: 0xFFF0E0D0);
+    // Black goes halfway to the shadow color.
+    expect(g[4], closeTo(0x10 / 2, 1e-9));
+    expect(g[9], closeTo(0x20 / 2, 1e-9));
+    // White comes out between white and the light color.
+    final r = (g[0] + g[1] + g[2]) * 255 + g[4];
+    expect(r, closeTo((255 + 0xF0) / 2, 1e-6));
   });
 }

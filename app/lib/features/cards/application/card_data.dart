@@ -196,6 +196,7 @@ class CardOptions {
     this.filteredPath,
     this.photoFrame = CardFrame.fill,
     this.mapFrame = CardFrame.fill,
+    this.photoThemed = false,
   });
 
   final CardPalette palette;
@@ -225,6 +226,10 @@ class CardOptions {
   final CardFrame photoFrame;
   final CardFrame mapFrame;
 
+  /// The photo (plain or filtered) painted in the theme's colors instead
+  /// of natural ones.
+  final bool photoThemed;
+
   /// The filter the card draws right now.
   CardPhotoFilter get activeFilter =>
       filteredPath == null ? CardPhotoFilter.none : photoFilter;
@@ -252,6 +257,7 @@ class CardOptions {
     String? caption,
     CardFrame? photoFrame,
     CardFrame? mapFrame,
+    bool? photoThemed,
   }) => CardOptions(
     palette: palette ?? this.palette,
     showPlace: showPlace ?? this.showPlace,
@@ -265,6 +271,7 @@ class CardOptions {
     filteredPath: filteredPath,
     photoFrame: photoFrame ?? this.photoFrame,
     mapFrame: mapFrame ?? this.mapFrame,
+    photoThemed: photoThemed ?? this.photoThemed,
   );
 
   /// Another photo: its filtered version has to be made again, and it is
@@ -280,6 +287,7 @@ class CardOptions {
     photoPath: path,
     photoFilter: photoFilter,
     mapFrame: mapFrame,
+    photoThemed: photoThemed,
   );
 
   CardOptions withFilter(CardPhotoFilter filter, {String? filteredPath}) =>
@@ -296,6 +304,7 @@ class CardOptions {
         filteredPath: filter == CardPhotoFilter.none ? null : filteredPath,
         photoFrame: photoFrame,
         mapFrame: mapFrame,
+        photoThemed: photoThemed,
       );
 }
 
