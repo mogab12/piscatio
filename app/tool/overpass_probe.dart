@@ -6,8 +6,10 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:piscatio/data/remote/overpass_client.dart';
+import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/domain/models/place_map.dart';
+import 'package:piscatio/domain/services/map_sketch.dart';
 
 const _spots = {
   'Pantanal, Cuiabá river': GeoPoint(-16.52, -56.41),
@@ -16,14 +18,47 @@ const _spots = {
   'Mantiqueira streams': GeoPoint(-22.45, -45.48),
 };
 
+/// Share of the view covered by water areas (lakes and sea), by even-odd
+/// sampling on a grid.
+double waterShare(MapSketch sketch) {
+  const n = 60;
+  var wet = 0;
+  final areas = [
+    for (final s in sketch.shapes)
+      if (s.kind.isArea) ...s.parts,
+  ];
+  for (var i = 0; i < n; i++) {
+    for (var j = 0; j < n; j++) {
+      final x = -1 + 2 * (i + 0.5) / n;
+      final y = -1 + 2 * (j + 0.5) / n;
+      var inside = false;
+      for (final ring in areas) {
+        final k = ring.length ~/ 2;
+        for (var a = 0, b = k - 1; a < k; b = a++) {
+          final ax = ring[a * 2], ay = ring[a * 2 + 1];
+          final bx = ring[b * 2], by = ring[b * 2 + 1];
+          if ((ay > y) != (by > y) &&
+              x < (bx - ax) * (y - ay) / (by - ay) + ax) {
+            inside = !inside;
+          }
+        }
+      }
+      if (inside) wet++;
+    }
+  }
+  return wet / (n * n);
+}
+
 Future<void> main() async {
+  final secret = List<int>.generate(32, (i) => i * 11 % 256);
   final client = http.Client();
   final overpass = OverpassClient(client);
   var failures = 0;
   for (final MapEntry(key: name, value: point) in _spots.entries) {
     final watch = Stopwatch()..start();
     try {
-      final map = await overpass.fetchAround(point);
+      final area = mapAreaFor(point, secret);
+      final map = await overpass.fetchAround(area.center);
       final counts = <MapFeatureKind, int>{};
       var points = 0;
       for (final f in map.features) {
@@ -38,6 +73,15 @@ Future<void> main() async {
         '${map.features.length} features $counts, $points points, '
         'stored ${(stored / 1024).toStringAsFixed(0)} KB',
       );
+      for (final level in [PrivacyLevel.approximate, PrivacyLevel.exact]) {
+        final view = MapView.forPrivacy(level, point, secret)!;
+        final sketch = MapSketch.of(map, view);
+        stdout.writeln(
+          '  ${level.name}: '
+          '${sketch == null ? 'no map' : '${sketch.shapes.length} shapes, '
+                    'water ${(waterShare(sketch) * 100).round()}%'}',
+        );
+      }
       if (!map.features.any((f) => f.kind != MapFeatureKind.road)) {
         stdout.writeln('  no water found');
         failures++;
