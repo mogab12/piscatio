@@ -150,16 +150,61 @@ assinatura não.
 
 ## Personalização dos cards
 
-No editor, em abas curtas: **Estilo** (Régua, Carta, Etiqueta; story ou
-quadrado), **Cor** (vermelho, laranja, limão e azul, as cores de iscas; cada uma
-tem um tom para a água funda, outro para o plástico branco e outro para tinta de
-carimbo no manilha), **Foto** (qualquer foto da pescaria, ou sem foto),
+No editor, em abas curtas: **Estilo** (Régua, Capa, Carta, Etiqueta, Mapa; story
+ou quadrado), **Tema** (paleta inteira, ver abaixo), **Foto** (qualquer foto da
+pescaria, ou sem foto, e o filtro),
 **Detalhes** (local conforme a privacidade, clima e lua, isca) e **Legenda** (texto
 livre de até 80 caracteres: citação na Régua, nota em itálico no cartucho da Carta,
-campo "Observações" datilografado na Etiqueta). O dourado continua reservado para
-recordes em qualquer cor.
+campo "Observações" datilografado na Etiqueta, citação na Capa). O recorde tem cor
+própria em cada tema.
+
+## Temas (1D)
+
+Trocar só o acento mudava um ponteiro. Um tema é uma paleta inteira, com nomes do
+universo da pesca: **Cabeça-vermelha** (a marca: vermelho sobre água funda),
+**Papel** (caderno de campo claro), **Tucunaré** (oliva e dourado, o vermelho do
+olho para recordes), **Amanhecer** (pêssego e ameixa, claro), **Lua** (azul noite,
+dourado da lua) e **Rio** (verde de rio, isca limão). Cada um define fundo, texto,
+linhas da carta, acento no fundo e acento impresso, recorde, plástico e tinta da
+régua, papel e fita da etiqueta; o resto é misturado a partir deles. Temas claros
+clareiam a foto em vez de escurecer. Um teste garante contraste AA em todos.
+
+## Capa (1D)
+
+Pedido: o nome do app mais evidente. A Capa trata a captura como capa de revista
+chamada Piscatio: o nome é o título, de ponta a ponta, na cor de acento; linha de
+edição (número da captura, data); legenda como citação; espécie e medida enorme
+como matéria; selo redondo e inclinado para recordes. Sem gradiente decorativo: só
+as duas faixas funcionais sob o título e sob as chamadas.
+
+## Filtros de foto (1D)
+
+Protótipos em Python sobre fotos reais de pesca (noite e dia) antes de escrever em
+Dart; ficaram os que funcionam nos dois casos. **Nanquim** (XDoG e hachura nas
+sombras), **Gravura** (linhas que se curvam com a forma, como guia de campo
+antigo), **Serigrafia** (três tintas chapadas, levemente fora de registro, formas
+suavizadas em baixa resolução), **Retícula** (pontos a 45°) e **Duotom**. Fotos de
+noite passam por equalização parcial do histograma antes. O filtro gera uma
+separação (quantidade de cada tinta) e o card pinta com as cores do tema por
+matriz de cor: trocar de tema é instantâneo.
+
+## Mapa (1D)
+
+Mapa impresso: terra no branco da régua, água na tinta dela, linhas de
+profundidade paralelas à margem (como na Carta), rios em traço firme, estradas
+principais finas, o círculo tracejado na cor de acento com a boia no meio, escala,
+norte e crédito do OpenStreetMap sobre placas claras (legíveis sobre a água). A
+foto vira medalhão redondo no canto de cima. Na Carta, a água real substitui as
+isóbatas inventadas.
 
 ## Registro de iterações
+
+- 1D: temas revisados lado a lado nos três estilos (o dourado dos temas claros
+  escureceu para ter contraste); filtros primeiro em Python, depois em Dart e nos
+  cards (a matriz de cor forçava opacidade e pintava o card inteiro: corrigido);
+  mapa com o texto de baixo reduzido ao espaço (encolhe em vez de vazar) e o
+  medalhão movido para não cobrir o crédito; capa com faixa superior mais forte
+  nos temas claros e selo com o número numa linha só.
 
 - 1A: tokens, tipografia e régua do tempo na pescaria ativa. Revisado por capturas
   de tela (claro, escuro, fonte 1,6×). Ajustes feitos depois da revisão: botão de

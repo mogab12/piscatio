@@ -58,7 +58,23 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 - [x] Critérios de pronto da Fase 1: offline-first coberto pelos testes (rede sempre
       falha nos testes de widget e nada trava), troca de idioma e unidade em tempo
       real (testes de ajustes)
-- [ ] **Checkpoint 1C**: testar no celular
+- [x] **Checkpoint 1C**: testado no celular (pedidos para a 1D: mais
+      personalização, mais estilos valorizando a marca, mapa e filtro de desenho)
+
+### 1D — Cards: temas, capa, filtros e mapa
+
+- [x] Temas que mudam o card inteiro (Cabeça-vermelha, Papel, Tucunaré, Amanhecer,
+      Lua, Rio), com teste de contraste AA
+- [x] Estilo Capa: "Piscatio" como título de revista, matéria de capa e selo de
+      recorde; padrão quando há foto
+- [x] Filtros de foto nas cores do tema (nanquim, gravura, serigrafia, retícula,
+      duotom), feitos num isolate e guardados em cache
+- [x] Mapa estilizado: água do OpenStreetMap (Overpass) pela fila de jobs, em
+      volta do ponto aproximado; esboço sem coordenadas; círculo que contém o ponto
+      sem centrar nele; mar preenchido pela costa; crédito ODbL
+- [x] Estilo Mapa e água real na Carta; opção "Mapa do local"
+- [x] Schema v3 (cache `place_maps`) com teste de migração
+- [ ] **Checkpoint 1D**: testar no celular
 
 ## Fase 2 — Backend e sincronização
 

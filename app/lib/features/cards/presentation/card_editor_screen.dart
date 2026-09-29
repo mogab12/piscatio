@@ -35,7 +35,8 @@ class CardEditorScreen extends ConsumerStatefulWidget {
 }
 
 class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
-  var _style = CardStyle.board;
+  /// Chosen by the person; until then [_styleFor] picks one.
+  CardStyle? _style;
   var _format = CardFormat.story;
   var _options = const CardOptions();
   var _section = _Section.style;
@@ -55,6 +56,10 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     _caption.dispose();
     super.dispose();
   }
+
+  /// The cover shows the brand best, but needs a photo.
+  CardStyle _styleFor(String? photo) =>
+      _style ?? (photo != null ? CardStyle.cover : CardStyle.board);
 
   String _styleName(CardStyle s) => switch (s) {
     CardStyle.board => context.l10n.cardStyleBoard,
@@ -130,7 +135,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     }
   }
 
-  Future<void> _share(String? photoPath) async {
+  Future<void> _share(String? photoPath, CardStyle style) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final sharer = ref.read(cardSharerProvider);
@@ -145,7 +150,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
           _boundary.currentContext!.findRenderObject()!
               as RenderRepaintBoundary;
       final png = await captureCard(boundary);
-      final name = 'piscatio-${_style.name}-${_format.name}.png';
+      final name = 'piscatio-${style.name}-${_format.name}.png';
       await sharer.sharePng(png, name);
     } on Exception {
       messenger.showSnackBar(SnackBar(content: Text(l10n.cardShareFailed)));
@@ -171,7 +176,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         if (data == null) return (null, null, null, null, <String>[], tripId);
         final view = CatchCardView(
           data: data,
-          style: _style,
+          style: _styleFor(data.photoPath),
           format: _format,
           options: _options,
         );
@@ -191,7 +196,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         }
         final view = TripCardView(
           data: data,
-          style: _style,
+          style: _styleFor(data.photoPath),
           format: _format,
           options: _options,
         );
@@ -206,6 +211,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
       }(),
     };
     final sourcePhoto = _options.sourcePhoto(defaultPhoto);
+    final style = _styleFor(defaultPhoto);
     final privacy = tripId == null
         ? null
         : ref.watch(tripProvider(tripId)).value?.privacyLevel;
@@ -242,12 +248,12 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
               for (final s in CardStyle.values)
                 ChoiceChip(
                   label: Text(_styleName(s)),
-                  selected: _style == s,
+                  selected: style == s,
                   showCheckmark: false,
                   onSelected:
                       s == CardStyle.map &&
                           mapState != CardMapState.ready &&
-                          _style != s
+                          style != s
                       ? null
                       : (_) => setState(() => _style = s),
                 ),
@@ -408,7 +414,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                       child: Semantics(
                         image: true,
                         label: l10n.cardPreviewLabel(
-                          _styleName(_style),
+                          _styleName(style),
                           _formatName(_format),
                         ),
                         excludeSemantics: true,
@@ -483,7 +489,9 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         child: ActionSlab(
           label: l10n.cardShare,
           icon: Icons.ios_share_rounded,
-          onPressed: card == null || _sharing ? null : () => _share(shownPhoto),
+          onPressed: card == null || _sharing
+              ? null
+              : () => _share(shownPhoto, style),
         ),
       ),
     );

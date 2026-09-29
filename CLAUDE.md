@@ -99,6 +99,9 @@ Regras:
   lidos antes e salvos no banco.
 - Modo aproximado: `domain/services/privacy_offset` — encaixe em grade (~1 km) +
   deslocamento determinístico (HMAC com salt da instalação). Nunca aleatório por chamada.
+- Mapas (`domain/services/map_sketch`): só em aproximado/exato. O card recebe um
+  `MapSketch` (formas relativas, sem lat/lng). O círculo contém o ponto e nunca é
+  centrado nele. Serviços externos só recebem o ponto aproximado.
 
 ## Clima
 
@@ -108,6 +111,14 @@ Regras:
 - Clima ao vivo (MET Norway) fica para a Fase 2, via proxy no backend (exigência dos
   termos deles para apps).
 - Fase da lua: cálculo local (`domain/services/moon`).
+
+## Mapas
+
+- OpenStreetMap via Overpass (ODbL: crédito em todo mapa e nos Ajustes). Só água e
+  estradas principais, simplificadas e guardadas em `place_maps` (cache, não é dado
+  do usuário: não exporta, não sincroniza, apaga com "Apagar todos os dados").
+- Fase 2: pedido pelo backend. `tool/overpass_probe.dart` (workflow `map-probe`)
+  testa a consulta real, porque o ambiente de desenvolvimento não alcança o Overpass.
 
 ## Design
 

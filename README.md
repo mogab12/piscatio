@@ -10,12 +10,13 @@ cards bonitos no Instagram e no WhatsApp. Funciona sem internet.
 
 ## Status
 
-Fase 1 pronta (1A, 1B e 1C): pescaria ativa e captura rápida com foto sem EXIF,
+Fase 1 pronta (1A a 1D): pescaria ativa e captura rápida com foto sem EXIF,
 histórico, resumo pós-pescaria, recordes pessoais, clima da NASA POWER, cards em
-três estilos (Régua, Carta e Etiqueta) com personalização, estatísticas, iscas e
-equipamentos, pescaria passada a partir das fotos, busca de local por nome,
-exportação e exclusão de dados. Tudo funciona sem internet; a Fase 2 traz conta e
-sincronização.
+cinco estilos (Régua, Capa, Carta, Etiqueta e Mapa) com seis temas de cor, filtros
+de foto (nanquim, gravura, serigrafia, retícula, duotom) e mapa estilizado do local,
+estatísticas, iscas e equipamentos, pescaria passada a partir das fotos, busca de
+local por nome, exportação e exclusão de dados. Tudo funciona sem internet; a
+Fase 2 traz conta e sincronização.
 
 ## Jeito mais rápido de testar (Android, sem instalar nada)
 
@@ -114,6 +115,10 @@ SCREENSHOTS=1 flutter test test/screenshots   # PNGs em app/build/screenshots/
 - Fotos são regravadas sem EXIF/GPS no momento da importação.
 - O modo "Região aproximada" desloca o ponto de forma consistente (grade + HMAC),
   para que várias pescarias no mesmo lugar não revelem o pesqueiro.
+- Mapas nos cards só em pescarias "aproximada" ou "exata". O círculo marca uma
+  área (4 km ou 650 m) que contém o ponto sem nunca estar centrada nele, e o card
+  recebe só formas relativas, nunca coordenadas. O pedido ao OpenStreetMap usa o
+  ponto aproximado: o pesqueiro não sai do celular.
 
 ## Dados de clima
 
@@ -122,6 +127,29 @@ A Open-Meteo gratuita não permite uso comercial. O app usa a **NASA POWER**
 atraso: ao finalizar, a pescaria entra numa fila que tenta de novo ao abrir o app,
 a cada 15 minutos e quando a internet volta. O crédito fica nos Ajustes. Clima ao
 vivo fica para a Fase 2, através do backend.
+
+## Dados de mapa
+
+Os mapas vêm do **OpenStreetMap** (ODbL: uso comercial permitido com crédito, que
+aparece em todo mapa e nos Ajustes), pela API pública do Overpass. Só água
+(lagos, represas, rios, córregos, mar) e as estradas principais, baixadas uma vez
+por região pela fila de jobs e guardadas no celular (algumas dezenas de KB). Na
+Fase 2 o pedido passa pelo backend, com cache próprio. O workflow `map-probe`
+testa a consulta real em quatro lugares sempre que o código do mapa muda.
+
+## O que testar no checkpoint 1D
+
+1. **Temas** (aba Tema do editor): Cabeça-vermelha, Papel, Tucunaré, Amanhecer, Lua
+   e Rio mudam o card inteiro: fundo, textos, régua, etiqueta, carimbo e recorde.
+2. **Capa:** com foto, o editor abre na Capa, com "Piscatio" como título de revista,
+   a espécie e a medida como matéria de capa e o selo de recorde.
+3. **Filtros** (aba Foto): Nanquim, Gravura, Serigrafia, Retícula e Duotom. O
+   primeiro uso leva um ou dois segundos; o filtro segue as cores do tema.
+4. **Mapa:** numa pescaria com local "aproximado" ou "exato" e internet, o estilo
+   Mapa aparece (e a Carta passa a desenhar a água de verdade). Troque a privacidade
+   e veja o mapa mudar de escala; em "Só eu" não há mapa. Detalhes → "Mapa do
+   local" liga e desliga.
+5. **Litoral:** uma pescaria no mar mostra o mar preenchido, não só a linha da costa.
 
 ## O que testar no checkpoint 1C
 
@@ -156,6 +184,8 @@ vivo fica para a Fase 2, através do backend.
 ## Limitações conhecidas
 
 - O clima só existe 2 a 3 dias depois da pescaria (limite da fonte gratuita).
+- O mapa depende do que está mapeado no OpenStreetMap: lagoas pequenas podem não
+  existir lá, e então o estilo Mapa não aparece.
 - Nome da região e busca de local usam o geocodificador do sistema (Android/iOS) e
   precisam de internet; sem ela, o nome da região fica na fila.
 - A exportação leva os dados em JSON; as fotos ficam no celular (backup de fotos

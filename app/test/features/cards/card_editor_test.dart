@@ -258,6 +258,8 @@ void main() {
     CatchCardView view() => tester.widget(find.byType(CatchCardView));
     CardCanvas canvas() => tester.widget(find.byType(CardCanvas));
     final photo = view().data.photoPath!;
+    // With a photo, the editor opens on the cover (the brand up front).
+    expect(view().style, CardStyle.cover);
 
     await tester.tap(find.text('Foto'));
     await app.settle(tester);
