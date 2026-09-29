@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/media/photo_source.dart';
 import 'package:piscatio/core/providers.dart';
 import 'package:piscatio/data/media/photo_importer.dart';
+import 'package:piscatio/data/remote/piscatio_api.dart';
 import 'package:piscatio/domain/models/catch.dart';
 import 'package:piscatio/domain/models/enums.dart';
+import 'package:piscatio/domain/models/geo_point.dart';
+import 'package:piscatio/features/account/presentation/account_screen.dart';
+import 'package:piscatio/features/active_trip/presentation/active_trip_screen.dart';
 import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
+import 'package:piscatio/features/stats/presentation/stats_screen.dart';
 import 'package:piscatio/features/summary/presentation/trip_summary_screen.dart';
 
 import '../features/summary/trip_summary_test.dart' show seedSummaryTrip;
+import '../helpers/fake_server.dart';
 import '../helpers/fakes.dart';
 import '../helpers/pump_app.dart';
 import '../helpers/screenshots.dart';
@@ -352,6 +359,75 @@ void main() {
     await tester.tap(find.text('Números'));
     await app.settle(tester);
     await saveScreenshot(tester, 'stats_large_text');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
+
+  testWidgets('phase 2 screens', (tester) async {
+    usePhoneSurface(tester);
+    final server = FakeServer();
+    final app = await TestApp.start(
+      tester,
+      overrides: [
+        apiFactoryProvider.overrideWithValue(
+          (base, token) =>
+              PiscatioApi(server.client(), base: base, token: token),
+        ),
+      ],
+    );
+    await app.run(tester, () async {
+      await app.read(settingsRepositoryProvider).completeOnboarding();
+      final tuvira = await app
+          .read(tackleRepositoryProvider)
+          .addBait('Tuvira', BaitType.natural);
+      final trips = app.read(tripRepositoryProvider);
+      final catches = app.read(catchRepositoryProvider);
+      final now = app.clock.now();
+      for (final day in [3, 10, 17]) {
+        final start = now.subtract(Duration(days: day, hours: 3));
+        final trip = await trips.createPastTrip(
+          startedAt: start,
+          endedAt: start.add(const Duration(hours: 6)),
+          timezone: 'UTC',
+          privacy: PrivacyLevel.private,
+        );
+        for (final minutes in [20, 70, day == 3 ? 300 : 110]) {
+          final c = await catches.addCatch(
+            tripId: trip.id,
+            speciesId: 'salminus-brasiliensis',
+            caughtAt: start.add(Duration(minutes: minutes)),
+          );
+          await catches.updateDetails(
+            c.id,
+            CatchDetails(speciesId: 'salminus-brasiliensis', baitId: tuvira.id),
+          );
+        }
+      }
+      final active = await trips.startTrip(
+        timezone: 'America/Cuiaba',
+        privacy: PrivacyLevel.approximate,
+      );
+      await trips.setLocation(active.id, const GeoPoint(-16.52, -56.41));
+    });
+    await app.pumpScreen(tester, const AccountScreen());
+    await saveScreenshot(tester, 'account_sign_in');
+    await tester.enterText(find.byType(TextField).first, FakeServer.email);
+    await tester.pump();
+    await tester.tap(find.text('Enviar código'));
+    await app.settle(tester);
+    await tester.enterText(find.byType(TextField).first, FakeServer.code);
+    await tester.pump();
+    await saveScreenshot(tester, 'account_code');
+    await tester.tap(find.text('Entrar'));
+    await app.settle(tester);
+    await app.settleUntil(tester, () => server.secret != null);
+    await app.settle(tester);
+    await saveScreenshot(tester, 'account_signed_in');
+    await app.pumpScreen(tester, const ActiveTripScreen());
+    await saveScreenshot(tester, 'active_trip_weather_now');
+    await app.pumpScreen(tester, const StatsScreen());
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -260));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'stats_what_worked');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
 }
