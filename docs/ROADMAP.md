@@ -100,6 +100,10 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
       hora pescada) e isca por espécie, com mínimo de 3 capturas em 2 pescarias
 - [x] Pedidos do checkpoint 1D: nome do logo em Shrikhand com a linha de pesca;
       versão do APK sobe a cada build
+- [x] Pedidos do teste da Fase 2: aviso "Desfazer" que some sozinho; aba
+      Detalhes com chaves liga/desliga legíveis; aba Enquadrar (zoom e posição da
+      foto e do mapa, por gesto ou controle); filtros Rupestre (novo, nas cores do
+      tema) e Gravura refeita; Nanquim e Serigrafia removidos
 - [ ] **Checkpoint 2**: publicar o servidor e testar no celular
 
 ## Fase 3 — Social

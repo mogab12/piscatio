@@ -171,6 +171,23 @@ testa a consulta real em quatro lugares sempre que o código do mapa muda.
 
 ## O que testar no checkpoint 2
 
+Mudanças pedidas no teste desta fase:
+
+- **Desfazer:** depois de salvar uma captura, o aviso "Captura salva, Desfazer"
+  some sozinho em 5 segundos.
+- **Detalhes** (editor do card): cada item (local, clima e lua, isca, mapa) tem o
+  nome sempre visível e uma chave liga/desliga.
+- **Enquadrar** (editor do card, aba nova): arraste e use dois dedos na foto ou no
+  mapa do card para escolher o zoom e a posição; os controles de zoom fazem o
+  mesmo, e o botão ao lado de cada um restaura.
+- **Filtros** (aba Foto): **Rupestre** (novo) pinta o peixe em ocre com contorno
+  de carvão sobre a pedra, e muda com o tema (pedra, ocre e carvão vêm dele: em
+  Lua fica azul sobre pedra cinza, em Rio verde sobre areia); **Gravura** refeita
+  como gravura de cédula, com linhas que contornam as formas. Nanquim e
+  Serigrafia saíram.
+
+Roteiro da fase:
+
 1. **Atualização:** a partir desta versão o número da versão sobe a cada build.
    Com a chave fixa configurada (ver "Atualizar sem desinstalar"), o APK novo
    instala por cima do anterior.
@@ -198,8 +215,9 @@ testa a consulta real em quatro lugares sempre que o código do mapa muda.
    e Rio mudam o card inteiro: fundo, textos, régua, etiqueta, carimbo e recorde.
 2. **Capa:** com foto, o editor abre na Capa, com "Piscatio" como título de revista,
    a espécie e a medida como matéria de capa e o selo de recorde.
-3. **Filtros** (aba Foto): Nanquim, Gravura, Serigrafia, Retícula e Duotom. O
-   primeiro uso leva um ou dois segundos; o filtro segue as cores do tema.
+3. **Filtros** (aba Foto): Rupestre, Gravura, Retícula e Duotom (Nanquim e
+   Serigrafia saíram no checkpoint 2). O primeiro uso leva alguns segundos; o
+   filtro segue as cores do tema.
 4. **Mapa:** numa pescaria com local "aproximado" ou "exato" e internet, o estilo
    Mapa aparece (e a Carta passa a desenhar a água de verdade). Troque a privacidade
    e veja o mapa mudar de escala; em "Só eu" não há mapa. Detalhes → "Mapa do

@@ -196,6 +196,31 @@ noite passam por equalização parcial do histograma antes. O filtro gera uma
 separação (quantidade de cada tinta) e o card pinta com as cores do tema por
 matriz de cor: trocar de tema é instantâneo.
 
+## Filtros revistos (Fase 2)
+
+Nanquim e Serigrafia saíram (não agradaram no teste). **Gravura** refeita como
+gravura de cédula: linhas regulares inclinadas que se curvam em volta das formas
+grandes (a curva vem do tom muito desfocado), mais grossas nas sombras, hachura
+cruzada nas sombras profundas e contraste local, para o escuro não virar mancha.
+**Rupestre** (novo), inspirado na tela de pausa de Far Cry Primal: o fundo da foto
+é reconhecido pelas cores das bordas; o que difere dele (em geral o peixe) é
+pintado em ocre, com contorno grosso de carvão e detalhes internos, e o resto
+fica em pedra nua com um esboço leve. A pedra tem relevo, poros e rachaduras. As
+cores vêm do tema (pedra = cartão da etiqueta, ocre = tinta de acento, carvão =
+fita da máquina), então cada tema tem a sua pintura. O filtro grava três máscaras
+(carvão, ocre, relevo) e o card as pinta em camadas sobre a pedra: trocar de tema
+continua instantâneo. Protótipos em Python (sete iterações: posterização, borrifo
+de carvão, mapa de gradiente…) antes da versão em Dart.
+
+## Enquadramento (Fase 2)
+
+Na aba Enquadrar, uma camada sobre o card recebe os gestos e os entrega à foto ou
+ao mapa que está sob o dedo (o menor, se um estiver sobre o outro): textos e véus
+do estilo não atrapalham. A foto sempre cobre a sua caixa; o mapa nunca sai das
+formas desenhadas, o círculo continua em volta da área e a escala escolhe uma
+distância menor ao aproximar. Controles de zoom repetem o gesto para quem não
+pode usá-lo.
+
 ## Mapa (1D)
 
 Mapa impresso: terra no branco da régua, água na tinta dela, linhas de
