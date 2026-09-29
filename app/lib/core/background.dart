@@ -144,6 +144,11 @@ final tripWeatherProvider = StreamProvider.family<TripWeather?, String>(
   (ref, tripId) => ref.watch(weatherRepositoryProvider).watchForTrip(tripId),
 );
 
+/// Weather of every trip that has some (for "what worked").
+final allTripWeatherProvider = StreamProvider<Map<String, TripWeather>>(
+  (ref) => ref.watch(weatherRepositoryProvider).watchAll(),
+);
+
 final jobQueueProvider = Provider(
   (ref) => JobQueue(
     ref.watch(appDatabaseProvider),

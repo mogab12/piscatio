@@ -13,8 +13,10 @@ import '../../../core/router/app_routes.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../domain/models/tackle.dart';
+import '../../../domain/services/insights.dart';
 import '../../../domain/services/logbook_stats.dart';
 import '../../../domain/services/records.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../common/species_label.dart';
 import '../application/stats_providers.dart';
 
@@ -61,6 +63,7 @@ class StatsScreen extends ConsumerWidget {
                     SliverList.list(
                       children: [
                         _Totals(stats: stats),
+                        if (stats.catchCount > 0) const _WhatWorked(),
                         if (stats.catchCount > 0) ...[
                           SectionLabel(l10n.statsByHourTitle),
                           Padding(
@@ -575,6 +578,144 @@ class _BestTrip extends ConsumerWidget {
           trailing: const Icon(Icons.chevron_right_rounded),
           onTap: () => context.push(AppRoutes.trip(tripId)),
         ),
+      ],
+    );
+  }
+}
+
+/// Patterns in the person's own fishing, each with its evidence.
+class _WhatWorked extends ConsumerWidget {
+  const _WhatWorked();
+
+  static String _moon(AppLocalizations l10n, MoonGroup g) => switch (g) {
+    MoonGroup.newMoon => l10n.insightsMoonNew,
+    MoonGroup.waxing => l10n.insightsMoonWaxing,
+    MoonGroup.fullMoon => l10n.insightsMoonFull,
+    MoonGroup.waning => l10n.insightsMoonWaning,
+  };
+
+  static String _pressure(AppLocalizations l10n, PressureTrend t) =>
+      switch (t) {
+        PressureTrend.falling => l10n.weatherPressureFalling,
+        PressureTrend.steady => l10n.weatherPressureSteady,
+        PressureTrend.rising => l10n.weatherPressureRising,
+      };
+
+  static IconData _pressureIcon(PressureTrend t) => switch (t) {
+    PressureTrend.falling => Icons.south_east_rounded,
+    PressureTrend.steady => Icons.east_rounded,
+    PressureTrend.rising => Icons.north_east_rounded,
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final f = context.formatters(ref);
+    final insights = ref.watch(insightsProvider);
+    if (insights == null) return const SizedBox.shrink();
+    final baits = <String, String>{
+      for (final b in ref.watch(allBaitsProvider).value ?? const <Bait>[])
+        b.id: b.name,
+    };
+    String hour(int h) => f.time(DateTime(2000, 1, 1, h).toUtc());
+    String rate(RateInsight i) => l10n.insightsRate(
+      f.number(i.rate, maxFractionDigits: 1),
+      f.number(i.average, maxFractionDigits: 1),
+    );
+    final rows = <(IconData, String, String)>[
+      for (final i in insights)
+        // A bait deleted since is left out.
+        if (i is! BaitInsight || baits.containsKey(i.baitId))
+          switch (i) {
+            HoursInsight() => (
+              Icons.schedule_rounded,
+              l10n.insightsHours(hour(i.startHour), hour(i.endHour)),
+              rate(i),
+            ),
+            MoonInsight() => (
+              Icons.brightness_3_outlined,
+              _moon(l10n, i.group),
+              rate(i),
+            ),
+            PressureInsight() => (
+              _pressureIcon(i.trend),
+              _pressure(l10n, i.trend),
+              rate(i),
+            ),
+            BaitInsight() => (
+              Icons.set_meal_outlined,
+              l10n.insightsBait(
+                ref.watch(speciesNameProvider(i.speciesId)) ??
+                    l10n.speciesUnknown,
+                baits[i.baitId]!,
+              ),
+              l10n.insightsBaitDetail(i.catches, i.speciesCatches),
+            ),
+          },
+    ];
+    final text = Theme.of(context).textTheme;
+    final palette = context.palette;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionLabel(l10n.insightsTitle),
+        if (rows.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: PiscatioSizes.gutter,
+            ),
+            child: Text(
+              l10n.insightsEmpty,
+              style: text.bodyMedium!.copyWith(color: palette.muted),
+            ),
+          ),
+        for (final (icon, title, detail) in rows)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              PiscatioSizes.gutter,
+              6,
+              PiscatioSizes.gutter,
+              6,
+            ),
+            child: Semantics(
+              label: '$title. $detail',
+              excludeSemantics: true,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 24,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: text.titleMedium),
+                        const SizedBox(height: 2),
+                        Text(
+                          detail,
+                          style: text.bodyMedium!.copyWith(
+                            color: palette.muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }

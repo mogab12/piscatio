@@ -1305,4 +1305,43 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get liveWeatherRainNextHour => 'Lluvia en la próxima hora';
+
+  @override
+  String get insightsTitle => 'Qué funcionó';
+
+  @override
+  String get insightsEmpty =>
+      'Aún no hay patrones. Aparecen aquí cuando algo se repite: al menos 3 capturas en 2 pescas.';
+
+  @override
+  String insightsHours(String start, String end) {
+    return 'Entre $start y $end';
+  }
+
+  @override
+  String insightsRate(String rate, String average) {
+    return '$rate peces por hora. Tu promedio es $average.';
+  }
+
+  @override
+  String get insightsMoonNew => 'Luna nueva';
+
+  @override
+  String get insightsMoonWaxing => 'Luna creciente';
+
+  @override
+  String get insightsMoonFull => 'Luna llena';
+
+  @override
+  String get insightsMoonWaning => 'Luna menguante';
+
+  @override
+  String insightsBait(String species, String bait) {
+    return '$species con $bait';
+  }
+
+  @override
+  String insightsBaitDetail(int count, int total) {
+    return '$count de $total capturas con carnada anotada';
+  }
 }

@@ -2295,6 +2295,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rain next hour'**
   String get liveWeatherRainNextHour;
+
+  /// Stats: heading of the section with patterns in the person's fishing.
+  ///
+  /// In en, this message translates to:
+  /// **'What worked'**
+  String get insightsTitle;
+
+  /// Stats: shown in 'What worked' when there is not enough data.
+  ///
+  /// In en, this message translates to:
+  /// **'No patterns yet. They show up here when something repeats: at least 3 catches over 2 trips.'**
+  String get insightsEmpty;
+
+  /// What worked: a 3-hour window of the day, e.g. 'Between 06:00 and 09:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'Between {start} and {end}'**
+  String insightsHours(String start, String end);
+
+  /// What worked: catches per hour fished under a condition vs the person's average.
+  ///
+  /// In en, this message translates to:
+  /// **'{rate} fish per hour. Your average is {average}.'**
+  String insightsRate(String rate, String average);
+
+  /// What worked: moon group.
+  ///
+  /// In en, this message translates to:
+  /// **'New moon'**
+  String get insightsMoonNew;
+
+  /// What worked: moon group (from new to full).
+  ///
+  /// In en, this message translates to:
+  /// **'Waxing moon'**
+  String get insightsMoonWaxing;
+
+  /// What worked: moon group.
+  ///
+  /// In en, this message translates to:
+  /// **'Full moon'**
+  String get insightsMoonFull;
+
+  /// What worked: moon group (from full to new).
+  ///
+  /// In en, this message translates to:
+  /// **'Waning moon'**
+  String get insightsMoonWaning;
+
+  /// What worked: the bait that took most catches of a species.
+  ///
+  /// In en, this message translates to:
+  /// **'{species} on {bait}'**
+  String insightsBait(String species, String bait);
+
+  /// What worked: how many of the species' catches (with a bait recorded) came on that bait.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} catches with a bait noted'**
+  String insightsBaitDetail(int count, int total);
 }
 
 class _AppLocalizationsDelegate

@@ -365,5 +365,15 @@
   "wipeSignedInNote": "Se cerrará tu sesión. La copia en el servidor se queda: para borrarla, elimina la cuenta.",
   "liveWeatherTitle": "Tiempo ahora",
   "liveWeatherSource": "Datos: MET Norway",
-  "liveWeatherRainNextHour": "Lluvia en la próxima hora"
+  "liveWeatherRainNextHour": "Lluvia en la próxima hora",
+  "insightsTitle": "Qué funcionó",
+  "insightsEmpty": "Aún no hay patrones. Aparecen aquí cuando algo se repite: al menos 3 capturas en 2 pescas.",
+  "insightsHours": "Entre {start} y {end}",
+  "insightsRate": "{rate} peces por hora. Tu promedio es {average}.",
+  "insightsMoonNew": "Luna nueva",
+  "insightsMoonWaxing": "Luna creciente",
+  "insightsMoonFull": "Luna llena",
+  "insightsMoonWaning": "Luna menguante",
+  "insightsBait": "{species} con {bait}",
+  "insightsBaitDetail": "{count} de {total} capturas con carnada anotada"
 }

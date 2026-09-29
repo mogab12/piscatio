@@ -15,6 +15,13 @@ class WeatherRepository {
   Stream<TripWeather?> watchForTrip(String tripId) =>
       _query(tripId).watchSingleOrNull().map((r) => r?.toModel());
 
+  /// Weather of every trip that has some, by trip id.
+  Stream<Map<String, TripWeather>> watchAll() =>
+      (_db.select(_db.weatherSnapshots)
+            ..where((w) => w.status.equalsValue(WeatherStatus.ok)))
+          .watch()
+          .map((rows) => {for (final r in rows) r.tripId: r.toModel()});
+
   Future<TripWeather?> forTrip(String tripId) async =>
       (await _query(tripId).getSingleOrNull())?.toModel();
 

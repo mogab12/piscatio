@@ -365,5 +365,15 @@
   "wipeSignedInNote": "Você sai da conta. A cópia no servidor continua: para apagá-la, exclua a conta.",
   "liveWeatherTitle": "Tempo agora",
   "liveWeatherSource": "Dados: MET Norway",
-  "liveWeatherRainNextHour": "Chuva na próxima hora"
+  "liveWeatherRainNextHour": "Chuva na próxima hora",
+  "insightsTitle": "O que funcionou",
+  "insightsEmpty": "Ainda sem padrões. Eles aparecem aqui quando algo se repete: pelo menos 3 capturas em 2 pescarias.",
+  "insightsHours": "Entre {start} e {end}",
+  "insightsRate": "{rate} peixes por hora. Sua média é {average}.",
+  "insightsMoonNew": "Lua nova",
+  "insightsMoonWaxing": "Lua crescente",
+  "insightsMoonFull": "Lua cheia",
+  "insightsMoonWaning": "Lua minguante",
+  "insightsBait": "{species} com {bait}",
+  "insightsBaitDetail": "{count} de {total} capturas com isca anotada"
 }

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/background.dart';
 import '../../../core/providers.dart';
+import '../../../domain/services/insights.dart';
 import '../../../domain/services/logbook_stats.dart';
 import '../../../domain/services/records.dart';
 
@@ -30,4 +32,18 @@ final personalBestsProvider = Provider<List<PersonalBest>>((ref) {
       );
     });
   return bests;
+});
+
+/// "What worked": patterns in the person's own fishing. Waits for the trips
+/// and catches, not for the weather (pressure joins when it arrives).
+final insightsProvider = Provider<List<Insight>?>((ref) {
+  final trips = ref.watch(tripHistoryProvider).value;
+  final catches = ref.watch(allCatchesProvider).value;
+  if (trips == null || catches == null) return null;
+  return whatWorked(
+    trips: [for (final o in trips) o.trip],
+    catches: catches,
+    weather: ref.watch(allTripWeatherProvider).value ?? const {},
+    now: ref.watch(clockProvider).now(),
+  );
 });

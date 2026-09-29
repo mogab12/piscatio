@@ -1694,5 +1694,77 @@
   "liveWeatherRainNextHour": "Rain next hour",
   "@liveWeatherRainNextHour": {
     "description": "Current weather: rain expected in the next hour."
+  },
+  "insightsTitle": "What worked",
+  "@insightsTitle": {
+    "description": "Stats: heading of the section with patterns in the person's fishing."
+  },
+  "insightsEmpty": "No patterns yet. They show up here when something repeats: at least 3 catches over 2 trips.",
+  "@insightsEmpty": {
+    "description": "Stats: shown in 'What worked' when there is not enough data."
+  },
+  "insightsHours": "Between {start} and {end}",
+  "@insightsHours": {
+    "description": "What worked: a 3-hour window of the day, e.g. 'Between 06:00 and 09:00'.",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsRate": "{rate} fish per hour. Your average is {average}.",
+  "@insightsRate": {
+    "description": "What worked: catches per hour fished under a condition vs the person's average.",
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsMoonNew": "New moon",
+  "@insightsMoonNew": {
+    "description": "What worked: moon group."
+  },
+  "insightsMoonWaxing": "Waxing moon",
+  "@insightsMoonWaxing": {
+    "description": "What worked: moon group (from new to full)."
+  },
+  "insightsMoonFull": "Full moon",
+  "@insightsMoonFull": {
+    "description": "What worked: moon group."
+  },
+  "insightsMoonWaning": "Waning moon",
+  "@insightsMoonWaning": {
+    "description": "What worked: moon group (from full to new)."
+  },
+  "insightsBait": "{species} on {bait}",
+  "@insightsBait": {
+    "description": "What worked: the bait that took most catches of a species.",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "bait": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsBaitDetail": "{count} of {total} catches with a bait noted",
+  "@insightsBaitDetail": {
+    "description": "What worked: how many of the species' catches (with a bait recorded) came on that bait.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }
