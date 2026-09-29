@@ -71,6 +71,12 @@ class SettingsRepository {
 
   Future<void> setRaw(String key, String value) => _put(key, value);
 
+  Future<void> remove(String key) => _put(key, null);
+
+  /// Adopts the account's secret (shared by all the person's devices).
+  Future<void> setPrivacySecret(List<int> secret) =>
+      _put(SettingKeys.privacySecret, base64Encode(secret));
+
   Future<void> _put(String key, String? value) async {
     if (value == null) {
       await (_db.delete(_db.settings)..where((s) => s.key.equals(key))).go();

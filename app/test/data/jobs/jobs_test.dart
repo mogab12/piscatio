@@ -369,12 +369,12 @@ void main() {
       PlaceMapJobHandler(
         trips: trips,
         maps: maps,
-        client: OverpassClient(
+        fetch: OverpassClient(
           MockClient((request) async {
             requests.add(request);
             return http.Response(_overpass, status);
           }),
-        ),
+        ).fetchAround,
         secret: () async => secret,
       ),
     ], deps.clock);

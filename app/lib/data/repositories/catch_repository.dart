@@ -201,11 +201,19 @@ class CatchRepository {
 
   Future<void> deleteCatch(String id) {
     final now = Value(_clock.now());
+    const pending = Value(SyncStatus.pending);
     return _db.transaction(() async {
-      await (_db.update(_db.catchPhotos)..where((p) => p.catchId.equals(id)))
-          .write(CatchPhotosCompanion(deletedAt: now, updatedAt: now));
+      await (_db.update(
+        _db.catchPhotos,
+      )..where((p) => p.catchId.equals(id))).write(
+        CatchPhotosCompanion(
+          deletedAt: now,
+          updatedAt: now,
+          syncStatus: pending,
+        ),
+      );
       await (_db.update(_db.catches)..where((c) => c.id.equals(id))).write(
-        CatchesCompanion(deletedAt: now, updatedAt: now),
+        CatchesCompanion(deletedAt: now, updatedAt: now, syncStatus: pending),
       );
     });
   }
@@ -217,10 +225,18 @@ class CatchRepository {
       await (_db.update(
         _db.catchPhotos,
       )..where((p) => p.catchId.equals(id))).write(
-        CatchPhotosCompanion(deletedAt: const Value(null), updatedAt: now),
+        CatchPhotosCompanion(
+          deletedAt: const Value(null),
+          updatedAt: now,
+          syncStatus: const Value(SyncStatus.pending),
+        ),
       );
       await (_db.update(_db.catches)..where((c) => c.id.equals(id))).write(
-        CatchesCompanion(deletedAt: const Value(null), updatedAt: now),
+        CatchesCompanion(
+          deletedAt: const Value(null),
+          updatedAt: now,
+          syncStatus: const Value(SyncStatus.pending),
+        ),
       );
     });
   }

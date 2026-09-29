@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:piscatio/core/location/location_service.dart';
 import 'package:piscatio/core/media/photo_source.dart';
+import 'package:piscatio/data/account/account_repository.dart';
 import 'package:piscatio/data/media/photo_importer.dart';
 import 'package:piscatio/data/remote/place_name_service.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
@@ -114,4 +115,15 @@ class FakePhotoFilterService implements PhotoFilterService {
 
   @override
   Future<void> clear() async => cleared = true;
+}
+
+/// The secure storage stand-in: keeps the token in memory.
+class FakeTokenStore implements TokenStore {
+  String? token;
+
+  @override
+  Future<String?> read() async => token;
+
+  @override
+  Future<void> write(String? value) async => token = value;
 }

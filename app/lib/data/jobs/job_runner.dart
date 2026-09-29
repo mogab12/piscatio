@@ -23,6 +23,13 @@ class JobRetryAt extends JobOutcome {
   final String? reason;
 }
 
+/// Recurring work done for now: run again at [at], with a clean slate.
+class JobReschedule extends JobOutcome {
+  const JobReschedule(this.at);
+
+  final DateTime at;
+}
+
 abstract interface class JobHandler {
   JobKind get kind;
 
@@ -78,6 +85,8 @@ class JobRunner {
       switch (await handler.run(job)) {
         case JobDone():
           await _queue.complete(job.id);
+        case JobReschedule(:final at):
+          await _queue.reschedule(job.id, at);
         case JobRetryAt(:final at, :final reason):
           if (job.attempts + 1 >= maxAttempts) {
             await handler.giveUp(job);

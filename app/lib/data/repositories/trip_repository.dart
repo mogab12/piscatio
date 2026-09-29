@@ -226,9 +226,11 @@ class TripRepository {
     );
   }
 
-  /// Soft-deletes the trip together with its catches and photos.
+  /// Soft-deletes the trip together with its catches and photos (the
+  /// tombstones sync like any edit).
   Future<void> deleteTrip(String id) {
     final now = Value(_clock.now());
+    const pending = Value(SyncStatus.pending);
     return _db.transaction(() async {
       final catchIds = _db.selectOnly(_db.catches)
         ..addColumns([_db.catches.id])
@@ -236,12 +238,20 @@ class TripRepository {
       await (_db.update(
             _db.catchPhotos,
           )..where((p) => p.catchId.isInQuery(catchIds) & p.deletedAt.isNull()))
-          .write(CatchPhotosCompanion(deletedAt: now, updatedAt: now));
-      await (_db.update(_db.catches)
-            ..where((c) => c.tripId.equals(id) & c.deletedAt.isNull()))
-          .write(CatchesCompanion(deletedAt: now, updatedAt: now));
+          .write(
+            CatchPhotosCompanion(
+              deletedAt: now,
+              updatedAt: now,
+              syncStatus: pending,
+            ),
+          );
+      await (_db.update(
+        _db.catches,
+      )..where((c) => c.tripId.equals(id) & c.deletedAt.isNull())).write(
+        CatchesCompanion(deletedAt: now, updatedAt: now, syncStatus: pending),
+      );
       await (_db.update(_db.trips)..where((t) => t.id.equals(id))).write(
-        TripsCompanion(deletedAt: now, updatedAt: now),
+        TripsCompanion(deletedAt: now, updatedAt: now, syncStatus: pending),
       );
     });
   }

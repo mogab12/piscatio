@@ -20,6 +20,8 @@ def seed(client):
         format="json",
     )
     assert r.status_code == 200
+    # The server asks for the image of a new photo.
+    assert r.json()["needs_file"] == [p["id"]]
     return p["id"]
 
 
@@ -73,3 +75,11 @@ def test_delete_account_erases_data_and_photos(client, user):
     assert not Trip.objects.exists()
     assert not default_storage.exists(name)
     assert client.get("/api/me").status_code == 401
+
+
+def test_a_photo_with_its_image_is_not_asked_again(client):
+    photo_id = seed(client)
+    put(client, photo_id)
+    row = client.get("/api/sync/pull").json()["changes"]["photos"][0]
+    r = client.post("/api/sync/push", {"changes": {"photos": [row]}}, format="json")
+    assert r.json()["stale"] and r.json()["needs_file"] == []

@@ -65,7 +65,7 @@ class WeatherSnapshots extends Table {
 /// Work that needs the network. Rows exist only while pending: a finished
 /// job is deleted. Retried on app start, resume and when the connection
 /// returns, honoring [nextAttemptAt].
-enum JobKind { weather, placeName, placeMap }
+enum JobKind { weather, placeName, placeMap, sync, photoUpload, photoDownload }
 
 @DataClassName('JobRow')
 class Jobs extends Table {

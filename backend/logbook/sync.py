@@ -79,7 +79,20 @@ def push(user: User, changes: dict) -> dict:
                 obj.server_seq = next_seq()
                 obj.save()
                 accepted.append({"table": table, "id": row_id})
-    return {"accepted": accepted, "stale": stale, "rejected": rejected}
+        # Photo rows the server has no image for yet: the device uploads them.
+        photo_ids = [r["id"] for r in accepted + stale if r["table"] == "photos"]
+        needs_file = [
+            str(pk)
+            for pk in CatchPhoto.objects.filter(
+                user=user, pk__in=photo_ids, file_name=""
+            ).values_list("pk", flat=True)
+        ]
+    return {
+        "accepted": accepted,
+        "stale": stale,
+        "rejected": rejected,
+        "needs_file": needs_file,
+    }
 
 
 def pull(user: User, since: int, limit: int = PULL_LIMIT) -> dict:

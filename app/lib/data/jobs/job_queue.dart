@@ -84,6 +84,17 @@ class JobQueue {
     );
   }
 
+  /// Next run of a recurring job: attempts start over.
+  Future<void> reschedule(String id, DateTime when) =>
+      (_db.update(_db.jobs)..where((j) => j.id.equals(id))).write(
+        JobsCompanion(
+          attempts: const Value(0),
+          nextAttemptAt: Value(when.toUtc()),
+          lastError: const Value(null),
+          updatedAt: Value(_clock.now()),
+        ),
+      );
+
   Future<void> cancel(JobKind kind, String subjectId) =>
       (_db.delete(_db.jobs)..where(
             (j) => j.kind.equalsValue(kind) & j.subjectId.equals(subjectId),

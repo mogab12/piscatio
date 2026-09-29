@@ -5,7 +5,9 @@ library;
 /// social features exist (Phase 3).
 enum PrivacyLevel { private, friends, approximate, exact }
 
-enum SyncStatus { pending, synced }
+/// `rejected`: the server refused the row (invalid); it is sent again only
+/// after the next local edit.
+enum SyncStatus { pending, synced, rejected }
 
 enum BaitType { natural, artificial, fly, other }
 

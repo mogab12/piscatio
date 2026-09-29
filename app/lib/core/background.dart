@@ -1,22 +1,32 @@
+import 'dart:convert';
+import 'dart:isolate';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import '../data/account/account_repository.dart';
 import '../data/db/tables.dart';
 import '../data/jobs/job_queue.dart';
 import '../data/jobs/job_runner.dart';
 import '../data/jobs/job_scheduler.dart';
 import '../data/jobs/place_map_job.dart';
 import '../data/jobs/place_name_job.dart';
+import '../data/jobs/sync_job.dart';
 import '../data/jobs/weather_job.dart';
+import '../data/media/photo_storage.dart';
 import '../data/remote/nasa_power_client.dart';
 import '../data/remote/overpass_client.dart';
+import '../data/remote/piscatio_api.dart';
 import '../data/remote/place_name_service.dart';
 import '../data/repositories/place_map_repository.dart';
 import '../data/repositories/weather_repository.dart';
+import '../data/sync/sync_service.dart';
 import '../domain/models/enums.dart';
+import '../domain/models/geo_point.dart';
 import '../domain/models/place_map.dart';
 import '../domain/models/weather.dart';
+import '../domain/services/overpass_map.dart';
 import '../features/settings/application/preferences.dart';
 import 'providers.dart';
 
@@ -53,6 +63,70 @@ final placeMapProvider = StreamProvider.family<PlaceMap?, String>(
   (ref, key) => ref.watch(placeMapRepositoryProvider).watch(key),
 );
 
+/// The sign-in token's safe (overridden in tests).
+final tokenStoreProvider = Provider<TokenStore>(
+  (ref) => const SecureTokenStore(),
+);
+
+final accountRepositoryProvider = Provider(
+  (ref) => AccountRepository(
+    ref.watch(appDatabaseProvider),
+    ref.watch(settingsRepositoryProvider),
+    ref.watch(tokenStoreProvider),
+  ),
+);
+
+/// The signed-in account; null when signed out.
+final accountProvider = StreamProvider<Account?>(
+  (ref) => ref.watch(accountRepositoryProvider).watch(),
+);
+
+/// Talks to a Piscatio server at [base] (with a session [token] if any).
+final apiFactoryProvider = Provider<ApiFactory>((ref) {
+  final http = ref.watch(httpClientProvider);
+  return (base, token) => PiscatioApi(http, base: base, token: token);
+});
+
+final syncServiceProvider = Provider(
+  (ref) => SyncService(
+    ref.watch(appDatabaseProvider),
+    ref.watch(clockProvider),
+    photoExists: (relative) {
+      final root = ref.read(photoRootProvider).value;
+      return root != null && resolvePhoto(root, relative).existsSync();
+    },
+  ),
+);
+
+/// OpenStreetMap data for a map area: through our server when signed in
+/// (shared cache, fair use of Overpass), directly otherwise or when the
+/// server is down.
+final mapFetcherProvider = Provider<Future<PlaceMap> Function(GeoPoint)>((ref) {
+  return (center) async {
+    final accounts = ref.read(accountRepositoryProvider);
+    final account = await accounts.read();
+    final token = await accounts.token();
+    if (account != null && token != null) {
+      try {
+        final bytes = await ref
+            .read(apiFactoryProvider)(account.server, token)
+            .mapArea(center.latitude, center.longitude);
+        return await Isolate.run(
+          () => OverpassMap.parse(
+            jsonDecode(utf8.decode(bytes)) as Map<String, Object?>,
+            center,
+          ),
+        );
+      } on ApiUnavailable {
+        // Fall through to Overpass.
+      } on ApiSignedOut {
+        // Fall through to Overpass.
+      }
+    }
+    return ref.read(overpassClientProvider).fetchAround(center);
+  };
+});
+
 /// The per-install secret behind approximate locations.
 final privacySecretProvider = FutureProvider<List<int>>(
   (ref) => ref.watch(settingsRepositoryProvider).privacySecret(),
@@ -77,7 +151,7 @@ final jobQueueProvider = Provider(
   ),
 );
 
-final jobRunnerProvider = Provider(
+final Provider<JobRunner> jobRunnerProvider = Provider<JobRunner>(
   (ref) => JobRunner(ref.watch(jobQueueProvider), [
     WeatherJobHandler(
       trips: ref.watch(tripRepositoryProvider),
@@ -93,8 +167,38 @@ final jobRunnerProvider = Provider(
     PlaceMapJobHandler(
       trips: ref.watch(tripRepositoryProvider),
       maps: ref.watch(placeMapRepositoryProvider),
-      client: ref.watch(overpassClientProvider),
+      fetch: (center) => ref.read(mapFetcherProvider)(center),
       secret: () => ref.read(settingsRepositoryProvider).privacySecret(),
+    ),
+    SyncJobHandler(
+      account: ref.watch(accountRepositoryProvider),
+      sync: ref.watch(syncServiceProvider),
+      settings: ref.watch(settingsRepositoryProvider),
+      queue: ref.watch(jobQueueProvider),
+      api: ref.watch(apiFactoryProvider),
+      clock: ref.watch(clockProvider),
+      onNewTrip: (id) async {
+        final work = ref.read(backgroundWorkProvider);
+        final trip = await ref.read(tripRepositoryProvider).getTrip(id);
+        if (trip == null) return;
+        if (!trip.isActive) await work.weatherFor(id);
+        await work.mapFor(id, trip.privacyLevel);
+      },
+      onSecretChanged: () => ref.invalidate(privacySecretProvider),
+      kick: () => ref.read(jobSchedulerProvider).kick(),
+    ),
+    PhotoUploadHandler(
+      db: ref.watch(appDatabaseProvider),
+      account: ref.watch(accountRepositoryProvider),
+      api: ref.watch(apiFactoryProvider),
+      root: () => ref.read(photoRootProvider.future),
+      clock: ref.watch(clockProvider),
+    ),
+    PhotoDownloadHandler(
+      db: ref.watch(appDatabaseProvider),
+      account: ref.watch(accountRepositoryProvider),
+      api: ref.watch(apiFactoryProvider),
+      root: () => ref.read(photoRootProvider.future),
     ),
   ], ref.watch(clockProvider)),
 );
@@ -108,7 +212,9 @@ final connectionRestoredProvider = Provider<Stream<void>>(
 
 /// Started once by the app. Tests replace it with a scheduler that is never
 /// started (no timers), whose [JobScheduler.kick] runs the queue on demand.
-final jobSchedulerProvider = Provider<JobScheduler>((ref) {
+final Provider<JobScheduler> jobSchedulerProvider = Provider<JobScheduler>((
+  ref,
+) {
   final scheduler = JobScheduler(
     ref.watch(jobRunnerProvider),
     connectionRestored: ref.watch(connectionRestoredProvider),
@@ -144,6 +250,22 @@ class BackgroundWork {
     await _queue.enqueue(JobKind.placeMap, tripId);
     _ref.read(jobSchedulerProvider).kick();
   }
+
+  /// Syncs as soon as possible (when signed in).
+  Future<void> syncSoon() async {
+    if (await _ref.read(accountRepositoryProvider).read() == null) return;
+    await _queue.enqueue(JobKind.sync, syncSubject);
+    _ref.read(jobSchedulerProvider).kick();
+  }
+
+  /// Makes sure the recurring sync is queued, without moving it.
+  Future<void> ensureSync() async {
+    if (await _ref.read(accountRepositoryProvider).read() == null) return;
+    if (await _queue.find(JobKind.sync, syncSubject) != null) return;
+    await syncSoon();
+  }
+
+  Future<void> cancelSync() => _queue.cancel(JobKind.sync, syncSubject);
 
   Future<void> cancelFor(String tripId) async {
     await _queue.cancel(JobKind.weather, tripId);

@@ -39,9 +39,11 @@ class TestApp {
     this.photoRoot,
     this.places,
     this.filters,
+    this.tokens,
   );
 
   final AppDatabase db;
+  final FakeTokenStore tokens;
   final FakePhotoFilterService filters;
   final FakeLocationService location;
   final FakePlaceNameService places;
@@ -78,6 +80,7 @@ class TestApp {
     location ??= FakeLocationService(fix: pantanal);
     final places = FakePlaceNameService();
     final filters = FakePhotoFilterService();
+    final tokens = FakeTokenStore();
     final photoRoot = Directory.systemTemp.createTempSync('piscatio_photos');
     final container = ProviderContainer(
       overrides: [
@@ -87,6 +90,7 @@ class TestApp {
         ),
         placeNameServiceProvider.overrideWithValue(places),
         photoFilterServiceProvider.overrideWithValue(filters),
+        tokenStoreProvider.overrideWithValue(tokens),
         // A scheduler that is never started: no timers or lifecycle hooks.
         jobSchedulerProvider.overrideWith(
           (ref) => JobScheduler(
@@ -115,6 +119,7 @@ class TestApp {
       photoRoot,
       places,
       filters,
+      tokens,
     );
   }
 

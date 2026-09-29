@@ -1,8 +1,9 @@
 import '../../domain/models/enums.dart';
+import '../../domain/models/geo_point.dart';
+import '../../domain/models/place_map.dart';
 import '../../domain/services/map_sketch.dart';
 import '../db/app_database.dart';
 import '../db/tables.dart';
-import '../remote/overpass_client.dart';
 import '../repositories/place_map_repository.dart';
 import '../repositories/trip_repository.dart';
 import 'job_runner.dart';
@@ -13,13 +14,16 @@ class PlaceMapJobHandler implements JobHandler {
   PlaceMapJobHandler({
     required this._trips,
     required this._maps,
-    required this._client,
+    required this._fetch,
     required this._secret,
   });
 
   final TripRepository _trips;
   final PlaceMapRepository _maps;
-  final OverpassClient _client;
+
+  /// OpenStreetMap data around a point (through our server when signed
+  /// in, else straight from Overpass).
+  final Future<PlaceMap> Function(GeoPoint center) _fetch;
   final Future<List<int>> Function() _secret;
 
   @override
@@ -36,7 +40,7 @@ class PlaceMapJobHandler implements JobHandler {
     }
     final area = mapAreaFor(spot, await _secret());
     if (await _maps.has(area.key)) return const JobDone();
-    await _maps.save(area.key, await _client.fetchAround(area.center));
+    await _maps.save(area.key, await _fetch(area.center));
     return const JobDone();
   }
 
