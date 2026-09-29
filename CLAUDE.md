@@ -7,7 +7,7 @@ vira um **card** compartilhável (9:16 e 1:1). Roadmap e status: `docs/ROADMAP.m
 
 ```
 /app        Flutter (Android + iOS) — Fase 1
-/backend    Django + DRF + PostGIS — Fase 2 (ainda não existe)
+/backend    Django + DRF + PostGIS — Fase 2 (conta, sync, fotos, clima ao vivo)
 /docs       ROADMAP e decisões
 ```
 
@@ -29,6 +29,14 @@ flutter test
 dart run tool/check_l10n.dart          # chaves e placeholders iguais nos 3 idiomas
 dart run tool/check_hardcoded_strings.dart   # nenhum texto literal na UI
 tool/verify.sh                         # tudo acima, como na CI — rodar antes de commitar
+```
+
+Backend (dentro de `backend/`, detalhes em `backend/README.md`):
+
+```bash
+DJANGO_DEBUG=1 pytest                 # PostGIS local (usuário/senha/banco "piscatio")
+ruff check . && ruff format --check .
+python manage.py makemigrations --check --dry-run
 ```
 
 O código gerado (`*.g.dart`, `*.freezed.dart`, `lib/l10n/generated/`) **é commitado**
