@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -5,11 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
+import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/providers.dart';
+import 'package:piscatio/data/db/tables.dart';
 import 'package:piscatio/data/repositories/catch_repository.dart';
 import 'package:piscatio/domain/models/catch.dart';
 import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
+import 'package:piscatio/domain/services/map_sketch.dart';
+import 'package:piscatio/domain/services/overpass_map.dart';
 import 'package:piscatio/features/cards/application/card_data.dart';
 import 'package:piscatio/features/cards/application/card_exporter.dart';
 import 'package:piscatio/features/cards/application/photo_filters.dart';
@@ -289,5 +294,100 @@ void main() {
     await app.settle(tester);
     expect(canvas().photoFilter, CardPhotoFilter.none);
     await app.dispose(tester);
+  });
+
+  group('map', () {
+    Future<void> storeMap(TestApp app, WidgetTester tester) =>
+        app.run(tester, () async {
+          final secret = await app
+              .read(settingsRepositoryProvider)
+              .privacySecret();
+          final area = mapAreaFor(const GeoPoint(-16.52, -56.41), secret);
+          final json = jsonDecode(
+            File('test/fixtures/overpass_reservoir.json').readAsStringSync(),
+          ) as Map<String, Object?>;
+          await app
+              .read(placeMapRepositoryProvider)
+              .save(area.key, OverpassMap.parse(json, area.center));
+        });
+
+    testWidgets('a trip with its map offers the map style', (tester) async {
+      final (app, tripId, _, _) = await _setup(tester);
+      await storeMap(app, tester);
+      await app.pumpScreen(
+        tester,
+        CardEditorScreen(subject: CardSubject.trip, id: tripId),
+      );
+      TripCardView view() => tester.widget(find.byType(TripCardView));
+      expect(view().data.map, isNotNull);
+
+      await tester.ensureVisible(find.text('Mapa'));
+      await app.settle(tester);
+      await tester.tap(find.text('Mapa'));
+      await app.settle(tester);
+      expect(view().style, CardStyle.map);
+      expect(tester.takeException(), isNull);
+
+      await tester.tap(find.text('Detalhes'));
+      await app.settle(tester);
+      expect(
+        find.text('O círculo marca a região, nunca o ponto exato.'),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(find.text('Mapa do local'));
+      await tester.tap(find.text('Mapa do local'));
+      await app.settle(tester);
+      expect(view().shown.map, isNull);
+      await app.dispose(tester);
+    });
+
+    testWidgets('private trips: no map, and none is asked for', (tester) async {
+      final (app, tripId, _, _) = await _setup(
+        tester,
+        privacy: PrivacyLevel.private,
+      );
+      await app.pumpScreen(
+        tester,
+        CardEditorScreen(subject: CardSubject.trip, id: tripId),
+      );
+      TripCardView view() => tester.widget(find.byType(TripCardView));
+      expect(view().data.map, isNull);
+      final chip = tester.widget<ChoiceChip>(
+        find.widgetWithText(ChoiceChip, 'Mapa'),
+      );
+      expect(chip.onSelected, isNull);
+      await tester.tap(find.text('Detalhes'));
+      await app.settle(tester);
+      expect(find.text('Pescarias privadas não mostram mapa.'), findsOneWidget);
+      final jobs = await app.run(
+        tester,
+        () => app.read(jobQueueProvider).all(),
+      );
+      expect(jobs.where((j) => j.kind == JobKind.placeMap), isEmpty);
+      await app.dispose(tester);
+    });
+
+    testWidgets('a missing map is queued and explained', (tester) async {
+      final (app, tripId, _, _) = await _setup(tester);
+      await app.pumpScreen(
+        tester,
+        CardEditorScreen(subject: CardSubject.trip, id: tripId),
+      );
+      await tester.tap(find.text('Detalhes'));
+      await app.settle(tester);
+      expect(
+        find.text('O mapa chega quando o celular estiver online.'),
+        findsOneWidget,
+      );
+      final jobs = await app.run(
+        tester,
+        () => app.read(jobQueueProvider).all(),
+      );
+      // Tried at once; offline in tests, so it waits for a retry.
+      final map = jobs.singleWhere((j) => j.kind == JobKind.placeMap);
+      expect(map.subjectId, tripId);
+      expect(map.lastError, contains('503'));
+      await app.dispose(tester);
+    });
   });
 }

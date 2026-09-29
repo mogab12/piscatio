@@ -4,6 +4,7 @@ import '../application/card_data.dart';
 import 'card_canvas.dart';
 import 'styles/board_card.dart';
 import 'styles/chart_card.dart';
+import 'styles/map_card.dart';
 import 'styles/tag_card.dart';
 
 /// A catch card at its canvas size, as customized in the editor.
@@ -35,6 +36,7 @@ class CatchCardView extends StatelessWidget {
         CardStyle.board => BoardCatchCard(data: d, format: format),
         CardStyle.chart => ChartCatchCard(data: d, format: format),
         CardStyle.tag => TagCatchCard(data: d, format: format),
+        CardStyle.map => MapCatchCard(data: d, format: format),
       },
     );
   }
@@ -68,6 +70,7 @@ class TripCardView extends StatelessWidget {
         CardStyle.board => BoardTripCard(data: d, format: format),
         CardStyle.chart => ChartTripCard(data: d, format: format),
         CardStyle.tag => TagTripCard(data: d, format: format),
+        CardStyle.map => MapTripCard(data: d, format: format),
       },
     );
   }

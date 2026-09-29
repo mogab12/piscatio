@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/formatting/l10n.dart';
+import '../../../../domain/services/map_sketch.dart';
 import '../../application/card_data.dart';
 import '../card_canvas.dart';
 import '../card_theme.dart';
 import '../painters/chart_painters.dart';
+import '../painters/map_painter.dart';
 import '../painters/moon_painter.dart';
 
 /// Stable across runs and platforms (unlike String.hashCode): FNV-1a.
@@ -17,8 +19,9 @@ int stableSeed(String s) {
   return h & 0x7fffffff;
 }
 
-/// Chart: a night nautical chart. The contours are drawn from the card's
-/// id, never from the real place. The featured number is set like a
+/// Chart: a night nautical chart. When the trip's privacy allows a map,
+/// the water around the place is drawn (the region, never the spot);
+/// otherwise the contours come from the card's id. The featured number is set like a
 /// sounding (depths are italic on charts); a compass rose carries the real
 /// wind and the moon of that day; a title block holds the details.
 class ChartCatchCard extends StatelessWidget {
@@ -48,6 +51,7 @@ class ChartCatchCard extends StatelessWidget {
     return _ChartLayout(
       format: format,
       seed: stableSeed(data.id),
+      map: data.map,
       photoPath: data.photoPath,
       edition: data.romanDate,
       sounding: (size) => measured
@@ -99,6 +103,7 @@ class ChartTripCard extends StatelessWidget {
     return _ChartLayout(
       format: format,
       seed: stableSeed(data.id),
+      map: data.map,
       photoPath: data.photoPath,
       edition: data.romanDate,
       sounding: (size) => CardHeadline(
@@ -131,6 +136,7 @@ class _ChartLayout extends StatelessWidget {
   const _ChartLayout({
     required this.format,
     required this.seed,
+    required this.map,
     required this.photoPath,
     required this.edition,
     required this.sounding,
@@ -140,6 +146,7 @@ class _ChartLayout extends StatelessWidget {
 
   final CardFormat format;
   final int seed;
+  final MapSketch? map;
   final String? photoPath;
   final String edition;
   final Widget Function(double size) sounding;
@@ -169,16 +176,32 @@ class _ChartLayout extends StatelessWidget {
       children: [
         Positioned.fill(
           child: CustomPaint(
-            painter: ContourPainter(
-              seed: seed,
-              line: p.line,
-              strongLine: p.lineStrong,
-              soundingStyle: CardType.text(
-                24,
-                style: FontStyle.italic,
-                color: p.sounding,
-              ),
-            ),
+            painter: map == null
+                ? ContourPainter(
+                    seed: seed,
+                    line: p.line,
+                    strongLine: p.lineStrong,
+                    soundingStyle: CardType.text(
+                      24,
+                      style: FontStyle.italic,
+                      color: p.sounding,
+                    ),
+                  )
+                : MapPainter(
+                    sketch: map!,
+                    inks: MapInks(
+                      land: p.ground,
+                      water: Color.lerp(p.ground, p.text, 0.09)!,
+                      contour: p.lineStrong,
+                      road: p.line,
+                      ring: p.accent,
+                      label: p.muted,
+                    ),
+                    labelStyle: margin,
+                    // Credited in the margin, like the edition.
+                    attribution: '',
+                    ring: false,
+                  ),
           ),
         ),
         Positioned.fill(
@@ -192,6 +215,12 @@ class _ChartLayout extends StatelessWidget {
           bottom: 4,
           child: Text(edition, style: margin),
         ),
+        if (map != null)
+          Positioned(
+            right: ChartBorderPainter.inset,
+            bottom: 4,
+            child: Text(context.l10n.mapAttribution, style: margin),
+          ),
         Positioned(
           left: signature.dx + (story ? 16 : 20),
           top: signature.dy + (story ? 0 : 12),

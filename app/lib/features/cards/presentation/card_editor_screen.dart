@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/background.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/providers.dart';
 import '../../../core/theme/tokens.dart';
@@ -12,6 +13,7 @@ import '../../../domain/models/enums.dart';
 import '../application/card_builder.dart';
 import '../application/card_data.dart';
 import '../application/card_exporter.dart';
+import '../application/card_map.dart';
 import '../application/photo_filter_service.dart';
 import '../application/photo_filters.dart';
 import 'card_view.dart';
@@ -42,6 +44,9 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
 
   /// Only the latest filter request may update the card.
   var _filterRequest = 0;
+
+  /// The map is asked for once, when the editor finds it missing.
+  var _mapRequested = false;
   final _boundary = GlobalKey();
   final _caption = TextEditingController();
 
@@ -55,6 +60,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     CardStyle.board => context.l10n.cardStyleBoard,
     CardStyle.chart => context.l10n.cardStyleChart,
     CardStyle.tag => context.l10n.cardStyleTag,
+    CardStyle.map => context.l10n.cardStyleMap,
   };
 
   String _formatName(CardFormat f) => switch (f) {
@@ -202,6 +208,23 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     final privacy = tripId == null
         ? null
         : ref.watch(tripProvider(tripId)).value?.privacyLevel;
+    final mapState = tripId == null
+        ? CardMapState.noPlace
+        : ref.watch(tripMapProvider(tripId)).state;
+    if (mapState == CardMapState.pending && privacy != null && !_mapRequested) {
+      _mapRequested = true;
+      final work = ref.read(backgroundWorkProvider);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => work.mapFor(tripId!, privacy),
+      );
+    }
+    final mapNote = switch (mapState) {
+      CardMapState.ready => l10n.cardMapArea,
+      CardMapState.noPlace => l10n.cardMapNoPlace,
+      CardMapState.private => l10n.cardMapPrivate,
+      CardMapState.pending => l10n.cardMapPending,
+      CardMapState.empty => l10n.cardMapEmpty,
+    };
     final placeNote = switch ((place, privacy)) {
       (null, PrivacyLevel.private || PrivacyLevel.friends) =>
         l10n.cardPlacePrivate,
@@ -220,7 +243,12 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                   label: Text(_styleName(s)),
                   selected: _style == s,
                   showCheckmark: false,
-                  onSelected: (_) => setState(() => _style = s),
+                  onSelected:
+                      s == CardStyle.map &&
+                          mapState != CardMapState.ready &&
+                          _style != s
+                      ? null
+                      : (_) => setState(() => _style = s),
                 ),
             ],
           ),
@@ -327,12 +355,19 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                   selected: _options.showBait,
                   onSelected: (v) => _set(_options.copyWith(showBait: v)),
                 ),
+                FilterChip(
+                  label: Text(l10n.cardShowMap),
+                  selected: mapState == CardMapState.ready && _options.showMap,
+                  onSelected: mapState != CardMapState.ready
+                      ? null
+                      : (v) => _set(_options.copyWith(showMap: v)),
+                ),
               ],
             ),
-            if (placeNote != null) ...[
+            for (final note in [?placeNote, mapNote]) ...[
               const SizedBox(height: 6),
               Text(
-                placeNote,
+                note,
                 style: Theme.of(context).textTheme.bodyMedium!
                     .copyWith(color: context.palette.muted),
               ),

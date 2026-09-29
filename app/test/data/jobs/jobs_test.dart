@@ -7,20 +7,27 @@ import 'package:piscatio/data/db/app_database.dart';
 import 'package:piscatio/data/db/tables.dart';
 import 'package:piscatio/data/jobs/job_queue.dart';
 import 'package:piscatio/data/jobs/job_runner.dart';
+import 'package:piscatio/data/jobs/place_map_job.dart';
 import 'package:piscatio/data/jobs/place_name_job.dart';
 import 'package:piscatio/data/jobs/weather_job.dart';
 import 'package:piscatio/data/remote/nasa_power_client.dart';
+import 'package:piscatio/data/remote/overpass_client.dart';
 import 'package:piscatio/data/remote/place_name_service.dart';
+import 'package:piscatio/data/repositories/place_map_repository.dart';
 import 'package:piscatio/data/repositories/trip_repository.dart';
 import 'package:piscatio/data/repositories/weather_repository.dart';
 import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
+import 'package:piscatio/domain/models/place_map.dart';
 import 'package:piscatio/domain/models/weather.dart';
+import 'package:piscatio/domain/services/map_sketch.dart';
 
 import '../../helpers/fakes.dart';
 import '../../helpers/test_db.dart';
 
 final _power = File('test/fixtures/power_hourly.json').readAsStringSync();
+final _overpass = File('test/fixtures/overpass_reservoir.json')
+    .readAsStringSync();
 
 /// Records calls and answers with scripted outcomes.
 class _ScriptedHandler implements JobHandler {
@@ -341,6 +348,97 @@ void main() {
       expect(composeRegion(administrativeArea: 'MT'), 'MT');
       expect(composeRegion(country: 'Brasil'), 'Brasil');
       expect(composeRegion(locality: ' '), isNull);
+    });
+  });
+
+  group('PlaceMapJobHandler', () {
+    late TripRepository trips;
+    late PlaceMapRepository maps;
+    late List<http.Request> requests;
+    late int status;
+    final secret = List<int>.generate(32, (i) => i);
+
+    setUp(() {
+      trips = TripRepository(db, deps.clock, deps.ids);
+      maps = PlaceMapRepository(db, deps.clock);
+      requests = [];
+      status = 200;
+    });
+
+    JobRunner runner() => JobRunner(queue, [
+      PlaceMapJobHandler(
+        trips: trips,
+        maps: maps,
+        client: OverpassClient(
+          MockClient((request) async {
+            requests.add(request);
+            return http.Response(_overpass, status);
+          }),
+        ),
+        secret: () async => secret,
+      ),
+    ], deps.clock);
+
+    Future<String> trip(PrivacyLevel privacy, {GeoPoint? at}) async {
+      final start = deps.clock.now().subtract(const Duration(hours: 5));
+      final t = await trips.createPastTrip(
+        startedAt: start,
+        endedAt: start.add(const Duration(hours: 2)),
+        timezone: 'UTC',
+        privacy: privacy,
+        location: at ?? const GeoPoint(-16.5205, -56.4102),
+      );
+      return t.id;
+    }
+
+    test(
+      'fetches the map around the approximate point, once per area',
+      () async {
+        final id = await trip(PrivacyLevel.approximate);
+        await queue.enqueue(JobKind.placeMap, id);
+        await runner().runDue();
+        expect(requests, hasLength(1));
+        final query = requests.single.bodyFields['data']!;
+        // The real spot never leaves the phone.
+        expect(query, isNot(contains('-16.5205')));
+        expect(query, isNot(contains('-56.4102')));
+        final area = mapAreaFor(const GeoPoint(-16.5205, -56.4102), secret);
+        final stored = await maps.get(area.key);
+        expect(stored, isNotNull);
+        expect(stored!.center, area.center);
+        expect(
+          stored.features.map((f) => f.kind),
+          contains(MapFeatureKind.water),
+        );
+        expect(await queue.all(), isEmpty);
+
+        // Another trip in the same place reuses it.
+        final again = await trip(
+          PrivacyLevel.exact,
+          at: const GeoPoint(-16.52051, -56.41021),
+        );
+        await queue.enqueue(JobKind.placeMap, again);
+        await runner().runDue();
+        expect(requests, hasLength(1));
+      },
+    );
+
+    test('private trips never ask for a map', () async {
+      final id = await trip(PrivacyLevel.private);
+      await queue.enqueue(JobKind.placeMap, id);
+      await runner().runDue();
+      expect(requests, isEmpty);
+      expect(await queue.all(), isEmpty);
+    });
+
+    test('a busy server is retried later', () async {
+      status = 429;
+      final id = await trip(PrivacyLevel.exact);
+      await queue.enqueue(JobKind.placeMap, id);
+      await runner().runDue();
+      final job = (await queue.all()).single;
+      expect(job.attempts, 1);
+      expect(job.lastError, contains('429'));
     });
   });
 }

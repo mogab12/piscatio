@@ -1138,4 +1138,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cardFilterFailed => 'No se pudo aplicar el filtro a esta foto.';
+
+  @override
+  String get unitKilometer => 'km';
+
+  @override
+  String get unitMile => 'mi';
+
+  @override
+  String get cardStyleMap => 'Mapa';
+
+  @override
+  String get cardShowMap => 'Mapa del lugar';
+
+  @override
+  String get cardMapPrivate => 'Las salidas privadas no muestran mapa.';
+
+  @override
+  String get cardMapPending =>
+      'El mapa llega cuando el teléfono tenga conexión.';
+
+  @override
+  String get cardMapEmpty => 'OpenStreetMap no tiene agua mapeada por aquí.';
+
+  @override
+  String get cardMapNoPlace => 'Esta salida no tiene lugar.';
+
+  @override
+  String get cardMapArea => 'El círculo marca la zona, nunca el punto exacto.';
+
+  @override
+  String get mapAttribution => '© colaboradores de OpenStreetMap';
+
+  @override
+  String get settingsMapData => 'Datos de mapa';
+
+  @override
+  String get settingsMapDataCredit =>
+      '© colaboradores de OpenStreetMap, disponible bajo la Open Database License (ODbL).';
 }

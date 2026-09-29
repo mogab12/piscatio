@@ -1128,4 +1128,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cardFilterFailed => 'Couldn\'t apply the filter to this photo.';
+
+  @override
+  String get unitKilometer => 'km';
+
+  @override
+  String get unitMile => 'mi';
+
+  @override
+  String get cardStyleMap => 'Map';
+
+  @override
+  String get cardShowMap => 'Map of the place';
+
+  @override
+  String get cardMapPrivate => 'Private trips never show a map.';
+
+  @override
+  String get cardMapPending => 'The map arrives once the phone is online.';
+
+  @override
+  String get cardMapEmpty => 'OpenStreetMap has no water mapped around here.';
+
+  @override
+  String get cardMapNoPlace => 'This trip has no place.';
+
+  @override
+  String get cardMapArea => 'The circle marks the area, never the exact spot.';
+
+  @override
+  String get mapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get settingsMapData => 'Map data';
+
+  @override
+  String get settingsMapDataCredit =>
+      '© OpenStreetMap contributors, available under the Open Database License (ODbL).';
 }

@@ -6110,7 +6110,7 @@ class JobRow extends DataClass implements Insertable<JobRow> {
   final String id;
   final JobKind kind;
 
-  /// What the job is about (a trip id for both current kinds).
+  /// What the job is about (a trip id for every current kind).
   final String subjectId;
   final int attempts;
   final DateTime nextAttemptAt;
@@ -6404,6 +6404,491 @@ class JobsCompanion extends UpdateCompanion<JobRow> {
   }
 }
 
+class $PlaceMapsTable extends PlaceMaps
+    with TableInfo<$PlaceMapsTable, PlaceMapRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlaceMapsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _areaKeyMeta = const VerificationMeta(
+    'areaKey',
+  );
+  @override
+  late final GeneratedColumn<String> areaKey = GeneratedColumn<String>(
+    'area_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _centerLatitudeMeta = const VerificationMeta(
+    'centerLatitude',
+  );
+  @override
+  late final GeneratedColumn<double> centerLatitude = GeneratedColumn<double>(
+    'center_latitude',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _centerLongitudeMeta = const VerificationMeta(
+    'centerLongitude',
+  );
+  @override
+  late final GeneratedColumn<double> centerLongitude = GeneratedColumn<double>(
+    'center_longitude',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _halfSizeMetersMeta = const VerificationMeta(
+    'halfSizeMeters',
+  );
+  @override
+  late final GeneratedColumn<int> halfSizeMeters = GeneratedColumn<int>(
+    'half_size_meters',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+    'data',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    areaKey,
+    centerLatitude,
+    centerLongitude,
+    halfSizeMeters,
+    data,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'place_maps';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlaceMapRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('area_key')) {
+      context.handle(
+        _areaKeyMeta,
+        areaKey.isAcceptableOrUnknown(data['area_key']!, _areaKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_areaKeyMeta);
+    }
+    if (data.containsKey('center_latitude')) {
+      context.handle(
+        _centerLatitudeMeta,
+        centerLatitude.isAcceptableOrUnknown(
+          data['center_latitude']!,
+          _centerLatitudeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_centerLatitudeMeta);
+    }
+    if (data.containsKey('center_longitude')) {
+      context.handle(
+        _centerLongitudeMeta,
+        centerLongitude.isAcceptableOrUnknown(
+          data['center_longitude']!,
+          _centerLongitudeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_centerLongitudeMeta);
+    }
+    if (data.containsKey('half_size_meters')) {
+      context.handle(
+        _halfSizeMetersMeta,
+        halfSizeMeters.isAcceptableOrUnknown(
+          data['half_size_meters']!,
+          _halfSizeMetersMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_halfSizeMetersMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+        _dataMeta,
+        this.data.isAcceptableOrUnknown(data['data']!, _dataMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {areaKey};
+  @override
+  PlaceMapRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaceMapRow(
+      areaKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}area_key'],
+      )!,
+      centerLatitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}center_latitude'],
+      )!,
+      centerLongitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}center_longitude'],
+      )!,
+      halfSizeMeters: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}half_size_meters'],
+      )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $PlaceMapsTable createAlias(String alias) {
+    return $PlaceMapsTable(attachedDatabase, alias);
+  }
+}
+
+class PlaceMapRow extends DataClass implements Insertable<PlaceMapRow> {
+  /// The approximate point, "lat,lng" with 5 decimals.
+  final String areaKey;
+  final double centerLatitude;
+  final double centerLongitude;
+  final int halfSizeMeters;
+
+  /// [PlaceMap.toJson].
+  final String data;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const PlaceMapRow({
+    required this.areaKey,
+    required this.centerLatitude,
+    required this.centerLongitude,
+    required this.halfSizeMeters,
+    required this.data,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['area_key'] = Variable<String>(areaKey);
+    map['center_latitude'] = Variable<double>(centerLatitude);
+    map['center_longitude'] = Variable<double>(centerLongitude);
+    map['half_size_meters'] = Variable<int>(halfSizeMeters);
+    map['data'] = Variable<String>(data);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  PlaceMapsCompanion toCompanion(bool nullToAbsent) {
+    return PlaceMapsCompanion(
+      areaKey: Value(areaKey),
+      centerLatitude: Value(centerLatitude),
+      centerLongitude: Value(centerLongitude),
+      halfSizeMeters: Value(halfSizeMeters),
+      data: Value(data),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory PlaceMapRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaceMapRow(
+      areaKey: serializer.fromJson<String>(json['areaKey']),
+      centerLatitude: serializer.fromJson<double>(json['centerLatitude']),
+      centerLongitude: serializer.fromJson<double>(json['centerLongitude']),
+      halfSizeMeters: serializer.fromJson<int>(json['halfSizeMeters']),
+      data: serializer.fromJson<String>(json['data']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'areaKey': serializer.toJson<String>(areaKey),
+      'centerLatitude': serializer.toJson<double>(centerLatitude),
+      'centerLongitude': serializer.toJson<double>(centerLongitude),
+      'halfSizeMeters': serializer.toJson<int>(halfSizeMeters),
+      'data': serializer.toJson<String>(data),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  PlaceMapRow copyWith({
+    String? areaKey,
+    double? centerLatitude,
+    double? centerLongitude,
+    int? halfSizeMeters,
+    String? data,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => PlaceMapRow(
+    areaKey: areaKey ?? this.areaKey,
+    centerLatitude: centerLatitude ?? this.centerLatitude,
+    centerLongitude: centerLongitude ?? this.centerLongitude,
+    halfSizeMeters: halfSizeMeters ?? this.halfSizeMeters,
+    data: data ?? this.data,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  PlaceMapRow copyWithCompanion(PlaceMapsCompanion data) {
+    return PlaceMapRow(
+      areaKey: data.areaKey.present ? data.areaKey.value : this.areaKey,
+      centerLatitude: data.centerLatitude.present
+          ? data.centerLatitude.value
+          : this.centerLatitude,
+      centerLongitude: data.centerLongitude.present
+          ? data.centerLongitude.value
+          : this.centerLongitude,
+      halfSizeMeters: data.halfSizeMeters.present
+          ? data.halfSizeMeters.value
+          : this.halfSizeMeters,
+      data: data.data.present ? data.data.value : this.data,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaceMapRow(')
+          ..write('areaKey: $areaKey, ')
+          ..write('centerLatitude: $centerLatitude, ')
+          ..write('centerLongitude: $centerLongitude, ')
+          ..write('halfSizeMeters: $halfSizeMeters, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    areaKey,
+    centerLatitude,
+    centerLongitude,
+    halfSizeMeters,
+    data,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaceMapRow &&
+          other.areaKey == this.areaKey &&
+          other.centerLatitude == this.centerLatitude &&
+          other.centerLongitude == this.centerLongitude &&
+          other.halfSizeMeters == this.halfSizeMeters &&
+          other.data == this.data &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class PlaceMapsCompanion extends UpdateCompanion<PlaceMapRow> {
+  final Value<String> areaKey;
+  final Value<double> centerLatitude;
+  final Value<double> centerLongitude;
+  final Value<int> halfSizeMeters;
+  final Value<String> data;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const PlaceMapsCompanion({
+    this.areaKey = const Value.absent(),
+    this.centerLatitude = const Value.absent(),
+    this.centerLongitude = const Value.absent(),
+    this.halfSizeMeters = const Value.absent(),
+    this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PlaceMapsCompanion.insert({
+    required String areaKey,
+    required double centerLatitude,
+    required double centerLongitude,
+    required int halfSizeMeters,
+    required String data,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : areaKey = Value(areaKey),
+       centerLatitude = Value(centerLatitude),
+       centerLongitude = Value(centerLongitude),
+       halfSizeMeters = Value(halfSizeMeters),
+       data = Value(data),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<PlaceMapRow> custom({
+    Expression<String>? areaKey,
+    Expression<double>? centerLatitude,
+    Expression<double>? centerLongitude,
+    Expression<int>? halfSizeMeters,
+    Expression<String>? data,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (areaKey != null) 'area_key': areaKey,
+      if (centerLatitude != null) 'center_latitude': centerLatitude,
+      if (centerLongitude != null) 'center_longitude': centerLongitude,
+      if (halfSizeMeters != null) 'half_size_meters': halfSizeMeters,
+      if (data != null) 'data': data,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PlaceMapsCompanion copyWith({
+    Value<String>? areaKey,
+    Value<double>? centerLatitude,
+    Value<double>? centerLongitude,
+    Value<int>? halfSizeMeters,
+    Value<String>? data,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return PlaceMapsCompanion(
+      areaKey: areaKey ?? this.areaKey,
+      centerLatitude: centerLatitude ?? this.centerLatitude,
+      centerLongitude: centerLongitude ?? this.centerLongitude,
+      halfSizeMeters: halfSizeMeters ?? this.halfSizeMeters,
+      data: data ?? this.data,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (areaKey.present) {
+      map['area_key'] = Variable<String>(areaKey.value);
+    }
+    if (centerLatitude.present) {
+      map['center_latitude'] = Variable<double>(centerLatitude.value);
+    }
+    if (centerLongitude.present) {
+      map['center_longitude'] = Variable<double>(centerLongitude.value);
+    }
+    if (halfSizeMeters.present) {
+      map['half_size_meters'] = Variable<int>(halfSizeMeters.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaceMapsCompanion(')
+          ..write('areaKey: $areaKey, ')
+          ..write('centerLatitude: $centerLatitude, ')
+          ..write('centerLongitude: $centerLongitude, ')
+          ..write('halfSizeMeters: $halfSizeMeters, ')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6419,6 +6904,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $CatchPhotosTable catchPhotos = $CatchPhotosTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $JobsTable jobs = $JobsTable(this);
+  late final $PlaceMapsTable placeMaps = $PlaceMapsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6434,6 +6920,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     catchPhotos,
     settings,
     jobs,
+    placeMaps,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -10927,6 +11414,257 @@ typedef $$JobsTableProcessedTableManager =
       JobRow,
       PrefetchHooks Function()
     >;
+typedef $$PlaceMapsTableCreateCompanionBuilder = PlaceMapsCompanion Function({
+  required String areaKey,
+  required double centerLatitude,
+  required double centerLongitude,
+  required int halfSizeMeters,
+  required String data,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<int> rowid,
+});
+typedef $$PlaceMapsTableUpdateCompanionBuilder = PlaceMapsCompanion Function({
+  Value<String> areaKey,
+  Value<double> centerLatitude,
+  Value<double> centerLongitude,
+  Value<int> halfSizeMeters,
+  Value<String> data,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$PlaceMapsTableFilterComposer
+    extends Composer<_$AppDatabase, $PlaceMapsTable> {
+  $$PlaceMapsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get areaKey => $composableBuilder(
+    column: $table.areaKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get centerLatitude => $composableBuilder(
+    column: $table.centerLatitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get centerLongitude => $composableBuilder(
+    column: $table.centerLongitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get halfSizeMeters => $composableBuilder(
+    column: $table.halfSizeMeters,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PlaceMapsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlaceMapsTable> {
+  $$PlaceMapsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get areaKey => $composableBuilder(
+    column: $table.areaKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get centerLatitude => $composableBuilder(
+    column: $table.centerLatitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get centerLongitude => $composableBuilder(
+    column: $table.centerLongitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get halfSizeMeters => $composableBuilder(
+    column: $table.halfSizeMeters,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlaceMapsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlaceMapsTable> {
+  $$PlaceMapsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get areaKey =>
+      $composableBuilder(column: $table.areaKey, builder: (column) => column);
+
+  GeneratedColumn<double> get centerLatitude => $composableBuilder(
+    column: $table.centerLatitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get centerLongitude => $composableBuilder(
+    column: $table.centerLongitude,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get halfSizeMeters => $composableBuilder(
+    column: $table.halfSizeMeters,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$PlaceMapsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlaceMapsTable,
+          PlaceMapRow,
+          $$PlaceMapsTableFilterComposer,
+          $$PlaceMapsTableOrderingComposer,
+          $$PlaceMapsTableAnnotationComposer,
+          $$PlaceMapsTableCreateCompanionBuilder,
+          $$PlaceMapsTableUpdateCompanionBuilder,
+          (
+            PlaceMapRow,
+            BaseReferences<_$AppDatabase, $PlaceMapsTable, PlaceMapRow>,
+          ),
+          PlaceMapRow,
+          PrefetchHooks Function()
+        > {
+  $$PlaceMapsTableTableManager(_$AppDatabase db, $PlaceMapsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlaceMapsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlaceMapsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlaceMapsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> areaKey = const Value.absent(),
+                Value<double> centerLatitude = const Value.absent(),
+                Value<double> centerLongitude = const Value.absent(),
+                Value<int> halfSizeMeters = const Value.absent(),
+                Value<String> data = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PlaceMapsCompanion(
+                areaKey: areaKey,
+                centerLatitude: centerLatitude,
+                centerLongitude: centerLongitude,
+                halfSizeMeters: halfSizeMeters,
+                data: data,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String areaKey,
+                required double centerLatitude,
+                required double centerLongitude,
+                required int halfSizeMeters,
+                required String data,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => PlaceMapsCompanion.insert(
+                areaKey: areaKey,
+                centerLatitude: centerLatitude,
+                centerLongitude: centerLongitude,
+                halfSizeMeters: halfSizeMeters,
+                data: data,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlaceMapsTable, PlaceMapRow>(table),
+                  BaseReferences<_$AppDatabase, $PlaceMapsTable, PlaceMapRow>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PlaceMapsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlaceMapsTable,
+      PlaceMapRow,
+      $$PlaceMapsTableFilterComposer,
+      $$PlaceMapsTableOrderingComposer,
+      $$PlaceMapsTableAnnotationComposer,
+      $$PlaceMapsTableCreateCompanionBuilder,
+      $$PlaceMapsTableUpdateCompanionBuilder,
+      (
+        PlaceMapRow,
+        BaseReferences<_$AppDatabase, $PlaceMapsTable, PlaceMapRow>,
+      ),
+      PlaceMapRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -10950,4 +11688,6 @@ class $AppDatabaseManager {
   $$SettingsTableTableManager get settings =>
       $$SettingsTableTableManager(_db, _db.settings);
   $$JobsTableTableManager get jobs => $$JobsTableTableManager(_db, _db.jobs);
+  $$PlaceMapsTableTableManager get placeMaps =>
+      $$PlaceMapsTableTableManager(_db, _db.placeMaps);
 }

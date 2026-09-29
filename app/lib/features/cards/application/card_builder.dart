@@ -15,6 +15,7 @@ import '../../../domain/models/tackle.dart';
 import '../../../domain/models/trip.dart';
 import '../../../domain/models/weather.dart';
 import '../../../domain/services/card_privacy.dart';
+import '../../../domain/services/map_sketch.dart';
 import '../../../domain/services/moon.dart';
 import '../../../domain/services/records.dart';
 import '../../../domain/services/roman_date.dart';
@@ -25,6 +26,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../common/species_label.dart';
 import '../../settings/application/preferences.dart';
 import 'card_data.dart';
+import 'card_map.dart';
 
 String? _photo(String? root, String? relative) =>
     root == null || relative == null ? null : p.join(root, relative);
@@ -55,6 +57,43 @@ CardWind? _wind(Formatters f, double? speed, double? from) =>
         label: '${f.windSpeed(speed)} ${f.compass(from)}',
       );
 
+/// A round distance about a third of the map's half-width, in the user's
+/// units.
+CardMapScale? mapScaleFor(MapSketch? map, Formatters f) {
+  if (map == null) return null;
+  final target = map.metersPerUnit * 0.4;
+  if (f.units == UnitSystem.imperial) {
+    const mile = 1609.344;
+    final miles = [
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+    ].lastWhere((m) => m * mile <= target, orElse: () => 0.25);
+    return CardMapScale(
+      miles * mile,
+      '${f.number(miles, maxFractionDigits: 2)} ${f.l10n.unitMile}',
+    );
+  }
+  final meters = [
+    100.0,
+    200.0,
+    500.0,
+    1000.0,
+    2000.0,
+    5000.0,
+    10000.0,
+  ].lastWhere((m) => m <= target, orElse: () => 100);
+  return CardMapScale(
+    meters,
+    meters < 1000
+        ? '${f.number(meters)} ${f.l10n.unitMeter}'
+        : '${f.number(meters / 1000)} ${f.l10n.unitKilometer}',
+  );
+}
+
 String rulerUnitLabel(RulerUnit unit, Formatters f) => switch (unit) {
   RulerUnit.centimeter => f.unitSymbol(DisplayUnit.centimeter),
   RulerUnit.inch => f.unitSymbol(DisplayUnit.inch),
@@ -74,6 +113,7 @@ CatchCardData buildCatchCard({
   TripWeather? weather,
   Bait? bait,
   String? photoRoot,
+  MapSketch? map,
 }) {
   final l10n = f.l10n;
   final status = recordStatus(item, allCatches);
@@ -152,6 +192,8 @@ CatchCardData buildCatchCard({
           ),
     temperatureLabel: temp == null ? null : f.temperature(temp),
     pressureLabel: pressure == null ? null : f.pressure(pressure),
+    map: map,
+    mapScale: mapScaleFor(map, f),
   );
 }
 
@@ -173,6 +215,7 @@ TripCardData buildTripCard({
   TripWeather? weather,
   Map<String, Bait> baitsById = const {},
   String? photoRoot,
+  MapSketch? map,
 }) {
   final l10n = f.l10n;
   String name(String? id) =>
@@ -262,6 +305,8 @@ TripCardData buildTripCard({
     wind: w == null ? null : _wind(f, w.windSpeedKmh, w.windDirectionDeg),
     temperatureLabel: w == null ? null : f.temperature(w.temperatureC!),
     pressureLabel: w?.pressureHpa == null ? null : f.pressure(w!.pressureHpa!),
+    map: map,
+    mapScale: mapScaleFor(map, f),
   );
 }
 
@@ -294,6 +339,7 @@ final catchCardDataProvider = Provider.family<CatchCardData?, String>((
     weather: ref.watch(tripWeatherProvider(trip.id)).value,
     bait: baits.where((b) => b.id == item.baitId).firstOrNull,
     photoRoot: root.path,
+    map: ref.watch(tripMapProvider(trip.id)).sketch,
   );
 });
 
@@ -320,5 +366,6 @@ final tripCardDataProvider = Provider.family<TripCardData?, String>((
     weather: ref.watch(tripWeatherProvider(tripId)).value,
     baitsById: {for (final b in baits) b.id: b},
     photoRoot: root.path,
+    map: ref.watch(tripMapProvider(trip.id)).sketch,
   );
 });

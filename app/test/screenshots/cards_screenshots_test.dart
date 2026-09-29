@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:piscatio/domain/models/enums.dart';
+import 'package:piscatio/domain/models/geo_point.dart';
+import 'package:piscatio/domain/services/map_sketch.dart';
+import 'package:piscatio/domain/services/overpass_map.dart';
 import 'package:piscatio/domain/services/ruler_scale.dart';
 import 'package:piscatio/features/cards/application/card_data.dart';
 import 'package:piscatio/features/cards/application/photo_filter_service.dart';
@@ -19,7 +24,24 @@ final _photo = File('test/fixtures/card_photo.jpg').absolute.path;
 /// `PREVIEW_PHOTO=/path/to/photo.jpg`.
 final _preview = Platform.environment['PREVIEW_PHOTO'] ?? _photo;
 
-CatchCardData sampleCatch({String? photo, bool record = true}) => CatchCardData(
+/// The sample reservoir (synthetic OpenStreetMap data), seen as a card
+/// would see it for [level].
+MapSketch sampleMap(PrivacyLevel level) {
+  final secret = List<int>.generate(32, (i) => i * 7 % 256);
+  const spot = GeoPoint(-16.5205, -56.4102);
+  final area = mapAreaFor(spot, secret);
+  final json = jsonDecode(
+    File('test/fixtures/overpass_reservoir.json').readAsStringSync(),
+  ) as Map<String, Object?>;
+  final map = OverpassMap.parse(json, area.center);
+  return MapSketch.of(map, MapView.forPrivacy(level, spot, secret)!)!;
+}
+
+CatchCardData sampleCatch({
+  String? photo,
+  bool record = true,
+  MapSketch? map,
+}) => CatchCardData(
   id: '0192f7a0-7a1b-7c3d-8e4f-5a6b7c8d9e0f',
   speciesName: 'Dourado',
   scientificName: 'Salminus brasiliensis',
@@ -54,9 +76,15 @@ CatchCardData sampleCatch({String? photo, bool record = true}) => CatchCardData(
   wind: const CardWind(fromDegrees: 135, label: '9 km/h SE'),
   temperatureLabel: '24 °C',
   pressureLabel: '1012 hPa',
+  map: map,
+  mapScale: map == null
+      ? null
+      : map.metersPerUnit > 5000
+      ? const CardMapScale(2000, '2 km')
+      : const CardMapScale(1000, '1 km'),
 );
 
-TripCardData sampleTrip({String? photo}) => TripCardData(
+TripCardData sampleTrip({String? photo, MapSketch? map}) => TripCardData(
   id: '0192f7a0-0000-7c3d-8e4f-5a6b7c8d9e0f',
   dateLabel: '12 de set. de 2026',
   romanDate: '12.IX.2026',
@@ -133,6 +161,8 @@ TripCardData sampleTrip({String? photo}) => TripCardData(
   wind: const CardWind(fromDegrees: 135, label: '9 km/h SE'),
   temperatureLabel: '24 °C',
   pressureLabel: '1012 hPa',
+  map: map,
+  mapScale: map == null ? null : const CardMapScale(2000, '2 km'),
 );
 
 Future<void> shoot(
@@ -314,4 +344,63 @@ void main() {
       }
     }, skip: !screenshotsEnabled);
   }
+
+  // The map style: local (exact) and regional (approximate) maps.
+  testWidgets('map style', (tester) async {
+    final local = sampleMap(PrivacyLevel.exact);
+    final regional = sampleMap(PrivacyLevel.approximate);
+    for (final (name, palette, map) in [
+      ('exact_redHead', CardPalette.redHead, local),
+      ('approx_paper', CardPalette.paper, regional),
+      ('exact_moon', CardPalette.moon, local),
+    ]) {
+      await shoot(
+        tester,
+        'map_catch_${name}_story',
+        CatchCardView(
+          data: sampleCatch(photo: _photo, map: map),
+          style: CardStyle.map,
+          format: CardFormat.story,
+          options: CardOptions(palette: palette),
+        ),
+        CardFormat.story,
+        photo: _photo,
+      );
+    }
+    await shoot(
+      tester,
+      'map_trip_square',
+      TripCardView(
+        data: sampleTrip(photo: _photo, map: regional),
+        style: CardStyle.map,
+        format: CardFormat.square,
+        options: const CardOptions(palette: CardPalette.tucunare),
+      ),
+      CardFormat.square,
+      photo: _photo,
+    );
+    // The chart draws the real water when there is a map.
+    await shoot(
+      tester,
+      'map_chart_story',
+      CatchCardView(
+        data: sampleCatch(photo: _photo, map: regional),
+        style: CardStyle.chart,
+        format: CardFormat.story,
+        options: const CardOptions(palette: CardPalette.river),
+      ),
+      CardFormat.story,
+      photo: _photo,
+    );
+    await shoot(
+      tester,
+      'map_catch_nomap_story',
+      CatchCardView(
+        data: sampleCatch(),
+        style: CardStyle.map,
+        format: CardFormat.story,
+      ),
+      CardFormat.story,
+    );
+  }, skip: !screenshotsEnabled);
 }

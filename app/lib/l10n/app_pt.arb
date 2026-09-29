@@ -315,5 +315,17 @@
   "cardFilterScreenprint": "Serigrafia",
   "cardFilterHalftone": "Retícula",
   "cardFilterWorking": "Aplicando o filtro",
-  "cardFilterFailed": "Não deu para aplicar o filtro nesta foto."
+  "cardFilterFailed": "Não deu para aplicar o filtro nesta foto.",
+  "unitKilometer": "km",
+  "unitMile": "mi",
+  "cardStyleMap": "Mapa",
+  "cardShowMap": "Mapa do local",
+  "cardMapPrivate": "Pescarias privadas não mostram mapa.",
+  "cardMapPending": "O mapa chega quando o celular estiver online.",
+  "cardMapEmpty": "O OpenStreetMap não tem água mapeada por aqui.",
+  "cardMapNoPlace": "Esta pescaria não tem local.",
+  "cardMapArea": "O círculo marca a região, nunca o ponto exato.",
+  "mapAttribution": "© colaboradores do OpenStreetMap",
+  "settingsMapData": "Dados de mapa",
+  "settingsMapDataCredit": "© colaboradores do OpenStreetMap, disponível sob a Open Database License (ODbL)."
 }

@@ -1476,5 +1476,53 @@
   "cardFilterFailed": "Couldn't apply the filter to this photo.",
   "@cardFilterFailed": {
     "description": "Snackbar when a photo filter fails."
+  },
+  "unitKilometer": "km",
+  "@unitKilometer": {
+    "description": "Unit symbol: kilometer."
+  },
+  "unitMile": "mi",
+  "@unitMile": {
+    "description": "Unit symbol: mile (distance)."
+  },
+  "cardStyleMap": "Map",
+  "@cardStyleMap": {
+    "description": "Card style: a stylized map of the fishing area."
+  },
+  "cardShowMap": "Map of the place",
+  "@cardShowMap": {
+    "description": "Card editor toggle: show the stylized map of the place."
+  },
+  "cardMapPrivate": "Private trips never show a map.",
+  "@cardMapPrivate": {
+    "description": "Card editor note: why there is no map."
+  },
+  "cardMapPending": "The map arrives once the phone is online.",
+  "@cardMapPending": {
+    "description": "Card editor note: map data not downloaded yet."
+  },
+  "cardMapEmpty": "OpenStreetMap has no water mapped around here.",
+  "@cardMapEmpty": {
+    "description": "Card editor note: no water features near the place."
+  },
+  "cardMapNoPlace": "This trip has no place.",
+  "@cardMapNoPlace": {
+    "description": "Card editor note: the trip has no location, so no map."
+  },
+  "cardMapArea": "The circle marks the area, never the exact spot.",
+  "@cardMapArea": {
+    "description": "Card editor note explaining the map's ring."
+  },
+  "mapAttribution": "© OpenStreetMap contributors",
+  "@mapAttribution": {
+    "description": "Required credit printed on every map (ODbL license)."
+  },
+  "settingsMapData": "Map data",
+  "@settingsMapData": {
+    "description": "Settings: title of the map data credit."
+  },
+  "settingsMapDataCredit": "© OpenStreetMap contributors, available under the Open Database License (ODbL).",
+  "@settingsMapDataCredit": {
+    "description": "Settings: map data credit and license."
   }
 }

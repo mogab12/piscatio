@@ -1132,4 +1132,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get cardFilterFailed => 'Não deu para aplicar o filtro nesta foto.';
+
+  @override
+  String get unitKilometer => 'km';
+
+  @override
+  String get unitMile => 'mi';
+
+  @override
+  String get cardStyleMap => 'Mapa';
+
+  @override
+  String get cardShowMap => 'Mapa do local';
+
+  @override
+  String get cardMapPrivate => 'Pescarias privadas não mostram mapa.';
+
+  @override
+  String get cardMapPending => 'O mapa chega quando o celular estiver online.';
+
+  @override
+  String get cardMapEmpty => 'O OpenStreetMap não tem água mapeada por aqui.';
+
+  @override
+  String get cardMapNoPlace => 'Esta pescaria não tem local.';
+
+  @override
+  String get cardMapArea => 'O círculo marca a região, nunca o ponto exato.';
+
+  @override
+  String get mapAttribution => '© colaboradores do OpenStreetMap';
+
+  @override
+  String get settingsMapData => 'Dados de mapa';
+
+  @override
+  String get settingsMapDataCredit =>
+      '© colaboradores do OpenStreetMap, disponível sob a Open Database License (ODbL).';
 }

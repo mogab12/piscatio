@@ -1,9 +1,10 @@
 import 'dart:ui';
 
+import '../../../domain/services/map_sketch.dart';
 import '../../../domain/services/ruler_scale.dart';
 import 'photo_filters.dart';
 
-enum CardStyle { board, chart, tag }
+enum CardStyle { board, chart, tag, map }
 
 enum CardFormat {
   story(Size(1080, 1920)),
@@ -187,6 +188,7 @@ class CardOptions {
     this.showPlace = true,
     this.showWeather = true,
     this.showBait = true,
+    this.showMap = true,
     this.caption,
     this.photoChosen = false,
     this.photoPath,
@@ -200,6 +202,9 @@ class CardOptions {
   /// Weather and moon.
   final bool showWeather;
   final bool showBait;
+
+  /// The sketch map of the place, when the trip's privacy allows one.
+  final bool showMap;
 
   /// Free text written by the person; empty or null shows nothing.
   final String? caption;
@@ -237,12 +242,14 @@ class CardOptions {
     bool? showPlace,
     bool? showWeather,
     bool? showBait,
+    bool? showMap,
     String? caption,
   }) => CardOptions(
     palette: palette ?? this.palette,
     showPlace: showPlace ?? this.showPlace,
     showWeather: showWeather ?? this.showWeather,
     showBait: showBait ?? this.showBait,
+    showMap: showMap ?? this.showMap,
     caption: caption ?? this.caption,
     photoChosen: photoChosen,
     photoPath: photoPath,
@@ -256,6 +263,7 @@ class CardOptions {
     showPlace: showPlace,
     showWeather: showWeather,
     showBait: showBait,
+    showMap: showMap,
     caption: caption,
     photoChosen: true,
     photoPath: path,
@@ -268,6 +276,7 @@ class CardOptions {
         showPlace: showPlace,
         showWeather: showWeather,
         showBait: showBait,
+        showMap: showMap,
         caption: caption,
         photoChosen: photoChosen,
         photoPath: photoPath,
@@ -325,6 +334,16 @@ class CardWind {
   final String label;
 }
 
+/// The map's scale bar: a round distance in the user's units.
+class CardMapScale {
+  const CardMapScale(this.meters, this.label);
+
+  final double meters;
+
+  /// "2 km", "1 mi".
+  final String label;
+}
+
 /// Everything a catch card shows, localized and in the user's units.
 ///
 /// Deliberately has **no coordinates**: a card cannot leak the spot, only
@@ -355,6 +374,8 @@ class CatchCardData {
     this.temperatureLabel,
     this.pressureLabel,
     this.caption,
+    this.map,
+    this.mapScale,
   });
 
   final String id;
@@ -397,6 +418,11 @@ class CatchCardData {
   /// The person's own words for this card.
   final String? caption;
 
+  /// The place as a sketch map: relative shapes and a ring, no coordinates.
+  /// Null for private trips.
+  final MapSketch? map;
+  final CardMapScale? mapScale;
+
   /// The card as the person set it up: hidden details removed, the chosen
   /// photo and caption applied. Privacy only ever removes information.
   CatchCardData customized(CardOptions o) => CatchCardData(
@@ -424,6 +450,8 @@ class CatchCardData {
     temperatureLabel: o.showWeather ? temperatureLabel : null,
     pressureLabel: o.showWeather ? pressureLabel : null,
     caption: o._caption,
+    map: o.showMap ? map : null,
+    mapScale: mapScale,
   );
 }
 
@@ -470,6 +498,8 @@ class TripCardData {
     this.temperatureLabel,
     this.pressureLabel,
     this.caption,
+    this.map,
+    this.mapScale,
   });
 
   final String id;
@@ -502,6 +532,8 @@ class TripCardData {
   final String? temperatureLabel;
   final String? pressureLabel;
   final String? caption;
+  final MapSketch? map;
+  final CardMapScale? mapScale;
 
   TripCardData customized(CardOptions o) => TripCardData(
     id: id,
@@ -526,5 +558,7 @@ class TripCardData {
     temperatureLabel: o.showWeather ? temperatureLabel : null,
     pressureLabel: o.showWeather ? pressureLabel : null,
     caption: o._caption,
+    map: o.showMap ? map : null,
+    mapScale: mapScale,
   );
 }

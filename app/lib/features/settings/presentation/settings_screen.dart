@@ -218,6 +218,11 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: Text(l10n.settingsWeatherDataCredit),
             ),
             ListTile(
+              leading: const Icon(Icons.map_outlined),
+              title: Text(l10n.settingsMapData),
+              subtitle: Text(l10n.settingsMapDataCredit),
+            ),
+            ListTile(
               leading: const Icon(Icons.description_outlined),
               title: Text(l10n.settingsLicenses),
               onTap: () => showLicensePage(

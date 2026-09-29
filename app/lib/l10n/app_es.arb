@@ -315,5 +315,17 @@
   "cardFilterScreenprint": "Serigrafía",
   "cardFilterHalftone": "Trama",
   "cardFilterWorking": "Aplicando el filtro",
-  "cardFilterFailed": "No se pudo aplicar el filtro a esta foto."
+  "cardFilterFailed": "No se pudo aplicar el filtro a esta foto.",
+  "unitKilometer": "km",
+  "unitMile": "mi",
+  "cardStyleMap": "Mapa",
+  "cardShowMap": "Mapa del lugar",
+  "cardMapPrivate": "Las salidas privadas no muestran mapa.",
+  "cardMapPending": "El mapa llega cuando el teléfono tenga conexión.",
+  "cardMapEmpty": "OpenStreetMap no tiene agua mapeada por aquí.",
+  "cardMapNoPlace": "Esta salida no tiene lugar.",
+  "cardMapArea": "El círculo marca la zona, nunca el punto exacto.",
+  "mapAttribution": "© colaboradores de OpenStreetMap",
+  "settingsMapData": "Datos de mapa",
+  "settingsMapDataCredit": "© colaboradores de OpenStreetMap, disponible bajo la Open Database License (ODbL)."
 }

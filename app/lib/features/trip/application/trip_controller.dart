@@ -48,10 +48,16 @@ class TripController {
     if (access != LocationAccess.granted) return;
     final fix = await location.currentFix();
     if (fix == null) return;
-    await _ref
-        .read(tripRepositoryProvider)
-        .setLocation(tripId, fix.point, accuracyMeters: fix.accuracyMeters);
-    await _ref.read(backgroundWorkProvider).placeNameFor(tripId);
+    final trips = _ref.read(tripRepositoryProvider);
+    await trips.setLocation(
+      tripId,
+      fix.point,
+      accuracyMeters: fix.accuracyMeters,
+    );
+    final work = _ref.read(backgroundWorkProvider);
+    await work.placeNameFor(tripId);
+    final trip = await trips.getTrip(tripId);
+    if (trip != null) await work.mapFor(tripId, trip.privacyLevel);
   }
 
   /// Ends the trip and queues its weather (published 2–3 days later).
@@ -65,8 +71,8 @@ class TripController {
     await _ref.read(backgroundWorkProvider).cancelFor(tripId);
   }
 
-  /// Saves edits; new times or place mean new weather, and a place without
-  /// region gets one looked up.
+  /// Saves edits; new times or place mean new weather, a place without
+  /// region gets one looked up, a new place or privacy may need a map.
   Future<void> updateTrip(Trip trip) async {
     final repo = _ref.read(tripRepositoryProvider);
     final before = await repo.getTrip(trip.id);
@@ -80,6 +86,11 @@ class TripController {
     if (!trip.isActive && changedWhenOrWhere) await work.weatherFor(trip.id);
     if (trip.location != null && (trip.locationRegion ?? '').isEmpty) {
       await work.placeNameFor(trip.id);
+    }
+    if (trip.location != null &&
+        (before?.location != trip.location ||
+            before?.privacyLevel != trip.privacyLevel)) {
+      await work.mapFor(trip.id, trip.privacyLevel);
     }
   }
 
@@ -127,6 +138,7 @@ class TripController {
     if (location != null && locationRegion == null) {
       await work.placeNameFor(trip.id);
     }
+    if (location != null) await work.mapFor(trip.id, privacy);
     return trip;
   }
 

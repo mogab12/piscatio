@@ -65,14 +65,14 @@ class WeatherSnapshots extends Table {
 /// Work that needs the network. Rows exist only while pending: a finished
 /// job is deleted. Retried on app start, resume and when the connection
 /// returns, honoring [nextAttemptAt].
-enum JobKind { weather, placeName }
+enum JobKind { weather, placeName, placeMap }
 
 @DataClassName('JobRow')
 class Jobs extends Table {
   TextColumn get id => text()();
   TextColumn get kind => textEnum<JobKind>()();
 
-  /// What the job is about (a trip id for both current kinds).
+  /// What the job is about (a trip id for every current kind).
   TextColumn get subjectId => text()();
   IntColumn get attempts => integer().withDefault(const Constant(0))();
   DateTimeColumn get nextAttemptAt => dateTime()();
@@ -87,6 +87,26 @@ class Jobs extends Table {
   List<Set<Column<Object>>> get uniqueKeys => [
     {kind, subjectId},
   ];
+}
+
+/// Map data (water and main roads) around an approximate point, from
+/// OpenStreetMap. A cache, not user data: rebuilt when missing, never
+/// exported or synced, erased with "delete all data".
+@DataClassName('PlaceMapRow')
+class PlaceMaps extends Table {
+  /// The approximate point, "lat,lng" with 5 decimals.
+  TextColumn get areaKey => text()();
+  RealColumn get centerLatitude => real()();
+  RealColumn get centerLongitude => real()();
+  IntColumn get halfSizeMeters => integer()();
+
+  /// [PlaceMap.toJson].
+  TextColumn get data => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {areaKey};
 }
 
 @DataClassName('SpeciesRow')

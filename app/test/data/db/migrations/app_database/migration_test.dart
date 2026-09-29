@@ -9,6 +9,7 @@ import 'generated/schema.dart';
 
 import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
+import 'generated/schema_v3.dart' as v3;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -205,4 +206,83 @@ void main() {
       );
     },
   );
+
+  // v2 → v3 only adds the place_maps cache; trips and pending jobs stay.
+  test('migration from v2 to v3 keeps trips and pending jobs', () async {
+    const t = '2026-09-12T09:00:00.000Z';
+    const trip = (
+      createdAt: t,
+      updatedAt: t,
+      syncStatus: 'pending',
+      id: 'trip-1',
+      startedAt: t,
+      endedAt: '2026-09-12T12:00:00.000Z',
+      timezone: 'America/Cuiaba',
+      latitude: -16.52,
+      longitude: -56.41,
+      privacyLevel: 'approximate',
+      moonPhase: 'newMoon',
+      moonIllumination: 0.02,
+      isRetroactive: 0,
+    );
+    const job = (
+      id: 'job-1',
+      kind: 'weather',
+      subjectId: 'trip-1',
+      attempts: 2,
+      nextAttemptAt: t,
+      createdAt: t,
+      updatedAt: t,
+    );
+    await verifier.testWithDataIntegrity(
+      oldVersion: 2,
+      newVersion: 3,
+      createOld: v2.DatabaseAtV2.new,
+      createNew: v3.DatabaseAtV3.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch
+          ..insert(
+            oldDb.trips,
+            const v2.TripsData(
+              createdAt: t,
+              updatedAt: t,
+              syncStatus: 'pending',
+              id: 'trip-1',
+              startedAt: t,
+              endedAt: '2026-09-12T12:00:00.000Z',
+              timezone: 'America/Cuiaba',
+              latitude: -16.52,
+              longitude: -56.41,
+              privacyLevel: 'approximate',
+              moonPhase: 'newMoon',
+              moonIllumination: 0.02,
+              isRetroactive: 0,
+            ),
+          )
+          ..insert(
+            oldDb.jobs,
+            const v2.JobsData(
+              id: 'job-1',
+              kind: 'weather',
+              subjectId: 'trip-1',
+              attempts: 2,
+              nextAttemptAt: t,
+              createdAt: t,
+              updatedAt: t,
+            ),
+          );
+      },
+      validateItems: (newDb) async {
+        final trips = await newDb.select(newDb.trips).get();
+        expect(trips.single.id, trip.id);
+        expect(trips.single.latitude, trip.latitude);
+        expect(trips.single.privacyLevel, trip.privacyLevel);
+        final jobs = await newDb.select(newDb.jobs).get();
+        expect(jobs.single.id, job.id);
+        expect(jobs.single.attempts, job.attempts);
+        expect(await newDb.select(newDb.placeMaps).get(), isEmpty);
+      },
+    );
+  });
 }

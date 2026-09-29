@@ -23,6 +23,7 @@ part 'app_database.g.dart';
     CatchPhotos,
     Settings,
     Jobs,
+    PlaceMaps,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -32,7 +33,7 @@ class AppDatabase extends _$AppDatabase {
   factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'piscatio'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -49,6 +50,9 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(schema.weatherSnapshots);
         await m.createTable(schema.jobs);
         await _createJobIndex();
+      },
+      from2To3: (m, schema) async {
+        await m.createTable(schema.placeMaps);
       },
     ),
     beforeOpen: (details) async {
@@ -81,6 +85,7 @@ class AppDatabase extends _$AppDatabase {
   /// species catalog is kept, custom species are removed.
   Future<void> wipeUserData() => transaction(() async {
     await delete(jobs).go();
+    await delete(placeMaps).go();
     await delete(catchPhotos).go();
     await delete(catches).go();
     await delete(weatherSnapshots).go();

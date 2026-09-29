@@ -1995,6 +1995,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t apply the filter to this photo.'**
   String get cardFilterFailed;
+
+  /// Unit symbol: kilometer.
+  ///
+  /// In en, this message translates to:
+  /// **'km'**
+  String get unitKilometer;
+
+  /// Unit symbol: mile (distance).
+  ///
+  /// In en, this message translates to:
+  /// **'mi'**
+  String get unitMile;
+
+  /// Card style: a stylized map of the fishing area.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get cardStyleMap;
+
+  /// Card editor toggle: show the stylized map of the place.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of the place'**
+  String get cardShowMap;
+
+  /// Card editor note: why there is no map.
+  ///
+  /// In en, this message translates to:
+  /// **'Private trips never show a map.'**
+  String get cardMapPrivate;
+
+  /// Card editor note: map data not downloaded yet.
+  ///
+  /// In en, this message translates to:
+  /// **'The map arrives once the phone is online.'**
+  String get cardMapPending;
+
+  /// Card editor note: no water features near the place.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenStreetMap has no water mapped around here.'**
+  String get cardMapEmpty;
+
+  /// Card editor note: the trip has no location, so no map.
+  ///
+  /// In en, this message translates to:
+  /// **'This trip has no place.'**
+  String get cardMapNoPlace;
+
+  /// Card editor note explaining the map's ring.
+  ///
+  /// In en, this message translates to:
+  /// **'The circle marks the area, never the exact spot.'**
+  String get cardMapArea;
+
+  /// Required credit printed on every map (ODbL license).
+  ///
+  /// In en, this message translates to:
+  /// **'© OpenStreetMap contributors'**
+  String get mapAttribution;
+
+  /// Settings: title of the map data credit.
+  ///
+  /// In en, this message translates to:
+  /// **'Map data'**
+  String get settingsMapData;
+
+  /// Settings: map data credit and license.
+  ///
+  /// In en, this message translates to:
+  /// **'© OpenStreetMap contributors, available under the Open Database License (ODbL).'**
+  String get settingsMapDataCredit;
 }
 
 class _AppLocalizationsDelegate
