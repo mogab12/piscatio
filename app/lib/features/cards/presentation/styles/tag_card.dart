@@ -13,20 +13,15 @@ import 'chart_card.dart' show stableSeed;
 /// the darkened photo. Printed field names, typed values, a rubber stamp
 /// for records.
 class TagCatchCard extends StatelessWidget {
-  const TagCatchCard({
-    super.key,
-    required this.data,
-    required this.format,
-    this.accent = CardAccent.red,
-  });
+  const TagCatchCard({super.key, required this.data, required this.format});
 
   final CatchCardData data;
   final CardFormat format;
-  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final seed = stableSeed(data.id);
     final record = data.record;
     final scientific = data.scientificName;
@@ -44,14 +39,10 @@ class TagCatchCard extends StatelessWidget {
       stamp: record == null
           ? null
           : record.isFirst
-          ? _Stamp(
-              lines: [l10n.cardFirstOfSpecies],
-              color: const Color(0xFF1E3A6E),
-              seed: seed,
-            )
+          ? _Stamp(lines: [l10n.cardFirstOfSpecies], color: p.typed, seed: seed)
           : _Stamp(
               lines: [l10n.cardRecord, ?record.improvement],
-              color: accent.ink,
+              color: p.accentInk,
               seed: seed,
             ),
       header: _Typed(
@@ -140,22 +131,17 @@ class TagCatchCard extends StatelessWidget {
 /// The trip version: a field register listing the catches, records typed
 /// with the red half of the ribbon.
 class TagTripCard extends StatelessWidget {
-  const TagTripCard({
-    super.key,
-    required this.data,
-    required this.format,
-    this.accent = CardAccent.red,
-  });
+  const TagTripCard({super.key, required this.data, required this.format});
 
   final TripCardData data;
   final CardFormat format;
-  final CardAccent accent;
 
   static const maxRows = 7;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final seed = stableSeed(data.id);
     final shown = data.catches.length > maxRows
         ? data.catches.take(maxRows - 1).toList()
@@ -163,10 +149,7 @@ class TagTripCard extends StatelessWidget {
     final hidden = data.catches.length - shown.length;
     final rule = BoxDecoration(
       border: Border(
-        bottom: BorderSide(
-          color: CardInk.water.withValues(alpha: 0.28),
-          width: 1.5,
-        ),
+        bottom: BorderSide(color: p.typed.withValues(alpha: 0.28), width: 1.5),
       ),
     );
     return _TagScene(
@@ -177,7 +160,7 @@ class TagTripCard extends StatelessWidget {
           ? null
           : _Stamp(
               lines: [l10n.cardRecordCount(data.recordCount)],
-              color: accent.ink,
+              color: p.accentInk,
               seed: seed,
             ),
       tagSize: Size(800, data.caption == null ? 1320 : 1460),
@@ -190,7 +173,7 @@ class TagTripCard extends StatelessWidget {
             style: CardType.condensed(
               40,
               weight: FontWeight.w800,
-              color: CardInk.water,
+              color: p.typed,
             ),
           ),
         ),
@@ -241,7 +224,7 @@ class TagTripCard extends StatelessWidget {
                       c.measureLabel!,
                       seed: seed + 60 + i,
                       size: 36,
-                      color: c.isRecord ? accent.ink : CardInk.typed,
+                      color: c.isRecord ? p.accentInk : null,
                       bold: c.isRecord,
                     ),
                   ),
@@ -367,7 +350,7 @@ class _TagScene extends StatelessWidget {
             painter: StringPainter(
               hole: hole,
               holeRadius: TagPainter.holeRadiusFor(tagSize) * scale,
-              color: CardInk.string,
+              color: context.cardPalette.string,
               angle: tilt,
             ),
           ),
@@ -392,7 +375,8 @@ class _Tag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const printed = CardInk.water;
+    final p = context.cardPalette;
+    final printed = p.typed;
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -400,10 +384,10 @@ class _Tag extends StatelessWidget {
           child: CustomPaint(
             painter: TagPainter(
               seed: seed,
-              paper: CardInk.manila,
-              shade: CardInk.manilaShade,
-              edge: CardInk.manilaEdge,
-              hole: const Color(0xFF071C22),
+              paper: p.stock,
+              shade: p.stockShade,
+              edge: p.stockEdge,
+              hole: Color.lerp(p.ground, const Color(0xFF000000), 0.35)!,
             ),
           ),
         ),
@@ -414,11 +398,7 @@ class _Tag extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const BrandMark(
-                    size: 30,
-                    color: printed,
-                    floatBottom: CardInk.manila,
-                  ),
+                  BrandMark(size: 30, color: printed, floatBottom: p.stock),
                   const Spacer(),
                   header,
                 ],
@@ -452,7 +432,7 @@ class _Typed extends StatelessWidget {
     this.size = 46,
     this.italic = false,
     this.bold = false,
-    this.color = CardInk.typed,
+    this.color,
     this.ellipsis = false,
     this.wrap = false,
   });
@@ -462,7 +442,9 @@ class _Typed extends StatelessWidget {
   final double size;
   final bool italic;
   final bool bold;
-  final Color color;
+
+  /// Defaults to the palette's typewriter ribbon.
+  final Color? color;
   final bool ellipsis;
 
   /// Free text: wraps onto up to three lines.
@@ -471,6 +453,7 @@ class _Typed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rnd = math.Random(seed);
+    final color = this.color ?? context.cardPalette.typed;
     final style = CardType.typed(size, italic: italic, bold: bold);
     final span = TextSpan(
       children: [
@@ -516,6 +499,7 @@ class _Field extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final printed = context.cardPalette.typed;
     return Padding(
       padding: const EdgeInsets.only(bottom: 22),
       child: Column(
@@ -525,7 +509,7 @@ class _Field extends StatelessWidget {
             label,
             style: CardType.condensed(
               25,
-              color: CardInk.water.withValues(alpha: 0.66),
+              color: printed.withValues(alpha: 0.66),
             ),
           ),
           const SizedBox(height: 4),
@@ -537,7 +521,7 @@ class _Field extends StatelessWidget {
             size: wrap ? 38 : 46,
           ),
           const SizedBox(height: 4),
-          Container(height: 1.5, color: CardInk.water.withValues(alpha: 0.3)),
+          Container(height: 1.5, color: printed.withValues(alpha: 0.3)),
         ],
       ),
     );

@@ -65,7 +65,10 @@ class ContourPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ContourPainter old) =>
-      old.seed != seed || old.line != line;
+      old.seed != seed ||
+      old.line != line ||
+      old.strongLine != strongLine ||
+      old.soundingStyle != soundingStyle;
 }
 
 /// Chart neatline with the graduated border (alternating minute bars).
@@ -143,7 +146,8 @@ class ChartBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(ChartBorderPainter old) => old.ink != ink;
+  bool shouldRepaint(ChartBorderPainter old) =>
+      old.ink != ink || old.paper != paper;
 }
 
 /// Compass rose with bearing ticks; when the wind is known, an arrow
@@ -237,5 +241,8 @@ class CompassRosePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CompassRosePainter old) =>
-      old.windFromDegrees != windFromDegrees;
+      old.windFromDegrees != windFromDegrees ||
+      old.ink != ink ||
+      old.accent != accent ||
+      old.letterStyle != letterStyle;
 }

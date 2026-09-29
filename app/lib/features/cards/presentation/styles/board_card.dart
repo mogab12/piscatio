@@ -10,20 +10,15 @@ import '../painters/board_painter.dart';
 /// the fish's length. A record shows as the previous best's gold mark on
 /// the same scale: the gap between the marks is the improvement.
 class BoardCatchCard extends StatelessWidget {
-  const BoardCatchCard({
-    super.key,
-    required this.data,
-    required this.format,
-    this.accent = CardAccent.red,
-  });
+  const BoardCatchCard({super.key, required this.data, required this.format});
 
   final CatchCardData data;
   final CardFormat format;
-  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final story = format == CardFormat.story;
     final hasPhoto = CardPhoto.exists(data.photoPath);
     final s = data.ruler;
@@ -35,17 +30,20 @@ class BoardCatchCard extends StatelessWidget {
       photoPath: data.photoPath,
       board: BoardPainter(
         ticks: scaleTicks(s, (v) => cardNumber(context, v)),
+        board: p.board,
+        ink: p.boardInk,
+        stop: p.boardStop,
         marks: [
           if (record != null && !record.isFirst && previous != null)
             BoardMark(
               s.fraction(previous),
-              CardInk.gold,
+              p.recordInk,
               notch: false,
               label: data.previousRecordLabel == null
                   ? null
                   : l10n.cardPreviousRecord(data.previousRecordLabel!),
             ),
-          BoardMark(s.fraction(s.value), accent.onLight),
+          BoardMark(s.fraction(s.value), p.accentInk),
         ],
         numberStyle: CardType.condensed(
           story ? 34 : 30,
@@ -102,7 +100,7 @@ class BoardCatchCard extends StatelessWidget {
               style: CardType.text(
                 story ? 38 : 32,
                 style: FontStyle.italic,
-                color: CardInk.muted,
+                color: p.muted,
               ),
             ),
           ),
@@ -125,20 +123,15 @@ class BoardCatchCard extends StatelessWidget {
 /// Board for a trip: the board becomes the trip's time scale (hours from
 /// the start), shaded as far as it lasted, with a notch per catch.
 class BoardTripCard extends StatelessWidget {
-  const BoardTripCard({
-    super.key,
-    required this.data,
-    required this.format,
-    this.accent = CardAccent.red,
-  });
+  const BoardTripCard({super.key, required this.data, required this.format});
 
   final TripCardData data;
   final CardFormat format;
-  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final story = format == CardFormat.story;
     final hasPhoto = CardPhoto.exists(data.photoPath);
     return _BoardLayout(
@@ -146,9 +139,12 @@ class BoardTripCard extends StatelessWidget {
       photoPath: data.photoPath,
       board: BoardPainter(
         ticks: hourTicks(data.spanHours),
+        board: p.board,
+        ink: p.boardInk,
+        stop: p.boardStop,
         marks: [
           for (final c in data.catches)
-            BoardMark(c.offset, c.isRecord ? CardInk.gold : accent.onLight),
+            BoardMark(c.offset, c.isRecord ? p.recordInk : p.accentInk),
         ],
         numberStyle: CardType.condensed(
           story ? 34 : 30,
@@ -158,7 +154,7 @@ class BoardTripCard extends StatelessWidget {
         unitLabel: l10n.cardHoursUnit,
         brand: l10n.brandName,
         fillFraction: data.elapsedFraction,
-        fillColor: const Color(0xFFDDE7E5),
+        fillColor: p.boardFill,
         notchScale: 0.55,
       ),
       children: [
@@ -198,7 +194,7 @@ class BoardTripCard extends StatelessWidget {
               children: [
                 TextSpan(
                   text: '${l10n.cardFieldBiggest}  ',
-                  style: CardType.text(36, color: CardInk.muted),
+                  style: CardType.text(36, color: p.muted),
                 ),
                 TextSpan(
                   text: data.biggestLabel,
@@ -243,6 +239,7 @@ class _BoardLayout extends StatelessWidget {
     final boardHeight = story ? 210.0 : 160.0;
     final hasPhoto = CardPhoto.exists(photoPath);
     final signature = CardSignature.originFor(format);
+    final ground = context.cardPalette.ground;
     return Stack(
       children: [
         Positioned.fill(child: CardPhoto(path: photoPath)),
@@ -256,8 +253,8 @@ class _BoardLayout extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   stops: story ? const [0, 0.24] : const [0, 0.3],
                   colors: [
-                    CardInk.water.withValues(alpha: 0.62),
-                    CardInk.water.withValues(alpha: 0),
+                    ground.withValues(alpha: 0.62),
+                    ground.withValues(alpha: 0),
                   ],
                 ),
               ),
@@ -273,9 +270,9 @@ class _BoardLayout extends StatelessWidget {
                       ? const [0.26, 0.56, 0.8]
                       : const [0.1, 0.5, 0.86],
                   colors: [
-                    CardInk.water.withValues(alpha: 0),
-                    CardInk.water.withValues(alpha: 0.74),
-                    CardInk.water.withValues(alpha: 0.95),
+                    ground.withValues(alpha: 0),
+                    ground.withValues(alpha: 0.74),
+                    ground.withValues(alpha: 0.95),
                   ],
                 ),
               ),
@@ -351,7 +348,7 @@ class _RecordLine extends StatelessWidget {
         style: CardType.text(
           story ? 40 : 34,
           weight: FontWeight.w700,
-          color: CardInk.gold,
+          color: context.cardPalette.record,
         ),
       ),
     );
@@ -380,7 +377,10 @@ class _Stat extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           label,
-          style: CardType.text(story ? 32 : 28, color: CardInk.muted),
+          style: CardType.text(
+            story ? 32 : 28,
+            color: context.cardPalette.muted,
+          ),
         ),
       ],
     );
@@ -406,7 +406,7 @@ class _Facts extends StatelessWidget {
             style: CardType.text(
               story ? 34 : 30,
               weight: FontWeight.w500,
-              color: CardInk.foam,
+              color: context.cardPalette.soft,
             ),
           ),
       ],

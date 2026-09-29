@@ -844,9 +844,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cardSectionStyle => 'Estilo';
 
   @override
-  String get cardSectionColor => 'Cor';
-
-  @override
   String get cardSectionPhoto => 'Foto';
 
   @override
@@ -854,18 +851,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get cardSectionCaption => 'Legenda';
-
-  @override
-  String get cardColorRed => 'Vermelho';
-
-  @override
-  String get cardColorOrange => 'Laranja';
-
-  @override
-  String get cardColorChartreuse => 'Limão';
-
-  @override
-  String get cardColorBlue => 'Azul';
 
   @override
   String get cardNoPhoto => 'Sem foto';
@@ -1102,4 +1087,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get placeSearchPointSaved => 'Ponto do local marcado';
+
+  @override
+  String get cardSectionTheme => 'Tema';
+
+  @override
+  String get cardThemeRedHead => 'Cabeça-vermelha';
+
+  @override
+  String get cardThemePaper => 'Papel';
+
+  @override
+  String get cardThemeTucunare => 'Tucunaré';
+
+  @override
+  String get cardThemeDawn => 'Amanhecer';
+
+  @override
+  String get cardThemeMoon => 'Lua';
+
+  @override
+  String get cardThemeRiver => 'Rio';
 }

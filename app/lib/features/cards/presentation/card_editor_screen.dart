@@ -16,9 +16,9 @@ import 'card_view.dart';
 
 enum CardSubject { catchItem, trip }
 
-enum _Section { style, color, photo, details, caption }
+enum _Section { style, theme, photo, details, caption }
 
-/// Make the card yours: style and format, accent color, photo, which
+/// Make the card yours: style and format, color theme, photo, which
 /// details show, a caption. Then share.
 class CardEditorScreen extends ConsumerStatefulWidget {
   const CardEditorScreen({super.key, required this.subject, required this.id});
@@ -58,17 +58,19 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
 
   String _sectionName(_Section s) => switch (s) {
     _Section.style => context.l10n.cardSectionStyle,
-    _Section.color => context.l10n.cardSectionColor,
+    _Section.theme => context.l10n.cardSectionTheme,
     _Section.photo => context.l10n.cardSectionPhoto,
     _Section.details => context.l10n.cardSectionDetails,
     _Section.caption => context.l10n.cardSectionCaption,
   };
 
-  String _accentName(CardAccent a) => switch (a) {
-    CardAccent.red => context.l10n.cardColorRed,
-    CardAccent.orange => context.l10n.cardColorOrange,
-    CardAccent.chartreuse => context.l10n.cardColorChartreuse,
-    CardAccent.blue => context.l10n.cardColorBlue,
+  String _paletteName(CardPalette p) => switch (p) {
+    CardPalette.redHead => context.l10n.cardThemeRedHead,
+    CardPalette.paper => context.l10n.cardThemePaper,
+    CardPalette.tucunare => context.l10n.cardThemeTucunare,
+    CardPalette.dawn => context.l10n.cardThemeDawn,
+    CardPalette.moon => context.l10n.cardThemeMoon,
+    CardPalette.river => context.l10n.cardThemeRiver,
   };
 
   void _set(CardOptions o) => setState(() => _options = o);
@@ -186,15 +188,15 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
           ),
         ],
       ),
-      _Section.color => _ChipRow(
-        height: 96,
+      _Section.theme => _ChipRow(
+        height: 104,
         children: [
-          for (final a in CardAccent.values)
+          for (final p in CardPalette.values)
             _Swatch(
-              color: a.onLight,
-              label: _accentName(a),
-              selected: _options.accent == a,
-              onTap: () => _set(_options.copyWith(accent: a)),
+              palette: p,
+              label: _paletteName(p),
+              selected: _options.palette == p,
+              onTap: () => _set(_options.copyWith(palette: p)),
             ),
         ],
       ),
@@ -338,7 +340,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                           icon: switch (s) {
                             _Section.style =>
                               Icons.dashboard_customize_outlined,
-                            _Section.color => Icons.palette_outlined,
+                            _Section.theme => Icons.palette_outlined,
                             _Section.photo => Icons.photo_outlined,
                             _Section.details => Icons.tune_rounded,
                             _Section.caption => Icons.short_text_rounded,
@@ -461,16 +463,17 @@ class _SectionTab extends StatelessWidget {
   }
 }
 
-/// A color to pick: a disc with its name under it.
+/// A theme to pick: a disc of its ground with the accent and the record
+/// color on it, and its name under it.
 class _Swatch extends StatelessWidget {
   const _Swatch({
-    required this.color,
+    required this.palette,
     required this.label,
     required this.selected,
     required this.onTap,
   });
 
-  final Color color;
+  final CardPalette palette;
   final String label;
   final bool selected;
   final VoidCallback onTap;
@@ -492,19 +495,22 @@ class _Swatch extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 60,
+                height: 60,
+                padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  color: color,
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: selected ? ink : Colors.transparent,
                     width: 3,
                   ),
                 ),
-                child: selected
-                    ? const Icon(Icons.check_rounded, color: Colors.white)
-                    : null,
+                child: CustomPaint(
+                  painter: _PalettePainter(palette),
+                  child: selected
+                      ? Icon(Icons.check_rounded, color: palette.text)
+                      : null,
+                ),
               ),
               const SizedBox(height: 4),
               Text(label, style: Theme.of(context).textTheme.labelMedium),
@@ -514,6 +520,42 @@ class _Swatch extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PalettePainter extends CustomPainter {
+  _PalettePainter(this.palette);
+
+  final CardPalette palette;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = size.center(Offset.zero);
+    final r = size.shortestSide / 2;
+    canvas
+      ..drawCircle(c, r, Paint()..color = palette.ground)
+      ..drawCircle(
+        c,
+        r - 0.5,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = palette.text.withValues(alpha: 0.25),
+      )
+      ..drawArc(
+        Rect.fromCircle(center: c, radius: r),
+        -0.6,
+        1.9,
+        true,
+        Paint()..color = palette.accent,
+      )
+      ..drawCircle(
+        c + Offset(-r * 0.42, r * 0.42),
+        r * 0.2,
+        Paint()..color = palette.record,
+      );
+  }
+
+  @override
+  bool shouldRepaint(_PalettePainter old) => old.palette != palette;
 }
 
 /// A photo to pick (or "no photo" when [path] is null).

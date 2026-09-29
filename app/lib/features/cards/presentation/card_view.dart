@@ -27,13 +27,13 @@ class CatchCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = shown;
-    final a = options.accent;
     return CardCanvas(
       format: format,
+      palette: options.palette,
       child: switch (style) {
-        CardStyle.board => BoardCatchCard(data: d, format: format, accent: a),
-        CardStyle.chart => ChartCatchCard(data: d, format: format, accent: a),
-        CardStyle.tag => TagCatchCard(data: d, format: format, accent: a),
+        CardStyle.board => BoardCatchCard(data: d, format: format),
+        CardStyle.chart => ChartCatchCard(data: d, format: format),
+        CardStyle.tag => TagCatchCard(data: d, format: format),
       },
     );
   }
@@ -59,13 +59,13 @@ class TripCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final d = shown;
-    final a = options.accent;
     return CardCanvas(
       format: format,
+      palette: options.palette,
       child: switch (style) {
-        CardStyle.board => BoardTripCard(data: d, format: format, accent: a),
-        CardStyle.chart => ChartTripCard(data: d, format: format, accent: a),
-        CardStyle.tag => TagTripCard(data: d, format: format, accent: a),
+        CardStyle.board => BoardTripCard(data: d, format: format),
+        CardStyle.chart => ChartTripCard(data: d, format: format),
+        CardStyle.tag => TagTripCard(data: d, format: format),
       },
     );
   }

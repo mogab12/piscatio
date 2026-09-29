@@ -50,5 +50,6 @@ class MoonPainter extends CustomPainter {
       old.illumination != illumination ||
       old.waxing != waxing ||
       old.southern != southern ||
-      old.lit != lit;
+      old.lit != lit ||
+      old.dark != dark;
 }

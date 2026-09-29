@@ -9,6 +9,7 @@ import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/features/cards/application/card_data.dart';
 import 'package:piscatio/features/cards/application/card_exporter.dart';
+import 'package:piscatio/features/cards/presentation/card_canvas.dart';
 import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
 import 'package:piscatio/features/cards/presentation/card_view.dart';
 
@@ -113,7 +114,7 @@ void main() {
     await app.dispose(tester);
   });
 
-  testWidgets('color, details and caption make the card yours', (tester) async {
+  testWidgets('theme, details and caption make the card yours', (tester) async {
     final (app, _, catchId, _) = await _setup(tester);
     await app.pumpScreen(
       tester,
@@ -121,11 +122,16 @@ void main() {
     );
     CatchCardView view() => tester.widget(find.byType(CatchCardView));
 
-    await tester.tap(find.text('Cor'));
+    await tester.tap(find.text('Tema'));
     await app.settle(tester);
-    await tester.tap(find.bySemanticsLabel('Laranja'));
+    await tester.ensureVisible(find.bySemanticsLabel('Tucunaré'));
     await app.settle(tester);
-    expect(view().options.accent, CardAccent.orange);
+    await tester.tap(find.bySemanticsLabel('Tucunaré'));
+    await app.settle(tester);
+    expect(view().options.palette, CardPalette.tucunare);
+    // The whole card follows: its ground is the theme's.
+    final canvas = tester.widget<CardCanvas>(find.byType(CardCanvas));
+    expect(canvas.palette, CardPalette.tucunare);
 
     await tester.tap(find.text('Detalhes'));
     await app.settle(tester);

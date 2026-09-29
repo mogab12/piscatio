@@ -241,14 +241,9 @@
   "bootCopyDetails": "Copiar detalles",
   "brandTagline": "Diario de pesca",
   "cardSectionStyle": "Estilo",
-  "cardSectionColor": "Color",
   "cardSectionPhoto": "Foto",
   "cardSectionDetails": "Detalles",
   "cardSectionCaption": "Leyenda",
-  "cardColorRed": "Rojo",
-  "cardColorOrange": "Naranja",
-  "cardColorChartreuse": "Chartreuse",
-  "cardColorBlue": "Azul",
   "cardNoPhoto": "Sin foto",
   "cardNoPhotos": "No hay fotos para la tarjeta.",
   "cardPhotoOption": "Foto {number}",
@@ -305,5 +300,12 @@
   "placeSearchHint": "Represa, río, ciudad…",
   "placeSearchEmpty": "No se encontró ningún lugar con ese nombre.",
   "placeSearchFailed": "Sin conexión para buscar. Inténtalo de nuevo.",
-  "placeSearchPointSaved": "Punto del lugar marcado"
+  "placeSearchPointSaved": "Punto del lugar marcado",
+  "cardSectionTheme": "Tema",
+  "cardThemeRedHead": "Cabeza roja",
+  "cardThemePaper": "Papel",
+  "cardThemeTucunare": "Tucunaré",
+  "cardThemeDawn": "Amanecer",
+  "cardThemeMoon": "Luna",
+  "cardThemeRiver": "Río"
 }

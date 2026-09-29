@@ -13,25 +13,176 @@ enum CardFormat {
   final Size size;
 }
 
-/// The card's accent, in the colors of fishing lures. Each has a shade for
-/// deep water, one for white plastic and one for stamp ink on manila.
-enum CardAccent {
-  red(Color(0xFFFF6A5E), Color(0xFFE4262C), Color(0xFFC4232B)),
-  orange(Color(0xFFFF9A3C), Color(0xFFEE7614), Color(0xFFC0580B)),
-  chartreuse(Color(0xFFD2E640), Color(0xFF9DB814), Color(0xFF5E7A0A)),
-  blue(Color(0xFF5AAEFF), Color(0xFF2B7FD6), Color(0xFF1D5AA6));
+/// A card's whole color scheme: the ground it is printed on, its text, the
+/// accent, the record color and the materials (measuring board, specimen
+/// tag). Each is named after something from the water.
+///
+/// Only the key colors are set by hand; the rest are mixed from them so
+/// every palette stays coherent.
+enum CardPalette {
+  /// The brand: red-head lure over deep water.
+  redHead(
+    dark: true,
+    ground: Color(0xFF0B2A33),
+    text: Color(0xFFFFFFFF),
+    line: Color(0xFF1C4854),
+    accent: Color(0xFFFF6A5E),
+    accentInk: Color(0xFFE4262C),
+    record: Color(0xFFF4B400),
+    board: Color(0xFFF7F9F8),
+    boardInk: Color(0xFF0B2A33),
+    stock: Color(0xFFE4D29E),
+    typed: Color(0xFF1D2326),
+    string: Color(0xFFEFE8D6),
+  ),
 
-  const CardAccent(this.onDark, this.onLight, this.ink);
+  /// Logbook paper: deep water ink, red pencil.
+  paper(
+    dark: false,
+    ground: Color(0xFFF3EFE6),
+    text: Color(0xFF0B2A33),
+    line: Color(0xFFDCD6C8),
+    accent: Color(0xFFE4262C),
+    accentInk: Color(0xFFD0202A),
+    record: Color(0xFF8F6400),
+    board: Color(0xFFFFFFFF),
+    boardInk: Color(0xFF0B2A33),
+    stock: Color(0xFFD6C49B),
+    typed: Color(0xFF0B2A33),
+    string: Color(0xFF8C7B5A),
+  ),
 
-  final Color onDark;
-  final Color onLight;
-  final Color ink;
+  /// Peacock bass: olive and gold, the red of its eye for records.
+  tucunare(
+    dark: true,
+    ground: Color(0xFF1A2310),
+    text: Color(0xFFF5EFD8),
+    line: Color(0xFF2E3A1C),
+    accent: Color(0xFFF2B705),
+    accentInk: Color(0xFFB7410F),
+    record: Color(0xFFFF7A45),
+    board: Color(0xFFF3ECD2),
+    boardInk: Color(0xFF1A2310),
+    stock: Color(0xFFDCCB8C),
+    typed: Color(0xFF1A2310),
+    string: Color(0xFFEDE3C4),
+  ),
+
+  /// First light on the water: peach sky, plum ink.
+  dawn(
+    dark: false,
+    ground: Color(0xFFF7E3D2),
+    text: Color(0xFF2B1B3E),
+    line: Color(0xFFEBCDB8),
+    accent: Color(0xFFE0502B),
+    accentInk: Color(0xFFCB4020),
+    record: Color(0xFF8A5800),
+    board: Color(0xFFFFFAF4),
+    boardInk: Color(0xFF2B1B3E),
+    stock: Color(0xFFEBC9A4),
+    typed: Color(0xFF2B1B3E),
+    string: Color(0xFF7A5A6E),
+  ),
+
+  /// Night fishing: moonlight blue, the moon's gold for records.
+  moon(
+    dark: true,
+    ground: Color(0xFF0A0E1C),
+    text: Color(0xFFEAEEF7),
+    line: Color(0xFF1A2340),
+    accent: Color(0xFF9DB9FF),
+    accentInk: Color(0xFF3355CC),
+    record: Color(0xFFF3D46B),
+    board: Color(0xFFE6EAF3),
+    boardInk: Color(0xFF0A0E1C),
+    stock: Color(0xFFCDD3E0),
+    typed: Color(0xFF0A0E1C),
+    string: Color(0xFFD8DDE8),
+  ),
+
+  /// River green and a chartreuse lure.
+  river(
+    dark: true,
+    ground: Color(0xFF1F352D),
+    text: Color(0xFFF3F0E4),
+    line: Color(0xFF2D4A3F),
+    accent: Color(0xFFCBDD3F),
+    accentInk: Color(0xFF5E7A0A),
+    record: Color(0xFFF4B400),
+    board: Color(0xFFF3F0E4),
+    boardInk: Color(0xFF1F352D),
+    stock: Color(0xFFE3D5AE),
+    typed: Color(0xFF1F352D),
+    string: Color(0xFFEFE8D6),
+  );
+
+  const CardPalette({
+    required this.dark,
+    required this.ground,
+    required this.text,
+    required this.line,
+    required this.accent,
+    required this.accentInk,
+    required this.record,
+    required this.board,
+    required this.boardInk,
+    required this.stock,
+    required this.typed,
+    required this.string,
+  });
+
+  /// Light text on a dark ground (scrims darken photos) or the opposite.
+  final bool dark;
+
+  /// What the card is printed on; also the scrim over photos.
+  final Color ground;
+  final Color text;
+
+  /// Faint linework on the ground (chart contours).
+  final Color line;
+
+  /// Accent on the ground.
+  final Color accent;
+
+  /// Accent printed on the light materials (board mark, stamp ink).
+  final Color accentInk;
+  final Color record;
+
+  /// Measuring board plastic and the ink printed on it.
+  final Color board;
+  final Color boardInk;
+
+  /// Specimen tag card stock and the typewriter ribbon.
+  final Color stock;
+  final Color typed;
+  final Color string;
+
+  Color get ground2 => Color.lerp(ground, text, 0.05)!;
+  Color get ground3 => Color.lerp(ground, text, 0.10)!;
+
+  /// Secondary text, still readable.
+  Color get soft => Color.lerp(text, ground, 0.06)!;
+  Color get muted => Color.lerp(text, ground, dark ? 0.36 : 0.32)!;
+  Color get lineStrong => Color.lerp(line, text, 0.08)!;
+  Color get sounding => Color.lerp(line, text, 0.18)!;
+
+  /// Record color on the light materials.
+  Color get recordInk => dark ? Color.lerp(record, boardInk, 0.28)! : record;
+  Color get boardStop => Color.lerp(boardInk, board, 0.15)!;
+  Color get boardFill => Color.lerp(board, boardInk, 0.1)!;
+  Color get stockShade => Color.lerp(stock, typed, 0.08)!;
+  Color get stockEdge => Color.lerp(stock, typed, 0.16)!;
+
+  /// The dark and light ends of the palette, for photo filters.
+  Color get shadow =>
+      dark ? Color.lerp(ground, const Color(0xFF000000), 0.2)! : text;
+  Color get highlight => dark ? soft : board;
 }
 
 /// What the person chose in the card editor.
 class CardOptions {
   const CardOptions({
-    this.accent = CardAccent.red,
+    this.palette = CardPalette.redHead,
     this.showPlace = true,
     this.showWeather = true,
     this.showBait = true,
@@ -40,7 +191,7 @@ class CardOptions {
     this.photoPath,
   });
 
-  final CardAccent accent;
+  final CardPalette palette;
   final bool showPlace;
 
   /// Weather and moon.
@@ -61,13 +212,13 @@ class CardOptions {
   }
 
   CardOptions copyWith({
-    CardAccent? accent,
+    CardPalette? palette,
     bool? showPlace,
     bool? showWeather,
     bool? showBait,
     String? caption,
   }) => CardOptions(
-    accent: accent ?? this.accent,
+    palette: palette ?? this.palette,
     showPlace: showPlace ?? this.showPlace,
     showWeather: showWeather ?? this.showWeather,
     showBait: showBait ?? this.showBait,
@@ -77,7 +228,7 @@ class CardOptions {
   );
 
   CardOptions withPhoto(String? path) => CardOptions(
-    accent: accent,
+    palette: palette,
     showPlace: showPlace,
     showWeather: showWeather,
     showBait: showBait,

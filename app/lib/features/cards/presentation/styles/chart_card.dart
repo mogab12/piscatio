@@ -22,20 +22,15 @@ int stableSeed(String s) {
 /// sounding (depths are italic on charts); a compass rose carries the real
 /// wind and the moon of that day; a title block holds the details.
 class ChartCatchCard extends StatelessWidget {
-  const ChartCatchCard({
-    super.key,
-    required this.data,
-    required this.format,
-    this.accent = CardAccent.red,
-  });
+  const ChartCatchCard({super.key, required this.data, required this.format});
 
   final CatchCardData data;
   final CardFormat format;
-  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final record = data.record;
     final measured = data.headline.isNotEmpty;
     final rows = <(String, String)>[
@@ -56,17 +51,13 @@ class ChartCatchCard extends StatelessWidget {
       photoPath: data.photoPath,
       edition: data.romanDate,
       sounding: (size) => measured
-          ? CardHeadline(
-              parts: data.headline,
-              size: size,
-              unitColor: CardInk.muted,
-            )
+          ? CardHeadline(parts: data.headline, size: size, unitColor: p.muted)
           : FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.bottomLeft,
               child: Text(data.timeLabel, style: CardType.numbers(size * 0.75)),
             ),
-      rose: _Rose(moon: data.moon, wind: data.wind, accent: accent),
+      rose: _Rose(moon: data.moon, wind: data.wind),
       cartouche: (compact) => _Cartouche(
         title: data.speciesName,
         subtitle: data.scientificName,
@@ -86,20 +77,15 @@ class ChartCatchCard extends StatelessWidget {
 }
 
 class ChartTripCard extends StatelessWidget {
-  const ChartTripCard({
-    super.key,
-    required this.data,
-    required this.format,
-    this.accent = CardAccent.red,
-  });
+  const ChartTripCard({super.key, required this.data, required this.format});
 
   final TripCardData data;
   final CardFormat format;
-  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final rows = <(String, String)>[
       if (data.place != null) (l10n.cardFieldPlace, data.place!),
       (l10n.cardFieldTime, data.timeRangeLabel),
@@ -123,9 +109,9 @@ class ChartTripCard extends StatelessWidget {
           ),
         ],
         size: size,
-        unitColor: CardInk.muted,
+        unitColor: p.muted,
       ),
-      rose: _Rose(moon: data.moon, wind: data.wind, accent: accent),
+      rose: _Rose(moon: data.moon, wind: data.wind),
       cartouche: (compact) => _Cartouche(
         title: data.dateLabel,
         note: data.caption,
@@ -166,7 +152,8 @@ class _ChartLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final story = format == CardFormat.story;
     final hasPhoto = CardPhoto.exists(photoPath);
-    final margin = CardType.condensed(22);
+    final p = context.cardPalette;
+    final margin = CardType.condensed(22, color: p.muted);
     final signature = CardSignature.originFor(format);
     // Content starts under the brand and, in stories, ends above the
     // reply bar.
@@ -184,22 +171,19 @@ class _ChartLayout extends StatelessWidget {
           child: CustomPaint(
             painter: ContourPainter(
               seed: seed,
-              line: CardInk.isobath,
-              strongLine: CardInk.isobathStrong,
+              line: p.line,
+              strongLine: p.lineStrong,
               soundingStyle: CardType.text(
                 24,
                 style: FontStyle.italic,
-                color: CardInk.sounding,
+                color: p.sounding,
               ),
             ),
           ),
         ),
         Positioned.fill(
           child: CustomPaint(
-            painter: ChartBorderPainter(
-              ink: CardInk.muted,
-              paper: CardInk.water,
-            ),
+            painter: ChartBorderPainter(ink: p.muted, paper: p.ground),
           ),
         ),
         // Margin notes outside the neatline, like a chart's imprint.
@@ -305,15 +289,15 @@ class _ChartLayout extends StatelessWidget {
 
 /// Compass rose with the wind arrow and, in the middle, the moon.
 class _Rose extends StatelessWidget {
-  const _Rose({required this.moon, required this.wind, required this.accent});
+  const _Rose({required this.moon, required this.wind});
 
   final CardMoon? moon;
   final CardWind? wind;
-  final CardAccent accent;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final p = context.cardPalette;
     final moon = this.moon;
     return LayoutBuilder(
       builder: (context, box) {
@@ -328,7 +312,7 @@ class _Rose extends StatelessWidget {
         final note = CardType.text(
           noteSize,
           style: FontStyle.italic,
-          color: CardInk.muted,
+          color: p.muted,
           height: 1.3,
         );
         return Column(
@@ -342,11 +326,11 @@ class _Rose extends StatelessWidget {
                   Positioned.fill(
                     child: CustomPaint(
                       painter: CompassRosePainter(
-                        ink: CardInk.muted,
-                        accent: accent.onDark,
+                        ink: p.muted,
+                        accent: p.accent,
                         letterStyle: CardType.condensed(
                           side * 0.075,
-                          color: CardInk.foam,
+                          color: p.soft,
                         ),
                         letters: [
                           l10n.compassN,
@@ -366,8 +350,8 @@ class _Rose extends StatelessWidget {
                           illumination: moon.illumination,
                           waxing: moon.waxing,
                           southern: moon.southern,
-                          lit: CardInk.foam,
-                          dark: CardInk.water3,
+                          lit: p.soft,
+                          dark: p.ground3,
                         ),
                       ),
                     ),
@@ -392,17 +376,18 @@ class _Inset extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = context.cardPalette;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: CardInk.water,
-        border: Border.all(color: CardInk.muted, width: 3),
+        color: p.ground,
+        border: Border.all(color: p.muted, width: 3),
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: DecoratedBox(
           position: DecorationPosition.foreground,
           decoration: BoxDecoration(
-            border: Border.all(color: CardInk.muted, width: 1.5),
+            border: Border.all(color: p.muted, width: 1.5),
           ),
           child: CardPhoto(path: path),
         ),
@@ -438,9 +423,10 @@ class _Cartouche extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final label = CardType.condensed(compact ? 26 : 30);
+    final p = context.cardPalette;
+    final label = CardType.condensed(compact ? 26 : 30, color: p.muted);
     final value = CardType.text(compact ? 30 : 34, weight: FontWeight.w600);
-    final rule = BorderSide(color: CardInk.water3, width: compact ? 1.5 : 2);
+    final rule = BorderSide(color: p.ground3, width: compact ? 1.5 : 2);
     final shown = legend.take(legendLimit).toList();
     final hidden = legend.length - shown.length;
     Widget row(String l, String v) => Container(
@@ -467,8 +453,8 @@ class _Cartouche extends StatelessWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: CardInk.water,
-        border: Border.all(color: CardInk.muted, width: 3),
+        color: p.ground,
+        border: Border.all(color: p.muted, width: 3),
       ),
       child: Container(
         margin: const EdgeInsets.all(9),
@@ -479,7 +465,7 @@ class _Cartouche extends StatelessWidget {
           compact ? 18 : 26,
         ),
         decoration: BoxDecoration(
-          border: Border.all(color: CardInk.muted, width: 1.5),
+          border: Border.all(color: p.muted, width: 1.5),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -506,7 +492,7 @@ class _Cartouche extends StatelessWidget {
                   style: CardType.text(
                     compact ? 28 : 34,
                     style: FontStyle.italic,
-                    color: CardInk.muted,
+                    color: p.muted,
                   ),
                 ),
               ),
@@ -521,7 +507,7 @@ class _Cartouche extends StatelessWidget {
                     compact ? 30 : 38,
                     weight: FontWeight.w600,
                     style: FontStyle.italic,
-                    color: CardInk.foam,
+                    color: p.soft,
                   ),
                 ),
               ),
@@ -529,17 +515,15 @@ class _Cartouche extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: compact ? 14 : 20),
                 padding: EdgeInsets.only(top: compact ? 10 : 14),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: CardInk.gold, width: 4),
-                  ),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: p.record, width: 4)),
                 ),
                 child: Text(
                   record!,
                   style: CardType.text(
                     compact ? 30 : 36,
                     weight: FontWeight.w700,
-                    color: CardInk.gold,
+                    color: p.record,
                   ),
                 ),
               ),
@@ -562,7 +546,7 @@ class _Cartouche extends StatelessWidget {
                               style: CardType.numbers(
                                 compact ? 30 : 36,
                                 weight: FontWeight.w800,
-                                color: CardInk.foam,
+                                color: p.soft,
                               ),
                             ),
                             TextSpan(text: ' $name', style: value),
@@ -572,7 +556,7 @@ class _Cartouche extends StatelessWidget {
                     if (hidden > 0)
                       Text(
                         l10n.cardMoreCatches(hidden),
-                        style: value.copyWith(color: CardInk.muted),
+                        style: value.copyWith(color: p.muted),
                       ),
                   ],
                 ),

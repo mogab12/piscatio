@@ -218,11 +218,11 @@ void main() {
     }
   }
 
-  // The editor's options: accent, caption, weather hidden, no photo.
-  for (final (style, accent) in [
-    (CardStyle.board, CardAccent.orange),
-    (CardStyle.chart, CardAccent.chartreuse),
-    (CardStyle.tag, CardAccent.blue),
+  // The editor's options: theme, caption, weather hidden, no photo.
+  for (final (style, palette) in [
+    (CardStyle.board, CardPalette.dawn),
+    (CardStyle.chart, CardPalette.tucunare),
+    (CardStyle.tag, CardPalette.moon),
   ]) {
     testWidgets('custom ${style.name}', (tester) async {
       await shoot(
@@ -233,7 +233,7 @@ void main() {
           style: style,
           format: CardFormat.story,
           options: CardOptions(
-            accent: accent,
+            palette: palette,
             caption: 'Primeiro dourado da temporada, no raso da prainha',
           ),
         ),
@@ -248,13 +248,33 @@ void main() {
           style: style,
           format: CardFormat.square,
           options: CardOptions(
-            accent: accent,
+            palette: palette,
             showWeather: false,
             caption: 'Manhã de piracema',
           ).withPhoto(null),
         ),
         CardFormat.square,
       );
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Every theme on every style, to review them side by side.
+  for (final palette in CardPalette.values) {
+    testWidgets('theme ${palette.name}', (tester) async {
+      for (final style in CardStyle.values) {
+        await shoot(
+          tester,
+          'theme_${palette.name}_${style.name}',
+          CatchCardView(
+            data: sampleCatch(photo: _photo),
+            style: style,
+            format: CardFormat.story,
+            options: CardOptions(palette: palette),
+          ),
+          CardFormat.story,
+          photo: _photo,
+        );
+      }
     }, skip: !screenshotsEnabled);
   }
 }

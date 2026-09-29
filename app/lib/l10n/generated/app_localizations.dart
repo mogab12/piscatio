@@ -1546,12 +1546,6 @@ abstract class AppLocalizations {
   /// **'Style'**
   String get cardSectionStyle;
 
-  /// Card editor tab: accent color.
-  ///
-  /// In en, this message translates to:
-  /// **'Color'**
-  String get cardSectionColor;
-
   /// Card editor tab: which photo the card uses.
   ///
   /// In en, this message translates to:
@@ -1569,30 +1563,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Caption'**
   String get cardSectionCaption;
-
-  /// Card accent color option.
-  ///
-  /// In en, this message translates to:
-  /// **'Red'**
-  String get cardColorRed;
-
-  /// Card accent color option.
-  ///
-  /// In en, this message translates to:
-  /// **'Orange'**
-  String get cardColorOrange;
-
-  /// Card accent color option: the yellow-green of fishing lures.
-  ///
-  /// In en, this message translates to:
-  /// **'Chartreuse'**
-  String get cardColorChartreuse;
-
-  /// Card accent color option.
-  ///
-  /// In en, this message translates to:
-  /// **'Blue'**
-  String get cardColorBlue;
 
   /// Card editor option to make the card without a photo.
   ///
@@ -1935,6 +1905,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Place marked on the map'**
   String get placeSearchPointSaved;
+
+  /// Card editor tab: the card's color theme (recolors the whole card).
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get cardSectionTheme;
+
+  /// Card theme named after the red-head fishing lure (the brand colors: red over deep water).
+  ///
+  /// In en, this message translates to:
+  /// **'Red head'**
+  String get cardThemeRedHead;
+
+  /// Card theme: light logbook paper with dark ink.
+  ///
+  /// In en, this message translates to:
+  /// **'Paper'**
+  String get cardThemePaper;
+
+  /// Card theme named after the peacock bass (tucunaré): olive, gold and red.
+  ///
+  /// In en, this message translates to:
+  /// **'Peacock bass'**
+  String get cardThemeTucunare;
+
+  /// Card theme: warm light colors of sunrise on the water.
+  ///
+  /// In en, this message translates to:
+  /// **'Dawn'**
+  String get cardThemeDawn;
+
+  /// Card theme: night fishing, dark blue with moonlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Moon'**
+  String get cardThemeMoon;
+
+  /// Card theme: river green with a chartreuse lure accent.
+  ///
+  /// In en, this message translates to:
+  /// **'River'**
+  String get cardThemeRiver;
 }
 
 class _AppLocalizationsDelegate

@@ -10,9 +10,15 @@ import 'card_theme.dart';
 /// Fixed-size drawing surface for a card: [CardFormat.size] canvas pixels,
 /// no system text scaling (the image must look the same for everyone).
 class CardCanvas extends StatelessWidget {
-  const CardCanvas({super.key, required this.format, required this.child});
+  const CardCanvas({
+    super.key,
+    required this.format,
+    required this.child,
+    this.palette = CardPalette.redHead,
+  });
 
   final CardFormat format;
+  final CardPalette palette;
   final Widget child;
 
   @override
@@ -20,12 +26,15 @@ class CardCanvas extends StatelessWidget {
     final media = MediaQuery.maybeOf(context) ?? const MediaQueryData();
     return MediaQuery(
       data: media.copyWith(textScaler: TextScaler.noScaling),
-      child: SizedBox.fromSize(
-        size: format.size,
-        child: ClipRect(
-          child: DefaultTextStyle(
-            style: CardType.text(32),
-            child: ColoredBox(color: CardInk.water, child: child),
+      child: CardPaletteScope(
+        palette: palette,
+        child: SizedBox.fromSize(
+          size: format.size,
+          child: ClipRect(
+            child: DefaultTextStyle(
+              style: CardType.text(32, color: palette.text),
+              child: ColoredBox(color: palette.ground, child: child),
+            ),
           ),
         ),
       ),
@@ -41,31 +50,32 @@ String cardNumber(BuildContext context, double v) {
   return f.format(v);
 }
 
-/// The catch photo filling its box; deep water when there is none or it
-/// cannot be read.
+/// The catch photo filling its box; the card's ground when there is none or
+/// it cannot be read.
 class CardPhoto extends StatelessWidget {
   const CardPhoto({super.key, required this.path, this.darken = 0});
 
   final String? path;
 
-  /// 0–1 veil of deep water over the photo.
+  /// 0–1 veil of the card's ground over the photo (darkens it on dark
+  /// palettes, lightens it on light ones).
   final double darken;
 
   static bool exists(String? path) => path != null && File(path).existsSync();
 
   @override
   Widget build(BuildContext context) {
-    if (!exists(path)) return const ColoredBox(color: CardInk.water);
+    final ground = context.cardPalette.ground;
+    if (!exists(path)) return ColoredBox(color: ground);
     return Stack(
       fit: StackFit.expand,
       children: [
         Image.file(
           File(path!),
           fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => const ColoredBox(color: CardInk.water),
+          errorBuilder: (_, _, _) => ColoredBox(color: ground),
         ),
-        if (darken > 0)
-          ColoredBox(color: CardInk.water.withValues(alpha: darken)),
+        if (darken > 0) ColoredBox(color: ground.withValues(alpha: darken)),
       ],
     );
   }
@@ -75,8 +85,8 @@ class CardPhoto extends StatelessWidget {
 class BrandMark extends StatelessWidget {
   const BrandMark({
     super.key,
+    required this.color,
     this.size = 34,
-    this.color = CardInk.paper,
     this.floatBottom,
   });
 
@@ -98,12 +108,14 @@ class CardSignature extends StatelessWidget {
   const CardSignature({
     super.key,
     required this.format,
-    this.color = CardInk.paper,
+    this.color,
     this.floatBottom,
   });
 
   final CardFormat format;
-  final Color color;
+
+  /// Defaults to the palette's text color.
+  final Color? color;
   final Color? floatBottom;
 
   /// Top-left corner of the signature.
@@ -112,12 +124,19 @@ class CardSignature extends StatelessWidget {
       : const Offset(60, 56);
 
   @override
-  Widget build(BuildContext context) => BrandLockup(
-    size: format == CardFormat.story ? 64 : 50,
-    color: color,
-    floatBottom: floatBottom,
-    tagline: true,
-  );
+  Widget build(BuildContext context) {
+    final p = context.cardPalette;
+    return BrandLockup(
+      size: format == CardFormat.story ? 64 : 50,
+      color: color ?? p.text,
+      floatBottom: floatBottom ?? floatBottomFor(p),
+      tagline: true,
+    );
+  }
+
+  /// White below the waterline on dark grounds; on light ones the float
+  /// takes the paper's color inside its dark outline.
+  static Color floatBottomFor(CardPalette p) => p.dark ? p.text : p.ground;
 }
 
 /// Stories get covered by the platform's UI: the header (progress bar,
@@ -135,17 +154,20 @@ class CardHeadline extends StatelessWidget {
     super.key,
     required this.parts,
     required this.size,
-    this.color = CardInk.paper,
+    this.color,
     this.unitColor,
   });
 
   final List<CardQuantity> parts;
   final double size;
-  final Color color;
+
+  /// Defaults to the palette's text color.
+  final Color? color;
   final Color? unitColor;
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? context.cardPalette.text;
     final number = CardType.numbers(size, color: color);
     final unit = CardType.numbers(
       size * 0.32,

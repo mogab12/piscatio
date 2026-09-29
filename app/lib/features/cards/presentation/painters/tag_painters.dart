@@ -55,11 +55,14 @@ class TagPainter extends CustomPainter {
 
     final rnd = math.Random(seed);
     // Speckle: tiny darker and lighter flecks in the card stock.
+    final fleckDark = Color.lerp(paper, const Color(0xFF3A2A08), 0.62)!;
+    final fleckLight = Color.lerp(paper, const Color(0xFFFFFFFF), 0.7)!;
     final dot = Paint();
     for (var i = 0; i < 1400; i++) {
       final dark = rnd.nextDouble() < 0.7;
-      dot.color = (dark ? const Color(0xFF6B5320) : const Color(0xFFFFF6DA))
-          .withValues(alpha: 0.06 + rnd.nextDouble() * 0.12);
+      dot.color = (dark ? fleckDark : fleckLight).withValues(
+        alpha: 0.06 + rnd.nextDouble() * 0.12,
+      );
       canvas.drawCircle(
         Offset(rnd.nextDouble() * size.width, rnd.nextDouble() * size.height),
         0.6 + rnd.nextDouble() * 1.6,
@@ -77,7 +80,7 @@ class TagPainter extends CustomPainter {
       );
       final a = rnd.nextDouble() * math.pi;
       final len = 8 + rnd.nextDouble() * 18;
-      fibre.color = const Color(0xFF7A6230).withValues(alpha: 0.10);
+      fibre.color = fleckDark.withValues(alpha: 0.10);
       canvas.drawLine(p, p + Offset(math.cos(a), math.sin(a)) * len, fibre);
     }
     // Slightly darker, handled edges.
@@ -116,7 +119,12 @@ class TagPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(TagPainter old) => old.seed != seed || old.hole != hole;
+  bool shouldRepaint(TagPainter old) =>
+      old.seed != seed ||
+      old.hole != hole ||
+      old.paper != paper ||
+      old.shade != shade ||
+      old.edge != edge;
 }
 
 /// Cotton string looped through the tag's hole: two strands that meet in
@@ -195,7 +203,7 @@ class StringPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(StringPainter old) =>
-      old.hole != hole || old.angle != angle;
+      old.hole != hole || old.angle != angle || old.color != color;
 }
 
 /// A rubber stamp: double border and text in one ink, with gaps where the
@@ -267,5 +275,6 @@ class StampPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(StampPainter old) => old.lines != lines;
+  bool shouldRepaint(StampPainter old) =>
+      old.lines != lines || old.color != color;
 }

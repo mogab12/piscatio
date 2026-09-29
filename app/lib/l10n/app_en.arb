@@ -1118,10 +1118,6 @@
   "@cardSectionStyle": {
     "description": "Card editor tab: style and format."
   },
-  "cardSectionColor": "Color",
-  "@cardSectionColor": {
-    "description": "Card editor tab: accent color."
-  },
   "cardSectionPhoto": "Photo",
   "@cardSectionPhoto": {
     "description": "Card editor tab: which photo the card uses."
@@ -1133,22 +1129,6 @@
   "cardSectionCaption": "Caption",
   "@cardSectionCaption": {
     "description": "Card editor tab: an optional text written by the user."
-  },
-  "cardColorRed": "Red",
-  "@cardColorRed": {
-    "description": "Card accent color option."
-  },
-  "cardColorOrange": "Orange",
-  "@cardColorOrange": {
-    "description": "Card accent color option."
-  },
-  "cardColorChartreuse": "Chartreuse",
-  "@cardColorChartreuse": {
-    "description": "Card accent color option: the yellow-green of fishing lures."
-  },
-  "cardColorBlue": "Blue",
-  "@cardColorBlue": {
-    "description": "Card accent color option."
   },
   "cardNoPhoto": "No photo",
   "@cardNoPhoto": {
@@ -1436,5 +1416,33 @@
   "placeSearchPointSaved": "Place marked on the map",
   "@placeSearchPointSaved": {
     "description": "Shown in the trip form when a searched place set the location."
+  },
+  "cardSectionTheme": "Theme",
+  "@cardSectionTheme": {
+    "description": "Card editor tab: the card's color theme (recolors the whole card)."
+  },
+  "cardThemeRedHead": "Red head",
+  "@cardThemeRedHead": {
+    "description": "Card theme named after the red-head fishing lure (the brand colors: red over deep water)."
+  },
+  "cardThemePaper": "Paper",
+  "@cardThemePaper": {
+    "description": "Card theme: light logbook paper with dark ink."
+  },
+  "cardThemeTucunare": "Peacock bass",
+  "@cardThemeTucunare": {
+    "description": "Card theme named after the peacock bass (tucunaré): olive, gold and red."
+  },
+  "cardThemeDawn": "Dawn",
+  "@cardThemeDawn": {
+    "description": "Card theme: warm light colors of sunrise on the water."
+  },
+  "cardThemeMoon": "Moon",
+  "@cardThemeMoon": {
+    "description": "Card theme: night fishing, dark blue with moonlight."
+  },
+  "cardThemeRiver": "River",
+  "@cardThemeRiver": {
+    "description": "Card theme: river green with a chartreuse lure accent."
   }
 }
