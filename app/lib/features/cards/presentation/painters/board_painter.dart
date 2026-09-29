@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/rendering.dart';
 
+import '../../../../core/theme/tokens.dart';
 import '../../../../core/widgets/brand.dart';
 import '../../../../domain/services/ruler_scale.dart';
 
@@ -223,7 +224,14 @@ class BoardPainter extends CustomPainter {
 
     // Maker's mark near the stop, along the bottom edge.
     final bottomY = body.bottom - h * 0.1;
-    final brandText = _text(brand, printStyle.copyWith(color: ink));
+    final brandText = _text(
+      brand,
+      printStyle.copyWith(
+        color: ink,
+        fontFamily: PiscatioFonts.brand,
+        fontWeight: FontWeight.w400,
+      ),
+    );
     final floatH = brandText.height * 1.05;
     final floatSize = Size(floatH * FloatPainter.aspect, floatH);
     final bx = x0 + 8;

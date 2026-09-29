@@ -1,4 +1,5 @@
-"""Generates the static Archivo instances bundled in assets/fonts.
+"""Generates the static Archivo instances bundled in assets/fonts, and
+fetches Shrikhand (the wordmark, already static).
 
 The app ships static instances (not the variable masters) so rendering is
 identical on every platform and in golden tests. Run from app/:
@@ -6,7 +7,8 @@ identical on every platform and in golden tests. Run from app/:
     pip install fonttools
     python tool/build_fonts.py
 
-Source: https://github.com/google/fonts/tree/main/ofl/archivo (SIL OFL 1.1).
+Sources (SIL OFL 1.1): https://github.com/google/fonts/tree/main/ofl/archivo
+and https://github.com/google/fonts/tree/main/ofl/shrikhand.
 """
 
 import pathlib
@@ -38,6 +40,8 @@ INSTANCES = [
     ("ArchivoCondensed", 62, 800, False),
 ]
 
+SHRIKHAND = "https://raw.githubusercontent.com/google/fonts/main/ofl/shrikhand/"
+
 WEIGHT_NAMES = {400: "Regular", 500: "Medium", 600: "SemiBold", 700: "Bold",
                 800: "ExtraBold", 900: "Black"}
 
@@ -59,6 +63,10 @@ def main() -> None:
             suffix = WEIGHT_NAMES[weight] + ("Italic" if italic else "")
             static.save(out / f"{family}-{suffix}.ttf")
             print(f"{family}-{suffix}.ttf")
+    urllib.request.urlretrieve(SHRIKHAND + "Shrikhand-Regular.ttf",
+                               out / "Shrikhand-Regular.ttf")
+    urllib.request.urlretrieve(SHRIKHAND + "OFL.txt", out / "OFL-Shrikhand.txt")
+    print("Shrikhand-Regular.ttf")
 
 
 if __name__ == "__main__":

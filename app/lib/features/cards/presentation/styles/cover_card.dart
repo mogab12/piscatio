@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../core/formatting/l10n.dart';
-import '../../../../core/theme/tokens.dart';
 import '../../../../core/widgets/brand.dart';
 import '../../application/card_data.dart';
 import '../card_canvas.dart';
@@ -205,46 +204,23 @@ class _Masthead extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final p = context.cardPalette;
-    final size = story ? 210.0 : 150.0;
-    final word = TextStyle(
-      fontFamily: PiscatioFonts.expanded,
-      fontStyle: FontStyle.italic,
-      fontWeight: FontWeight.w900,
-      fontSize: size,
-      height: 0.92,
-      letterSpacing: -size * 0.035,
-      color: p.accent,
-    );
     final line = CardType.condensed(story ? 34 : 26, color: p.text);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          label: l10n.appTitle,
-          child: FittedBox(
-            fit: BoxFit.fitWidth,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(bottom: size * 0.06),
-                  child: FloatMark(
-                    height: size * 1.02,
-                    ink: p.text,
-                    bottom: CardSignature.floatBottomFor(p),
-                  ),
-                ),
-                SizedBox(width: size * 0.12),
-                Text(l10n.appTitle, style: word),
-              ],
-            ),
+        // The logo as the magazine's name: the fishing line under it is the
+        // rule of the masthead.
+        FittedBox(
+          fit: BoxFit.fitWidth,
+          alignment: Alignment.centerLeft,
+          child: BrandLockup(
+            size: 200,
+            color: p.text,
+            wordColor: p.accent,
+            floatBottom: CardSignature.floatBottomFor(p),
           ),
         ),
-        SizedBox(height: story ? 14 : 10),
-        Container(height: story ? 5 : 4, color: p.text),
-        SizedBox(height: story ? 12 : 8),
+        SizedBox(height: story ? 10 : 6),
         Row(
           children: [
             Expanded(

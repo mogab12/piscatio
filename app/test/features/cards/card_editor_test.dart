@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/providers.dart';
+import 'package:piscatio/core/widgets/brand.dart';
 import 'package:piscatio/data/db/tables.dart';
 import 'package:piscatio/data/repositories/catch_repository.dart';
 import 'package:piscatio/domain/models/catch.dart';
@@ -109,7 +110,10 @@ void main() {
     expect(view().shown.place, 'Poço do Dourado');
     expect(find.text('Poço do Dourado'), findsWidgets);
     // The brand is on the card, with its tagline.
-    expect(find.text('Diário de pesca'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate((w) => w is BrandLockup && w.tagline),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Carta'));
     await app.settle(tester);

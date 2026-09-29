@@ -179,7 +179,10 @@ class FloatPainter extends CustomPainter {
       old.ink != ink || old.top != top || old.bottom != bottom;
 }
 
-/// Float + wordmark, optionally with the tagline under the name.
+/// The full logo: the float, the name in the wordmark face, and the float's
+/// line running under the name to a hook. Optionally the tagline under the
+/// line. Drawn as one piece, so it looks the same everywhere (and does not
+/// grow with the system text size: it is a picture).
 class BrandLockup extends StatelessWidget {
   const BrandLockup({
     super.key,
@@ -188,28 +191,30 @@ class BrandLockup extends StatelessWidget {
     this.floatBottom,
     this.tagline = false,
     this.taglineColor,
+    this.wordColor,
   });
 
-  /// Cap height-ish size of the wordmark.
+  /// Font size of the name.
   final double size;
+
+  /// Float outline, line and hook (and the name, unless [wordColor]).
   final Color color;
 
   /// Lower half of the float (defaults to [color]).
   final Color? floatBottom;
   final bool tagline;
   final Color? taglineColor;
+  final Color? wordColor;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final word = TextStyle(
-      fontFamily: PiscatioFonts.expanded,
-      fontStyle: FontStyle.italic,
-      fontWeight: FontWeight.w800,
+    final layout = BrandLayout(
       fontSize: size,
-      height: 1,
-      letterSpacing: -size * 0.02,
-      color: color,
+      word: l10n.appTitle,
+      wordColor: wordColor ?? color,
+      tagline: tagline ? l10n.brandTagline : null,
+      taglineColor: taglineColor ?? color.withValues(alpha: 0.78),
     );
     return Semantics(
       label: l10n.appTitle,
@@ -218,38 +223,189 @@ class BrandLockup extends StatelessWidget {
       child: FittedBox(
         fit: BoxFit.scaleDown,
         alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FloatMark(
-              height: size * (tagline ? 2.1 : 1.55),
-              ink: color,
-              bottom: floatBottom ?? color,
-            ),
-            SizedBox(width: size * 0.34),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(l10n.appTitle, style: word),
-                if (tagline) ...[
-                  SizedBox(height: size * 0.18),
-                  Text(
-                    l10n.brandTagline,
-                    style: TextStyle(
-                      fontFamily: PiscatioFonts.text,
-                      fontWeight: FontWeight.w600,
-                      fontSize: size * 0.46,
-                      height: 1,
-                      color: taglineColor ?? color.withValues(alpha: 0.78),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ],
+        child: CustomPaint(
+          size: layout.size,
+          painter: BrandPainter(
+            layout: layout,
+            ink: color,
+            floatBottom: floatBottom ?? color,
+          ),
         ),
       ),
     );
   }
+}
+
+/// Where each part of the logo goes, for a name set at [fontSize].
+class BrandLayout {
+  BrandLayout({
+    required this.fontSize,
+    required String word,
+    required Color wordColor,
+    String? tagline,
+    Color? taglineColor,
+  }) : wordPainter = TextPainter(
+         text: TextSpan(
+           text: word,
+           style: TextStyle(
+             fontFamily: PiscatioFonts.brand,
+             fontSize: fontSize,
+             height: 1.08,
+             color: wordColor,
+           ),
+         ),
+         textDirection: TextDirection.ltr,
+         textScaler: TextScaler.noScaling,
+       )..layout(),
+       taglinePainter = tagline == null
+           ? null
+           : (TextPainter(
+               text: TextSpan(
+                 text: tagline,
+                 style: TextStyle(
+                   fontFamily: PiscatioFonts.text,
+                   fontWeight: FontWeight.w600,
+                   fontSize: fontSize * 0.36,
+                   height: 1,
+                   color: taglineColor,
+                 ),
+               ),
+               textDirection: TextDirection.ltr,
+               textScaler: TextScaler.noScaling,
+             )..layout()) {
+    baseline = wordPainter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
+    );
+    floatSize = Size(fontSize * 1.12 * FloatPainter.aspect, fontSize * 1.12);
+    floatTop = baseline - floatSize.height * 0.97;
+    wordLeft = floatSize.width + fontSize * 0.2;
+    stroke = math.max(1.2, fontSize * 0.062);
+    lineY = baseline + fontSize * 0.2;
+    hookX = wordLeft + wordPainter.width + fontSize * 0.04;
+    hookShank = fontSize * 0.38;
+    hookBend = fontSize * 0.15;
+    taglineTop = lineY + fontSize * 0.2;
+    final hookBottom = lineY + hookShank + hookBend + stroke;
+    final taglineBottom = taglinePainter == null
+        ? 0.0
+        : taglineTop + taglinePainter!.height;
+    size = Size(
+      hookX + stroke * 1.5,
+      math.max(math.max(hookBottom, taglineBottom), wordPainter.height),
+    );
+  }
+
+  final double fontSize;
+  final TextPainter wordPainter;
+  final TextPainter? taglinePainter;
+  late final double baseline;
+  late final Size floatSize;
+  late final double floatTop;
+  late final double wordLeft;
+  late final double stroke;
+  late final double lineY;
+  late final double hookX;
+  late final double hookShank;
+  late final double hookBend;
+  late final double taglineTop;
+
+  /// The whole logo.
+  late final Size size;
+}
+
+/// Paints a [BrandLayout].
+class BrandPainter extends CustomPainter {
+  BrandPainter({
+    required this.layout,
+    required this.ink,
+    required this.floatBottom,
+    this.top = PiscatioColors.redHead,
+  });
+
+  final BrandLayout layout;
+  final Color ink;
+  final Color floatBottom;
+  final Color top;
+
+  /// The fishing line from under the float to the hook's point.
+  static Path linePath(BrandLayout l) {
+    final fh = l.floatSize.height;
+    // The float leans with the italic: its bottom sits a little right.
+    final start = Offset(
+      l.floatSize.width / 2 + fh * 0.07,
+      l.floatTop + fh * 0.99,
+    );
+    final r = l.fontSize * 0.2;
+    final y = l.lineY;
+    final x = l.hookX;
+    final shankEnd = y + l.hookShank;
+    final pointX = x - 2 * l.hookBend;
+    return Path()
+      ..moveTo(start.dx, start.dy)
+      ..lineTo(start.dx, y - r)
+      ..quadraticBezierTo(start.dx, y, start.dx + r, y)
+      ..lineTo(x - r * 0.5, y)
+      ..quadraticBezierTo(x, y, x, y + r * 0.5)
+      ..lineTo(x, shankEnd)
+      ..arcToPoint(
+        Offset(pointX, shankEnd),
+        radius: Radius.circular(l.hookBend),
+      )
+      ..lineTo(pointX, shankEnd - l.hookShank * 0.62);
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final l = layout;
+    canvas.save();
+    // Scale when the widget is given another size (FittedBox handles it,
+    // but the painter stays correct on its own).
+    final sx = size.width / l.size.width;
+    final sy = size.height / l.size.height;
+    canvas.scale(sx, sy);
+
+    final line = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = l.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = ink;
+    final path = linePath(l);
+    canvas.drawPath(path, line);
+    // The barb: a short spur back from the point.
+    final metric = path.computeMetrics().last;
+    final tip = metric.getTangentForOffset(metric.length)!.position;
+    canvas.drawLine(
+      tip,
+      tip + Offset(l.hookBend * 0.9, l.hookShank * 0.32),
+      line,
+    );
+
+    canvas
+      ..save()
+      ..translate(0, l.floatTop);
+    FloatPainter(
+      ink: ink,
+      top: top,
+      bottom: floatBottom,
+      line: false,
+    ).paint(canvas, l.floatSize);
+    canvas.restore();
+
+    l.wordPainter.paint(canvas, Offset(l.wordLeft, 0));
+    l.taglinePainter?.paint(
+      canvas,
+      Offset(l.wordLeft + l.fontSize * 0.06, l.taglineTop),
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(BrandPainter old) =>
+      old.ink != ink ||
+      old.floatBottom != floatBottom ||
+      old.top != top ||
+      old.layout.fontSize != layout.fontSize ||
+      old.layout.wordPainter.text != layout.wordPainter.text ||
+      old.layout.taglinePainter?.text != layout.taglinePainter?.text;
 }

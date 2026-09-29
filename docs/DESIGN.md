@@ -133,9 +133,17 @@ um selo genérico.
 - **Símbolo: a boia.** Vermelha acima da linha d'água, branca abaixo, antena em
   cima e a linha descendo, inclinada no ângulo do itálico do nome. É o objeto que
   todo pescador olha por horas; a "cabeça vermelha" da paleta vem daí.
-- **Assinatura:** boia + "Piscatio" (Archivo Expanded itálico) + "Diário de pesca".
+- **Assinatura:** boia + "Piscatio" + "Diário de pesca". O nome é em
+  **Shrikhand** (itálico pesado e arredondado, com cara de embalagem de isca
+  antiga): o Archivo Expanded era genérico demais para o nome. A linha da boia
+  desce e corre por baixo do nome até terminar num anzol: símbolo e nome viram
+  uma peça só. Na Capa, essa linha é o fio do cabeçalho da revista. Desenhada por
+  inteiro num `CustomPainter` (não cresce com a fonte do sistema: é uma imagem).
   Código em `core/widgets/brand.dart`; o ícone do app é gerado pelo
-  `tool/build_icons.py` com o mesmo desenho (boia com duas ondas na água funda).
+  `tool/build_icons.py` com a boia (com duas ondas na água funda).
+- Comparação feita: cerca de 20 fontes de exibição (scripts retrô, esportivas,
+  pincel, slab). Ficaram Shrikhand, Oleo Script e Knewave; Shrikhand venceu por
+  ler bem pequena e ter mais personalidade.
 - **Nos cards:** a assinatura fica no alto à esquerda, grande o bastante para ser
   lida num story de relance (é o que leva gente nova ao app). Não pode ser
   escondida. Nos estilos, a marca pequena continua "impressa" nos objetos (tábua,

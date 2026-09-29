@@ -47,6 +47,10 @@ abstract final class PiscatioFonts {
 
   /// Typewriter face, only for the specimen-tag card (it is the metaphor).
   static const typed = 'CourierPrime';
+
+  /// The wordmark: a heavy retro italic, like old lure packaging. Only for
+  /// the name "Piscatio".
+  static const brand = 'Shrikhand';
 }
 
 /// Semantic colors that Material's ColorScheme has no slot for.

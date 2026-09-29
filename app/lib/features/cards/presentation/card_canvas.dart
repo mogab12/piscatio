@@ -137,7 +137,7 @@ class CardSignature extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.cardPalette;
     return BrandLockup(
-      size: format == CardFormat.story ? 64 : 50,
+      size: format == CardFormat.story ? 80 : 60,
       color: color ?? p.text,
       floatBottom: floatBottom ?? floatBottomFor(p),
       tagline: true,

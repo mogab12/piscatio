@@ -83,7 +83,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: BrandLockup(
-                    size: 24,
                     color: Theme.of(context).colorScheme.onSurface,
                     floatBottom: Theme.of(context).colorScheme.surface,
                   ),

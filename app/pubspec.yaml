@@ -51,6 +51,7 @@ flutter:
     - assets/seed/
     - assets/fonts/OFL.txt
     - assets/fonts/OFL-CourierPrime.txt
+    - assets/fonts/OFL-Shrikhand.txt
   fonts:
     - family: Archivo
       fonts:
@@ -86,6 +87,10 @@ flutter:
           weight: 700
         - asset: assets/fonts/ArchivoCondensed-ExtraBold.ttf
           weight: 800
+    # The wordmark only (the name next to the float).
+    - family: Shrikhand
+      fonts:
+        - asset: assets/fonts/Shrikhand-Regular.ttf
     # Only for the specimen-tag card style (typed label).
     - family: CourierPrime
       fonts:

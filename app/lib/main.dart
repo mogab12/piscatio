@@ -13,6 +13,9 @@ void main() {
     yield LicenseEntryWithLineBreaks([
       'Courier Prime',
     ], await rootBundle.loadString('assets/fonts/OFL-CourierPrime.txt'));
+    yield LicenseEntryWithLineBreaks([
+      'Shrikhand',
+    ], await rootBundle.loadString('assets/fonts/OFL-Shrikhand.txt'));
   });
   installReadableErrorWidget();
   // Nothing is awaited before the first frame: the database opens behind
