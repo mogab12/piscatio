@@ -2349,6 +2349,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cave art'**
   String get cardFilterRupestre;
+
+  /// Card editor tab: zoom and position of the photo and the map.
+  ///
+  /// In en, this message translates to:
+  /// **'Frame'**
+  String get cardSectionFrame;
+
+  /// Card editor, Frame tab: how to frame with gestures.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag and pinch the photo or the map on the card.'**
+  String get cardFrameHint;
+
+  /// Card editor, Frame tab: slider label.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo zoom'**
+  String get cardFramePhoto;
+
+  /// Card editor, Frame tab: slider label.
+  ///
+  /// In en, this message translates to:
+  /// **'Map zoom'**
+  String get cardFrameMap;
+
+  /// Card editor, Frame tab: put the photo and the map back as they were.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get cardFrameReset;
+
+  /// Card editor, Frame tab: shown when there is nothing to frame.
+  ///
+  /// In en, this message translates to:
+  /// **'This card has no photo or map to frame.'**
+  String get cardFrameNothing;
 }
 
 class _AppLocalizationsDelegate

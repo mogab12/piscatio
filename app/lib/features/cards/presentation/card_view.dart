@@ -16,12 +16,16 @@ class CatchCardView extends StatelessWidget {
     required this.style,
     required this.format,
     this.options = const CardOptions(),
+    this.onFrame,
   });
 
   final CatchCardData data;
   final CardStyle style;
   final CardFormat format;
   final CardOptions options;
+
+  /// Set while framing in the editor (see [CardPaletteScope.onFrame]).
+  final void Function(CardFrameTarget target, CardFrame frame)? onFrame;
 
   /// What the card actually shows.
   CatchCardData get shown => data.customized(options);
@@ -33,6 +37,9 @@ class CatchCardView extends StatelessWidget {
       format: format,
       palette: options.palette,
       photoFilter: options.activeFilter,
+      photoFrame: options.photoFrame,
+      mapFrame: options.mapFrame,
+      onFrame: onFrame,
       child: switch (style) {
         CardStyle.board => BoardCatchCard(data: d, format: format),
         CardStyle.cover => CoverCatchCard(data: d, format: format),
@@ -52,12 +59,16 @@ class TripCardView extends StatelessWidget {
     required this.style,
     required this.format,
     this.options = const CardOptions(),
+    this.onFrame,
   });
 
   final TripCardData data;
   final CardStyle style;
   final CardFormat format;
   final CardOptions options;
+
+  /// Set while framing in the editor (see [CardPaletteScope.onFrame]).
+  final void Function(CardFrameTarget target, CardFrame frame)? onFrame;
 
   TripCardData get shown => data.customized(options);
 
@@ -68,6 +79,9 @@ class TripCardView extends StatelessWidget {
       format: format,
       palette: options.palette,
       photoFilter: options.activeFilter,
+      photoFrame: options.photoFrame,
+      mapFrame: options.mapFrame,
+      onFrame: onFrame,
       child: switch (style) {
         CardStyle.board => BoardTripCard(data: d, format: format),
         CardStyle.cover => CoverTripCard(data: d, format: format),

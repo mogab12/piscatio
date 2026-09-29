@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/background.dart';
 import '../../../core/formatting/l10n.dart';
@@ -20,7 +21,7 @@ import 'card_view.dart';
 
 enum CardSubject { catchItem, trip }
 
-enum _Section { style, theme, photo, details, caption }
+enum _Section { style, theme, photo, frame, details, caption }
 
 /// Make the card yours: style and format, color theme, photo, which
 /// details show, a caption. Then share.
@@ -78,6 +79,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     _Section.style => context.l10n.cardSectionStyle,
     _Section.theme => context.l10n.cardSectionTheme,
     _Section.photo => context.l10n.cardSectionPhoto,
+    _Section.frame => context.l10n.cardSectionFrame,
     _Section.details => context.l10n.cardSectionDetails,
     _Section.caption => context.l10n.cardSectionCaption,
   };
@@ -100,6 +102,13 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
   };
 
   void _set(CardOptions o) => setState(() => _options = o);
+
+  /// A drag or pinch on the card while framing.
+  void _frame(CardFrameTarget target, CardFrame frame) => _set(
+    target == CardFrameTarget.photo
+        ? _options.copyWith(photoFrame: frame)
+        : _options.copyWith(mapFrame: frame),
+  );
 
   /// Shows [filter] on [source] as soon as its filtered version is ready
   /// (made off the UI thread, then cached).
@@ -161,6 +170,9 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final onFrame = _section == _Section.frame ? _frame : null;
+    // Only the chart and map styles draw the map.
+    bool drawsMap(CardStyle s) => s == CardStyle.chart || s == CardStyle.map;
     final (
       Widget? card,
       String? place,
@@ -168,16 +180,20 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
       String? defaultPhoto,
       List<String> photos,
       String? tripId,
+      bool mapShown,
     ) = switch (widget.subject) {
       CardSubject.catchItem => () {
         final data = ref.watch(catchCardDataProvider(widget.id));
         final tripId = ref.watch(catchProvider(widget.id)).value?.tripId;
-        if (data == null) return (null, null, null, null, <String>[], tripId);
+        if (data == null) {
+          return (null, null, null, null, <String>[], tripId, false);
+        }
         final view = CatchCardView(
           data: data,
           style: _styleFor(data.photoPath),
           format: _format,
           options: _options,
+          onFrame: onFrame,
         );
         return (
           view,
@@ -186,18 +202,20 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
           data.photoPath,
           data.photoOptions,
           tripId,
+          view.shown.map != null && drawsMap(view.style),
         );
       }(),
       CardSubject.trip => () {
         final data = ref.watch(tripCardDataProvider(widget.id));
         if (data == null) {
-          return (null, null, null, null, <String>[], widget.id);
+          return (null, null, null, null, <String>[], widget.id, false);
         }
         final view = TripCardView(
           data: data,
           style: _styleFor(data.photoPath),
           format: _format,
           options: _options,
+          onFrame: onFrame,
         );
         return (
           view,
@@ -206,6 +224,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
           data.photoPath,
           data.photoOptions,
           widget.id,
+          view.shown.map != null && drawsMap(view.style),
         );
       }(),
     };
@@ -335,6 +354,35 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                   ),
                 ],
               ),
+      _Section.frame => SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: PiscatioSizes.gutter),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              shownPhoto != null || mapShown
+                  ? l10n.cardFrameHint
+                  : l10n.cardFrameNothing,
+              style: Theme.of(context).textTheme.bodyMedium!
+                  .copyWith(color: context.palette.muted),
+            ),
+            if (shownPhoto != null)
+              _ZoomRow(
+                label: l10n.cardFramePhoto,
+                target: CardFrameTarget.photo,
+                frame: _options.photoFrame,
+                onChanged: (f) => _frame(CardFrameTarget.photo, f),
+              ),
+            if (mapShown)
+              _ZoomRow(
+                label: l10n.cardFrameMap,
+                target: CardFrameTarget.map,
+                frame: _options.mapFrame,
+                onChanged: (f) => _frame(CardFrameTarget.map, f),
+              ),
+          ],
+        ),
+      ),
       _Section.details => SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: PiscatioSizes.gutter),
         child: Column(
@@ -461,6 +509,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                               Icons.dashboard_customize_outlined,
                             _Section.theme => Icons.palette_outlined,
                             _Section.photo => Icons.photo_outlined,
+                            _Section.frame => Icons.crop_rounded,
                             _Section.details => Icons.tune_rounded,
                             _Section.caption => Icons.short_text_rounded,
                           },
@@ -531,6 +580,54 @@ class _ChipRow extends StatelessWidget {
 
 /// One tab of the editor: icon over a short name, the selected one marked
 /// with the accent underline.
+/// Zoom of the photo or the map: the same as pinching, for those who
+/// prefer (or need) a slider.
+class _ZoomRow extends StatelessWidget {
+  const _ZoomRow({
+    required this.label,
+    required this.target,
+    required this.frame,
+    required this.onChanged,
+  });
+
+  final String label;
+  final CardFrameTarget target;
+  final CardFrame frame;
+  final ValueChanged<CardFrame> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final max = CardFrame.maxZoomFor(target);
+    final percent = NumberFormat.percentPattern(
+      Localizations.localeOf(context).toString(),
+    );
+    return Row(
+      children: [
+        SizedBox(
+          width: 104,
+          child: Text(label, style: Theme.of(context).textTheme.labelLarge),
+        ),
+        Expanded(
+          child: Slider(
+            value: frame.zoom.clamp(1.0, max),
+            min: 1,
+            max: max,
+            semanticFormatterCallback: percent.format,
+            onChanged: (v) => onChanged(
+              CardFrame(zoom: v, focus: frame.focus).clampFor(target),
+            ),
+          ),
+        ),
+        IconButton(
+          tooltip: context.l10n.cardFrameReset,
+          icon: const Icon(Icons.restart_alt_rounded),
+          onPressed: frame.isFill ? null : () => onChanged(CardFrame.fill),
+        ),
+      ],
+    );
+  }
+}
+
 /// Two columns of [_ToggleTile]s.
 class _ToggleGrid extends StatelessWidget {
   const _ToggleGrid({required this.children});
@@ -662,12 +759,15 @@ class _SectionTab extends StatelessWidget {
             children: [
               Icon(icon, color: color, size: 22),
               const SizedBox(height: 2),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelMedium!
-                    .copyWith(color: color),
+              // Six tabs on a narrow phone: the label shrinks to fit.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.labelMedium!
+                      .copyWith(color: color),
+                ),
               ),
             ],
           ),

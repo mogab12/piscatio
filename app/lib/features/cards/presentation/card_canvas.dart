@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,34 +11,106 @@ import 'card_theme.dart';
 
 /// Fixed-size drawing surface for a card: [CardFormat.size] canvas pixels,
 /// no system text scaling (the image must look the same for everyone).
-class CardCanvas extends StatelessWidget {
+class CardCanvas extends StatefulWidget {
   const CardCanvas({
     super.key,
     required this.format,
     required this.child,
     this.palette = CardPalette.redHead,
     this.photoFilter = CardPhotoFilter.none,
+    this.photoFrame = CardFrame.fill,
+    this.mapFrame = CardFrame.fill,
+    this.onFrame,
   });
 
   final CardFormat format;
   final CardPalette palette;
   final CardPhotoFilter photoFilter;
+  final CardFrame photoFrame;
+  final CardFrame mapFrame;
+
+  /// See [CardPaletteScope.onFrame]. While set, a layer over the whole
+  /// card turns drags and pinches into frames for the picture under them.
+  final void Function(CardFrameTarget target, CardFrame frame)? onFrame;
   final Widget child;
+
+  @override
+  State<CardCanvas> createState() => _CardCanvasState();
+}
+
+class _CardCanvasState extends State<CardCanvas> {
+  final _frames = CardFrameRegistry();
+  CardFrameEntry? _entry;
+  CardFrame _start = CardFrame.fill;
+  Offset _startLocal = Offset.zero;
+
+  CardFrame _frameOf(CardFrameTarget t) =>
+      t == CardFrameTarget.photo ? widget.photoFrame : widget.mapFrame;
+
+  void _onStart(ScaleStartDetails d) {
+    final entry = _frames.at(d.focalPoint);
+    final box = entry?.box();
+    _entry = entry;
+    if (entry == null || box == null) return;
+    _start = _frameOf(entry.target);
+    _startLocal = box.globalToLocal(d.focalPoint);
+  }
+
+  void _onUpdate(ScaleUpdateDetails d) {
+    final entry = _entry;
+    final box = entry?.box();
+    final report = widget.onFrame;
+    if (entry == null || box == null || report == null || !box.attached) {
+      return;
+    }
+    final zoom = (_start.zoom * d.scale).clamp(
+      1.0,
+      CardFrame.maxZoomFor(entry.target),
+    );
+    final delta = box.globalToLocal(d.focalPoint) - _startLocal;
+    report(
+      entry.target,
+      CardFrame(
+        zoom: zoom,
+        focus: _start.focus + entry.shift(delta, box.size, zoom),
+      ).clampFor(entry.target),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.maybeOf(context) ?? const MediaQueryData();
+    final palette = widget.palette;
+    Widget card = ColoredBox(color: palette.ground, child: widget.child);
+    if (widget.onFrame != null) {
+      card = Stack(
+        fit: StackFit.expand,
+        children: [
+          card,
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onScaleStart: _onStart,
+            onScaleUpdate: _onUpdate,
+            onScaleEnd: (_) => _entry = null,
+          ),
+        ],
+      );
+    }
     return MediaQuery(
       data: media.copyWith(textScaler: TextScaler.noScaling),
       child: CardPaletteScope(
         palette: palette,
-        photoFilter: photoFilter,
+        photoFilter: widget.photoFilter,
+        photoFrame: widget.photoFrame,
+        mapFrame: widget.mapFrame,
+        onFrame: widget.onFrame,
+        frames: _frames,
         child: SizedBox.fromSize(
-          size: format.size,
+          size: widget.format.size,
           child: ClipRect(
             child: DefaultTextStyle(
               style: CardType.text(32, color: palette.text),
-              child: ColoredBox(color: palette.ground, child: child),
+              child: card,
             ),
           ),
         ),
@@ -54,9 +127,11 @@ String cardNumber(BuildContext context, double v) {
   return f.format(v);
 }
 
-/// The catch photo filling its box; the card's ground when there is none or
-/// it cannot be read.
-class CardPhoto extends StatelessWidget {
+/// The catch photo filling its box, framed as the person chose; the
+/// card's ground when there is none or it cannot be read. While framing in
+/// the editor, dragging over it moves the photo and pinching zooms it (see
+/// [CardCanvas.onFrame]).
+class CardPhoto extends StatefulWidget {
   const CardPhoto({super.key, required this.path, this.darken = 0});
 
   final String? path;
@@ -67,16 +142,104 @@ class CardPhoto extends StatelessWidget {
 
   static bool exists(String? path) => path != null && File(path).existsSync();
 
+  /// Focus change for a drag of [delta] (in the photo box's pixels) on a
+  /// photo of [image] size in a [box], enlarged [zoom] times. The photo
+  /// covers the box, so it only moves along the axes where it overflows.
+  static Offset focusShift(Offset delta, Size image, Size box, double zoom) {
+    final cover = math.max(box.width / image.width, box.height / image.height);
+    double axis(double d, double shown, double room) {
+      final overflow = shown * zoom - room;
+      return overflow < 1 ? 0 : -2 * d / overflow;
+    }
+
+    return Offset(
+      axis(delta.dx, image.width * cover, box.width),
+      axis(delta.dy, image.height * cover, box.height),
+    );
+  }
+
+  @override
+  State<CardPhoto> createState() => _CardPhotoState();
+}
+
+class _CardPhotoState extends State<CardPhoto> {
+  Size? _imageSize;
+  ImageStream? _stream;
+  ImageStreamListener? _listener;
+  CardFrameRegistry? _frames;
+  late final _entry = CardFrameEntry(
+    target: CardFrameTarget.photo,
+    box: () => mounted ? context.findRenderObject() as RenderBox? : null,
+    shift: (delta, box, zoom) =>
+        CardPhoto.focusShift(delta, _imageSize ?? box, box, zoom),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final frames = context.cardFrames;
+    if (frames != _frames) {
+      _frames?.remove(_entry);
+      frames?.add(_entry);
+      _frames = frames;
+    }
+    if (context.cardOnFrame != null) _resolveSize();
+  }
+
+  @override
+  void didUpdateWidget(CardPhoto old) {
+    super.didUpdateWidget(old);
+    if (old.path != widget.path) {
+      _stopListening();
+      _imageSize = null;
+      if (context.cardOnFrame != null) _resolveSize();
+    }
+  }
+
+  /// The photo's pixel size, to turn drags into focus changes.
+  void _resolveSize() {
+    if (_stream != null || !CardPhoto.exists(widget.path)) return;
+    final stream = FileImage(File(widget.path!))
+        .resolve(createLocalImageConfiguration(context));
+    final listener = ImageStreamListener((info, _) {
+      if (!mounted) return;
+      _imageSize = Size(
+        info.image.width.toDouble(),
+        info.image.height.toDouble(),
+      );
+    });
+    stream.addListener(listener);
+    _stream = stream;
+    _listener = listener;
+  }
+
+  void _stopListening() {
+    final listener = _listener;
+    if (listener != null) _stream?.removeListener(listener);
+    _stream = null;
+    _listener = null;
+  }
+
+  @override
+  void dispose() {
+    _frames?.remove(_entry);
+    _stopListening();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.cardPalette;
     final ground = palette.ground;
-    if (!exists(path)) return ColoredBox(color: ground);
+    if (!CardPhoto.exists(widget.path)) return ColoredBox(color: ground);
     final filter = context.cardPhotoFilter;
+    final frame = context.cardFrame(CardFrameTarget.photo);
+    final align = Alignment(frame.focus.dx, frame.focus.dy);
     final tint = photoTint(palette, filter);
     final image = Image.file(
-      File(path!),
+      File(widget.path!),
       fit: BoxFit.cover,
+      alignment: align,
       errorBuilder: (_, _, _) => ColoredBox(color: ground),
     );
     Widget layer(Color color, int channel) => ColorFiltered(
@@ -86,7 +249,7 @@ class CardPhoto extends StatelessWidget {
       child: image,
     );
     final inks = rupestreInks(palette);
-    return Stack(
+    Widget photo = Stack(
       fit: StackFit.expand,
       children: [
         if (filter == CardPhotoFilter.rupestre) ...[
@@ -99,10 +262,78 @@ class CardPhoto extends StatelessWidget {
           image
         else
           ColorFiltered(colorFilter: tint, child: image),
-        if (darken > 0) ColoredBox(color: ground.withValues(alpha: darken)),
+      ],
+    );
+    if (frame.zoom != 1) {
+      // Enlarged around the kept part: the box stays covered.
+      photo = ClipRect(
+        child: Transform.scale(
+          scale: frame.zoom,
+          alignment: align,
+          child: photo,
+        ),
+      );
+    }
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        photo,
+        if (widget.darken > 0)
+          ColoredBox(color: ground.withValues(alpha: widget.darken)),
       ],
     );
   }
+}
+
+/// A sketch map painted by [painter] for the current frame, framed as the
+/// person chose. While framing in the editor, dragging over it moves the
+/// map and pinching zooms it (see [CardCanvas.onFrame]).
+class CardMapFrame extends StatefulWidget {
+  const CardMapFrame({
+    super.key,
+    required this.painter,
+    required this.focusShift,
+  });
+
+  final CustomPainter Function(CardFrame frame) painter;
+
+  /// Focus change for a drag of `delta` on a `size` frame at `zoom`.
+  final Offset Function(Offset delta, Size size, double zoom) focusShift;
+
+  @override
+  State<CardMapFrame> createState() => _CardMapFrameState();
+}
+
+class _CardMapFrameState extends State<CardMapFrame> {
+  CardFrameRegistry? _frames;
+  late final _entry = CardFrameEntry(
+    target: CardFrameTarget.map,
+    box: () => mounted ? context.findRenderObject() as RenderBox? : null,
+    shift: (delta, box, zoom) => widget.focusShift(delta, box, zoom),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final frames = context.cardFrames;
+    if (frames != _frames) {
+      _frames?.remove(_entry);
+      frames?.add(_entry);
+      _frames = frames;
+    }
+  }
+
+  @override
+  void dispose() {
+    _frames?.remove(_entry);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(
+    size: Size.infinite,
+    painter: widget.painter(context.cardFrame(CardFrameTarget.map)),
+  );
 }
 
 /// Small brand mark (float + name) for imprints and printed labels.

@@ -175,9 +175,9 @@ class _ChartLayout extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: CustomPaint(
-            painter: map == null
-                ? ContourPainter(
+          child: map == null
+              ? CustomPaint(
+                  painter: ContourPainter(
                     seed: seed,
                     line: p.line,
                     strongLine: p.lineStrong,
@@ -186,8 +186,11 @@ class _ChartLayout extends StatelessWidget {
                       style: FontStyle.italic,
                       color: p.sounding,
                     ),
-                  )
-                : MapPainter(
+                  ),
+                )
+              : CardMapFrame(
+                  focusShift: MapPainter.focusShift,
+                  painter: (frame) => MapPainter(
                     sketch: map!,
                     inks: MapInks(
                       land: p.ground,
@@ -201,8 +204,10 @@ class _ChartLayout extends StatelessWidget {
                     // Credited in the margin, like the edition.
                     attribution: '',
                     ring: false,
+                    zoom: frame.zoom,
+                    focus: frame.focus,
                   ),
-          ),
+                ),
         ),
         Positioned.fill(
           child: CustomPaint(

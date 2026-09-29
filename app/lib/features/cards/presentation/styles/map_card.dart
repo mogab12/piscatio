@@ -226,10 +226,10 @@ class _MapFrame extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4),
         child: ClipRect(
-          child: CustomPaint(
-            size: Size.infinite,
-            painter: map == null
-                ? ContourPainter(
+          child: map == null
+              ? CustomPaint(
+                  size: Size.infinite,
+                  painter: ContourPainter(
                     seed: seed,
                     line: inks.contour,
                     strongLine: inks.road,
@@ -238,17 +238,25 @@ class _MapFrame extends StatelessWidget {
                       style: FontStyle.italic,
                       color: inks.road,
                     ),
-                  )
-                : MapPainter(
-                    sketch: map,
-                    inks: inks,
-                    labelStyle: CardType.condensed(28, color: inks.label),
-                    attribution: l10n.mapAttribution,
-                    scaleMeters: scale?.meters,
-                    scaleLabel: scale?.label,
-                    north: l10n.compassN,
                   ),
-          ),
+                )
+              : CardMapFrame(
+                  focusShift: MapPainter.focusShift,
+                  painter: (frame) {
+                    final bar = scale?.forZoom(map.metersPerUnit, frame.zoom);
+                    return MapPainter(
+                      sketch: map,
+                      inks: inks,
+                      labelStyle: CardType.condensed(28, color: inks.label),
+                      attribution: l10n.mapAttribution,
+                      scaleMeters: bar?.meters,
+                      scaleLabel: bar?.label,
+                      north: l10n.compassN,
+                      zoom: frame.zoom,
+                      focus: frame.focus,
+                    );
+                  },
+                ),
         ),
       ),
     );

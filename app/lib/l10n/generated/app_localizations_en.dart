@@ -1333,4 +1333,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cardFilterRupestre => 'Cave art';
+
+  @override
+  String get cardSectionFrame => 'Frame';
+
+  @override
+  String get cardFrameHint =>
+      'Drag and pinch the photo or the map on the card.';
+
+  @override
+  String get cardFramePhoto => 'Photo zoom';
+
+  @override
+  String get cardFrameMap => 'Map zoom';
+
+  @override
+  String get cardFrameReset => 'Reset';
+
+  @override
+  String get cardFrameNothing => 'This card has no photo or map to frame.';
 }

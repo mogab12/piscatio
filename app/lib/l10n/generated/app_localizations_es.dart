@@ -1341,4 +1341,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cardFilterRupestre => 'Rupestre';
+
+  @override
+  String get cardSectionFrame => 'Encuadre';
+
+  @override
+  String get cardFrameHint =>
+      'Arrastra y usa dos dedos en la foto o el mapa de la tarjeta.';
+
+  @override
+  String get cardFramePhoto => 'Zoom de la foto';
+
+  @override
+  String get cardFrameMap => 'Zoom del mapa';
+
+  @override
+  String get cardFrameReset => 'Restablecer';
+
+  @override
+  String get cardFrameNothing =>
+      'Esta tarjeta no tiene foto ni mapa para encuadrar.';
 }

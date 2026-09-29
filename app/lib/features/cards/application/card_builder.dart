@@ -62,36 +62,41 @@ CardWind? _wind(Formatters f, double? speed, double? from) =>
 CardMapScale? mapScaleFor(MapSketch? map, Formatters f) {
   if (map == null) return null;
   final target = map.metersPerUnit * 0.4;
+  final List<CardMapScale> steps;
   if (f.units == UnitSystem.imperial) {
     const mile = 1609.344;
-    final miles = [
-      0.25,
-      0.5,
-      1.0,
-      2.0,
-      5.0,
-      10.0,
-    ].lastWhere((m) => m * mile <= target, orElse: () => 0.25);
-    return CardMapScale(
-      miles * mile,
-      '${f.number(miles, maxFractionDigits: 2)} ${f.l10n.unitMile}',
-    );
+    steps = [
+      for (final miles in [0.1, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0])
+        CardMapScale(
+          miles * mile,
+          '${f.number(miles, maxFractionDigits: 2)} ${f.l10n.unitMile}',
+        ),
+    ];
+  } else {
+    steps = [
+      for (final meters in [
+        50.0,
+        100.0,
+        200.0,
+        500.0,
+        1000.0,
+        2000.0,
+        5000.0,
+        10000.0,
+      ])
+        CardMapScale(
+          meters,
+          meters < 1000
+              ? '${f.number(meters)} ${f.l10n.unitMeter}'
+              : '${f.number(meters / 1000)} ${f.l10n.unitKilometer}',
+        ),
+    ];
   }
-  final meters = [
-    100.0,
-    200.0,
-    500.0,
-    1000.0,
-    2000.0,
-    5000.0,
-    10000.0,
-  ].lastWhere((m) => m <= target, orElse: () => 100);
-  return CardMapScale(
-    meters,
-    meters < 1000
-        ? '${f.number(meters)} ${f.l10n.unitMeter}'
-        : '${f.number(meters / 1000)} ${f.l10n.unitKilometer}',
+  final chosen = steps.lastWhere(
+    (s) => s.meters <= target,
+    orElse: () => steps[1],
   );
+  return CardMapScale(chosen.meters, chosen.label, steps: steps);
 }
 
 String rulerUnitLabel(RulerUnit unit, Formatters f) => switch (unit) {

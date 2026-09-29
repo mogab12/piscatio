@@ -194,6 +194,8 @@ class CardOptions {
     this.photoPath,
     this.photoFilter = CardPhotoFilter.none,
     this.filteredPath,
+    this.photoFrame = CardFrame.fill,
+    this.mapFrame = CardFrame.fill,
   });
 
   final CardPalette palette;
@@ -218,6 +220,10 @@ class CardOptions {
   /// ready (until then the card shows the plain photo).
   final CardPhotoFilter photoFilter;
   final String? filteredPath;
+
+  /// Zoom and position of the photo and of the map, set by the person.
+  final CardFrame photoFrame;
+  final CardFrame mapFrame;
 
   /// The filter the card draws right now.
   CardPhotoFilter get activeFilter =>
@@ -244,6 +250,8 @@ class CardOptions {
     bool? showBait,
     bool? showMap,
     String? caption,
+    CardFrame? photoFrame,
+    CardFrame? mapFrame,
   }) => CardOptions(
     palette: palette ?? this.palette,
     showPlace: showPlace ?? this.showPlace,
@@ -255,9 +263,12 @@ class CardOptions {
     photoPath: photoPath,
     photoFilter: photoFilter,
     filteredPath: filteredPath,
+    photoFrame: photoFrame ?? this.photoFrame,
+    mapFrame: mapFrame ?? this.mapFrame,
   );
 
-  /// Another photo: its filtered version has to be made again.
+  /// Another photo: its filtered version has to be made again, and it is
+  /// framed afresh.
   CardOptions withPhoto(String? path) => CardOptions(
     palette: palette,
     showPlace: showPlace,
@@ -268,6 +279,7 @@ class CardOptions {
     photoChosen: true,
     photoPath: path,
     photoFilter: photoFilter,
+    mapFrame: mapFrame,
   );
 
   CardOptions withFilter(CardPhotoFilter filter, {String? filteredPath}) =>
@@ -282,7 +294,48 @@ class CardOptions {
         photoPath: photoPath,
         photoFilter: filter,
         filteredPath: filter == CardPhotoFilter.none ? null : filteredPath,
+        photoFrame: photoFrame,
+        mapFrame: mapFrame,
       );
+}
+
+/// What a [CardFrame] applies to.
+enum CardFrameTarget { photo, map }
+
+/// How the person framed a picture on the card: [zoom] (1 fills the frame)
+/// and [focus], the part kept in view, from -1 to 1 on each axis like an
+/// alignment (0, 0 is the middle).
+class CardFrame {
+  const CardFrame({this.zoom = 1, this.focus = Offset.zero});
+
+  /// The picture filling its frame, centered.
+  static const fill = CardFrame();
+
+  /// Photos can be enlarged further than maps: map lines are simplified
+  /// for about one pixel of detail at full size.
+  static double maxZoomFor(CardFrameTarget target) =>
+      target == CardFrameTarget.photo ? 4 : 2.5;
+
+  final double zoom;
+  final Offset focus;
+
+  bool get isFill => zoom == 1 && focus == Offset.zero;
+
+  /// Within the zoom range of [target] and the focus range.
+  CardFrame clampFor(CardFrameTarget target) => CardFrame(
+    zoom: zoom.clamp(1.0, maxZoomFor(target)),
+    focus: Offset(focus.dx.clamp(-1.0, 1.0), focus.dy.clamp(-1.0, 1.0)),
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      other is CardFrame && other.zoom == zoom && other.focus == focus;
+
+  @override
+  int get hashCode => Object.hash(zoom, focus);
+
+  @override
+  String toString() => 'CardFrame($zoom, $focus)';
 }
 
 /// Record content, already localized.
@@ -336,12 +389,26 @@ class CardWind {
 
 /// The map's scale bar: a round distance in the user's units.
 class CardMapScale {
-  const CardMapScale(this.meters, this.label);
+  const CardMapScale(this.meters, this.label, {this.steps = const []});
 
   final double meters;
 
   /// "2 km", "1 mi".
   final String label;
+
+  /// Every round distance offered, shortest first, for zoomed-in maps.
+  final List<CardMapScale> steps;
+
+  /// The scale for a map enlarged [zoom] times: about a third of the
+  /// visible half-width, like at full size.
+  CardMapScale forZoom(double metersPerUnit, double zoom) {
+    if (zoom <= 1 || steps.isEmpty) return this;
+    final target = metersPerUnit * 0.4 / zoom;
+    return steps.lastWhere(
+      (s) => s.meters <= target,
+      orElse: () => steps.first,
+    );
+  }
 }
 
 /// Everything a catch card shows, localized and in the user's units.

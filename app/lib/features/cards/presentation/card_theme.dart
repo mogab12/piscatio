@@ -12,6 +12,10 @@ class CardPaletteScope extends InheritedWidget {
     super.key,
     required this.palette,
     this.photoFilter = CardPhotoFilter.none,
+    this.photoFrame = CardFrame.fill,
+    this.mapFrame = CardFrame.fill,
+    this.onFrame,
+    this.frames,
     required super.child,
   });
 
@@ -19,6 +23,17 @@ class CardPaletteScope extends InheritedWidget {
 
   /// The photo given to the card is this filter's separation image.
   final CardPhotoFilter photoFilter;
+
+  /// How the photo and the map are framed.
+  final CardFrame photoFrame;
+  final CardFrame mapFrame;
+
+  /// Set while the person frames the card in the editor: dragging and
+  /// pinching the photo or the map report the new frame here.
+  final void Function(CardFrameTarget target, CardFrame frame)? onFrame;
+
+  /// Where the framable pictures are on this card (see [CardFrameRegistry]).
+  final CardFrameRegistry? frames;
 
   static CardPaletteScope? _of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<CardPaletteScope>();
@@ -28,7 +43,11 @@ class CardPaletteScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(CardPaletteScope old) =>
-      old.palette != palette || old.photoFilter != photoFilter;
+      old.palette != palette ||
+      old.photoFilter != photoFilter ||
+      old.photoFrame != photoFrame ||
+      old.mapFrame != mapFrame ||
+      (old.onFrame == null) != (onFrame == null);
 }
 
 extension CardPaletteContext on BuildContext {
@@ -36,6 +55,64 @@ extension CardPaletteContext on BuildContext {
 
   CardPhotoFilter get cardPhotoFilter =>
       CardPaletteScope._of(this)?.photoFilter ?? CardPhotoFilter.none;
+
+  CardFrame cardFrame(CardFrameTarget target) {
+    final scope = CardPaletteScope._of(this);
+    if (scope == null) return CardFrame.fill;
+    return target == CardFrameTarget.photo ? scope.photoFrame : scope.mapFrame;
+  }
+
+  void Function(CardFrameTarget target, CardFrame frame)? get cardOnFrame =>
+      CardPaletteScope._of(this)?.onFrame;
+
+  CardFrameRegistry? get cardFrames => CardPaletteScope._of(this)?.frames;
+}
+
+/// A picture on the card that can be framed: its box on screen and how a
+/// drag inside it changes its focus.
+class CardFrameEntry {
+  CardFrameEntry({
+    required this.target,
+    required this.box,
+    required this.shift,
+  });
+
+  final CardFrameTarget target;
+  final RenderBox? Function() box;
+
+  /// Focus change for a drag of `delta` (in the box's pixels) at `zoom`.
+  final Offset Function(Offset delta, Size box, double zoom) shift;
+}
+
+/// The framable pictures of one card. The card's gesture layer asks it
+/// which picture is under the finger: overlays drawn above the photo (text,
+/// veils) must not swallow the gesture.
+class CardFrameRegistry {
+  final _entries = <CardFrameEntry>[];
+
+  void add(CardFrameEntry e) => _entries.add(e);
+
+  void remove(CardFrameEntry e) => _entries.remove(e);
+
+  /// The smallest picture containing [global] (a photo window wins over the
+  /// map behind it), or null.
+  CardFrameEntry? at(Offset global) {
+    CardFrameEntry? best;
+    var bestArea = double.infinity;
+    for (final e in _entries) {
+      final box = e.box();
+      if (box == null || !box.attached || !box.hasSize) continue;
+      if (!(Offset.zero & box.size).contains(box.globalToLocal(global))) {
+        continue;
+      }
+      final area = box.size.width * box.size.height;
+      if (area < bestArea) {
+        best = e;
+        bestArea = area;
+      }
+    }
+    return best;
+  }
 }
 
 /// Inks a one-ink filtered photo in the palette's colors: drawings in the

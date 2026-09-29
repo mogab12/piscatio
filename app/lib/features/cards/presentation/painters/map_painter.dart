@@ -48,6 +48,8 @@ class MapPainter extends CustomPainter {
     this.north,
     this.ring = true,
     this.contours = true,
+    this.zoom = 1,
+    this.focus = Offset.zero,
   });
 
   final MapSketch sketch;
@@ -61,6 +63,29 @@ class MapPainter extends CustomPainter {
   final String? north;
   final bool ring;
   final bool contours;
+
+  /// Framing chosen by the person: enlarged [zoom] times, moved toward
+  /// [focus] (-1 to 1 per axis) as far as the sketch's shapes reach.
+  final double zoom;
+  final Offset focus;
+
+  /// How far the view's center may move, in view units, on each axis of a
+  /// [size] frame at [zoom]: the frame never leaves the shapes.
+  static Offset panRange(Size size, double zoom) {
+    final unit = size.shortestSide / 2 * zoom;
+    return Offset(
+      math.max(MapSketch.extent - size.width / 2 / unit, 0),
+      math.max(MapSketch.extent - size.height / 2 / unit, 0),
+    );
+  }
+
+  /// Focus change for a drag of [delta] pixels on a [size] frame at [zoom].
+  static Offset focusShift(Offset delta, Size size, double zoom) {
+    final unit = size.shortestSide / 2 * zoom;
+    final range = panRange(size, zoom);
+    double axis(double d, double room) => room < 1e-3 ? 0 : -d / unit / room;
+    return Offset(axis(delta.dx, range.dx), axis(delta.dy, range.dy));
+  }
 
   static Path _path(
     List<SketchShape> shapes,
@@ -83,14 +108,19 @@ class MapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final unit = size.shortestSide / 2;
-    // Line widths in pixels of a 1080 px card, whatever the frame.
+    final unit = size.shortestSide / 2 * zoom;
+    // Line widths in pixels of a 1080 px card, whatever the frame and zoom.
     final px = size.shortestSide / 900;
+    final range = panRange(size, zoom);
+    final center = Offset(focus.dx * range.dx, focus.dy * range.dy);
     canvas
       ..save()
       ..clipRect(Offset.zero & size)
       ..drawRect(Offset.zero & size, Paint()..color = inks.land)
-      ..translate(size.width / 2, size.height / 2);
+      ..translate(
+        size.width / 2 - center.dx * unit,
+        size.height / 2 - center.dy * unit,
+      );
 
     List<SketchShape> of(bool Function(MapFeatureKind k) test) => [
       for (final s in sketch.shapes)
@@ -305,5 +335,7 @@ class MapPainter extends CustomPainter {
       old.inks.ring != inks.ring ||
       old.inks.label != inks.label ||
       old.scaleLabel != scaleLabel ||
-      old.attribution != attribution;
+      old.attribution != attribution ||
+      old.zoom != zoom ||
+      old.focus != focus;
 }

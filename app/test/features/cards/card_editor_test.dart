@@ -22,6 +22,7 @@ import 'package:piscatio/features/cards/application/photo_filters.dart';
 import 'package:piscatio/features/cards/presentation/card_canvas.dart';
 import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
 import 'package:piscatio/features/cards/presentation/card_view.dart';
+import 'package:piscatio/features/cards/presentation/painters/map_painter.dart';
 
 import '../../helpers/pump_app.dart';
 
@@ -310,6 +311,59 @@ void main() {
     await app.dispose(tester);
   });
 
+  testWidgets('framing: drag, pinch or slide to place the photo', (
+    tester,
+  ) async {
+    final (app, _, catchId, _) = await _setup(tester, photo: true);
+    await app.pumpScreen(
+      tester,
+      CardEditorScreen(subject: CardSubject.catchItem, id: catchId),
+    );
+    CatchCardView view() => tester.widget(find.byType(CatchCardView));
+    final card = find.byType(CatchCardView);
+
+    // Outside the Frame tab the card does not move.
+    await tester.drag(card, const Offset(-40, 0));
+    await app.settle(tester);
+    expect(view().options.photoFrame, CardFrame.fill);
+
+    await tester.tap(find.text('Enquadrar'));
+    await app.settle(tester);
+    expect(
+      find.text('Arraste e use dois dedos na foto ou no mapa do card.'),
+      findsOneWidget,
+    );
+    // Dragging left brings the right side of the (portrait) photo in.
+    await tester.drag(card, const Offset(-40, 0));
+    await app.settle(tester);
+    final moved = view().options.photoFrame;
+    expect(moved.focus.dx, greaterThan(0));
+    expect(moved.focus.dy, 0);
+
+    final slider = tester.widget<Slider>(find.byType(Slider));
+    slider.onChanged!(2);
+    await app.settle(tester);
+    expect(view().options.photoFrame.zoom, 2);
+    expect(view().options.photoFrame.focus, moved.focus);
+    // The card draws the photo enlarged.
+    expect(
+      find.descendant(
+        of: find.byType(CardPhoto),
+        matching: find.byType(Transform),
+      ),
+      findsWidgets,
+    );
+
+    await tester.tap(find.byTooltip('Restaurar'));
+    await app.settle(tester);
+    expect(view().options.photoFrame, CardFrame.fill);
+    final reset = tester.widget<IconButton>(
+      find.widgetWithIcon(IconButton, Icons.restart_alt_rounded),
+    );
+    expect(reset.onPressed, isNull);
+    await app.dispose(tester);
+  });
+
   group('map', () {
     Future<void> storeMap(TestApp app, WidgetTester tester) =>
         app.run(tester, () async {
@@ -352,6 +406,52 @@ void main() {
       await tester.tap(find.text('Mapa do local'));
       await app.settle(tester);
       expect(view().shown.map, isNull);
+      await app.dispose(tester);
+    });
+
+    testWidgets('the map can be zoomed and moved too', (tester) async {
+      final (app, tripId, _, _) = await _setup(tester);
+      await storeMap(app, tester);
+      await app.pumpScreen(
+        tester,
+        CardEditorScreen(subject: CardSubject.trip, id: tripId),
+      );
+      TripCardView view() => tester.widget(find.byType(TripCardView));
+      await tester.ensureVisible(find.text('Mapa'));
+      await app.settle(tester);
+      await tester.tap(find.text('Mapa'));
+      await app.settle(tester);
+      await tester.tap(find.text('Enquadrar'));
+      await app.settle(tester);
+      expect(find.text('Zoom do mapa'), findsOneWidget);
+      // No photo on this card: only the map's slider.
+      expect(find.byType(Slider), findsOneWidget);
+      tester.widget<Slider>(find.byType(Slider)).onChanged!(2);
+      await app.settle(tester);
+      expect(view().options.mapFrame.zoom, 2);
+
+      // The card's framing layer lies over the map: drag where the map is.
+      await tester.dragFrom(
+        tester.getCenter(find.byType(CardMapFrame)),
+        const Offset(30, 20),
+      );
+      await app.settle(tester);
+      final focus = view().options.mapFrame.focus;
+      expect(focus.dx, lessThan(0));
+      expect(focus.dy, lessThan(0));
+      final painter =
+          tester
+                  .widget<CustomPaint>(
+                    find.descendant(
+                      of: find.byType(CardMapFrame),
+                      matching: find.byType(CustomPaint),
+                    ),
+                  )
+                  .painter!
+              as MapPainter;
+      expect(painter.zoom, 2);
+      expect(painter.focus, focus);
+      expect(tester.takeException(), isNull);
       await app.dispose(tester);
     });
 

@@ -1762,5 +1762,29 @@
   "cardFilterRupestre": "Cave art",
   "@cardFilterRupestre": {
     "description": "Card photo filter: the catch painted in ochre and charcoal on stone, like a cave painting. Colors follow the card theme."
+  },
+  "cardSectionFrame": "Frame",
+  "@cardSectionFrame": {
+    "description": "Card editor tab: zoom and position of the photo and the map."
+  },
+  "cardFrameHint": "Drag and pinch the photo or the map on the card.",
+  "@cardFrameHint": {
+    "description": "Card editor, Frame tab: how to frame with gestures."
+  },
+  "cardFramePhoto": "Photo zoom",
+  "@cardFramePhoto": {
+    "description": "Card editor, Frame tab: slider label."
+  },
+  "cardFrameMap": "Map zoom",
+  "@cardFrameMap": {
+    "description": "Card editor, Frame tab: slider label."
+  },
+  "cardFrameReset": "Reset",
+  "@cardFrameReset": {
+    "description": "Card editor, Frame tab: put the photo and the map back as they were."
+  },
+  "cardFrameNothing": "This card has no photo or map to frame.",
+  "@cardFrameNothing": {
+    "description": "Card editor, Frame tab: shown when there is nothing to frame."
   }
 }

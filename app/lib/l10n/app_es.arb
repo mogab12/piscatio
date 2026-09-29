@@ -374,5 +374,11 @@
   "insightsMoonWaning": "Luna menguante",
   "insightsBait": "{species} con {bait}",
   "insightsBaitDetail": "{count} de {total} capturas con carnada anotada",
-  "cardFilterRupestre": "Rupestre"
+  "cardFilterRupestre": "Rupestre",
+  "cardSectionFrame": "Encuadre",
+  "cardFrameHint": "Arrastra y usa dos dedos en la foto o el mapa de la tarjeta.",
+  "cardFramePhoto": "Zoom de la foto",
+  "cardFrameMap": "Zoom del mapa",
+  "cardFrameReset": "Restablecer",
+  "cardFrameNothing": "Esta tarjeta no tiene foto ni mapa para encuadrar."
 }

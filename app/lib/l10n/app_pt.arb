@@ -374,5 +374,11 @@
   "insightsMoonWaning": "Lua minguante",
   "insightsBait": "{species} com {bait}",
   "insightsBaitDetail": "{count} de {total} capturas com isca anotada",
-  "cardFilterRupestre": "Rupestre"
+  "cardFilterRupestre": "Rupestre",
+  "cardSectionFrame": "Enquadrar",
+  "cardFrameHint": "Arraste e use dois dedos na foto ou no mapa do card.",
+  "cardFramePhoto": "Zoom da foto",
+  "cardFrameMap": "Zoom do mapa",
+  "cardFrameReset": "Restaurar",
+  "cardFrameNothing": "Este card não tem foto nem mapa para enquadrar."
 }
