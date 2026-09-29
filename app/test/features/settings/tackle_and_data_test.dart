@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/providers.dart';
 import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/features/onboarding/presentation/onboarding_screen.dart';
@@ -107,6 +108,10 @@ void main() {
       tester,
       () => app.read(settingsRepositoryProvider).completeOnboarding(),
     );
+    final secret = await app.run(
+      tester,
+      () => app.read(privacySecretProvider.future),
+    );
     await _openSettings(app, tester);
     await tester.scrollUntilVisible(find.text('Apagar todos os dados'), 200);
     await tester.tap(find.text('Apagar todos os dados'));
@@ -122,6 +127,17 @@ void main() {
     await app.settle(tester);
     expect(find.byType(OnboardingScreen), findsOneWidget);
     expect(app.filters.cleared, isTrue);
+    // The install secret starts over too, and nothing keeps the old one.
+    final fresh = await app.run(
+      tester,
+      () => app.read(privacySecretProvider.future),
+    );
+    expect(fresh, isNot(secret));
+    final stored = await app.run(
+      tester,
+      () => app.read(settingsRepositoryProvider).privacySecret(),
+    );
+    expect(stored, fresh);
     await app.dispose(tester);
   });
 }

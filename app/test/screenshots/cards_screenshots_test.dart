@@ -302,13 +302,16 @@ void main() {
           tester,
           'theme_${palette.name}_${style.name}',
           CatchCardView(
-            data: sampleCatch(photo: _photo),
+            data: sampleCatch(
+              photo: _preview,
+              map: sampleMap(PrivacyLevel.approximate),
+            ),
             style: style,
             format: CardFormat.story,
             options: CardOptions(palette: palette),
           ),
           CardFormat.story,
-          photo: _photo,
+          photo: _preview,
         );
       }
     }, skip: !screenshotsEnabled);

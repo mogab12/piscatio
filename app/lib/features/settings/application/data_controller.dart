@@ -8,6 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/background.dart';
 import '../../../core/providers.dart';
 import '../../../data/export/logbook_exporter.dart';
 import '../../../data/media/photo_importer.dart';
@@ -62,6 +63,8 @@ class DataController {
     final photos = Directory(p.join(root.path, PhotoImporter.folder));
     if (photos.existsSync()) await photos.delete(recursive: true);
     await _ref.read(photoFilterServiceProvider).clear();
+    // A new install secret will be made: forget the old one.
+    _ref.invalidate(privacySecretProvider);
   }
 }
 
