@@ -76,3 +76,12 @@ def test_map_area_is_fetched_once_per_area(client, settings):
     client.get("/api/conditions/map?lat=-16.51234&lon=-56.40321")
     assert len(responses.calls) == 1
     assert MapArea.objects.count() == 1
+
+
+def test_health_answers_over_plain_http_behind_the_proxy(api, settings):
+    # The platform's health check does not go through TLS; everything else
+    # is sent to HTTPS.
+    settings.SECURE_SSL_REDIRECT = True
+    assert api.get("/health").status_code == 200
+    assert api.get("/api/me").status_code == 301
+    assert api.get("/api/me", HTTP_X_FORWARDED_PROTO="https").status_code == 401

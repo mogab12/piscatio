@@ -67,10 +67,30 @@ O `render.yaml` na raiz do repositório cria o serviço (Docker) e o banco:
 
 1. Em <https://dashboard.render.com/blueprints>, **New Blueprint Instance**,
    escolha este repositório e o branch.
-2. Confirme. O Render gera a `DJANGO_SECRET_KEY`, cria o banco e publica em
+2. Confirme. O Render gera a `DJANGO_SECRET_KEY`, cria o banco (com PostGIS,
+   ativado pela primeira migração) e publica em
    `https://piscatio-api.onrender.com` (ou nome parecido).
-3. Opcional, em **Environment**: SMTP para os e-mails e R2 para as fotos.
+3. Abra `https://<endereço>/health`: deve responder `{"ok": true}`.
+4. Se o endereço não for `https://piscatio-api.onrender.com`, crie no GitHub a
+   variável `PISCATIO_API` (**Settings → Secrets and variables → Actions →
+   Variables**) com o endereço. Os próximos APKs já saem apontando para ele; no
+   APK atual, dá para trocar em **Conta → Servidor**.
+5. Opcional, em **Environment**: SMTP para os e-mails e R2 para as fotos.
 
-No plano gratuito o servidor dorme sem uso (o primeiro acesso demora) e o
-banco gratuito expira depois de 30 dias; o disco não é permanente, então para
-backup de fotos de verdade configure o R2.
+### E-mail do código de login
+
+Sem `EMAIL_HOST`, o código não é enviado: aparece no log do servidor (**Logs** no
+Render, procure "Seu código do Piscatio"). Serve para testar sozinho. Para enviar
+de verdade, um SMTP como o do Resend (gratuito para poucos e-mails):
+`EMAIL_HOST=smtp.resend.com`, `EMAIL_PORT=587` (ou `2587`, se a porta 587 estiver
+bloqueada), `EMAIL_HOST_USER=resend`, `EMAIL_HOST_PASSWORD=<chave da API>` e um
+`DEFAULT_FROM_EMAIL` de um domínio verificado. Se o envio falhar, o servidor
+responde 503 e registra o erro no log.
+
+### Plano gratuito
+
+O servidor dorme depois de uns 15 minutos sem uso (o primeiro acesso pode levar
+até um minuto) e o banco gratuito expira depois de 30 dias. O disco não é
+permanente, então para backup de fotos de verdade configure o R2
+(`AWS_STORAGE_BUCKET_NAME`, `AWS_S3_ENDPOINT_URL`, `AWS_ACCESS_KEY_ID`,
+`AWS_SECRET_ACCESS_KEY`).

@@ -1,4 +1,5 @@
 import logging
+import smtplib
 from datetime import timedelta
 
 from django.conf import settings
@@ -60,12 +61,18 @@ def email_start(request):
     ).count()
     if recent < 5:
         code = EmailCode.issue(email)
-        send_mail(
-            "Seu código do Piscatio / Your Piscatio code",
-            f"{code}\n\nVálido por 10 minutos. Valid for 10 minutes.",
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-        )
+        try:
+            send_mail(
+                "Seu código do Piscatio / Your Piscatio code",
+                f"{code}\n\nVálido por 10 minutos. Valid for 10 minutes.",
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+            )
+        except (smtplib.SMTPException, OSError):
+            # Wrong credentials, or a host that blocks SMTP: say so instead
+            # of a bare 500 (the app shows "try again").
+            log.exception("Could not send the sign-in code")
+            return Response({"detail": "email_unavailable"}, status=503)
     else:
         log.warning("Too many sign-in codes requested for an address")
     return Response(status=status.HTTP_202_ACCEPTED)

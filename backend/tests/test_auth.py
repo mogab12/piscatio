@@ -76,6 +76,15 @@ def test_at_most_five_codes_an_hour(api, settings):
     assert len(mail.outbox) == 5
 
 
+def test_a_mail_server_that_fails_is_reported(api):
+    with mock.patch(
+        "accounts.views.send_mail", side_effect=ConnectionRefusedError("port 587")
+    ):
+        r = api.post("/api/auth/email/start", {"email": "ana@example.com"})
+    assert r.status_code == 503
+    assert r.json()["detail"] == "email_unavailable"
+
+
 def test_no_token_no_data(api):
     assert api.get("/api/me").status_code == 401
     api.credentials(HTTP_AUTHORIZATION="Bearer nope")

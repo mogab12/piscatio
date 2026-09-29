@@ -131,6 +131,7 @@ if os.environ.get("EMAIL_HOST"):
     EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
     EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
     EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+    EMAIL_TIMEOUT = 15
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get(
@@ -164,6 +165,8 @@ REST_FRAMEWORK = {
 
 # Behind a TLS-terminating proxy (Render, Fly).
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# The platform's health check calls over plain HTTP from inside.
+SECURE_REDIRECT_EXEMPT = [r"^health$"]
 if not DEBUG:
     SECURE_SSL_REDIRECT = env_bool("DJANGO_SSL_REDIRECT", True)
     SESSION_COOKIE_SECURE = True
