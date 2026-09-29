@@ -1444,5 +1444,37 @@
   "cardThemeRiver": "River",
   "@cardThemeRiver": {
     "description": "Card theme: river green with a chartreuse lure accent."
+  },
+  "cardFilterNone": "Original",
+  "@cardFilterNone": {
+    "description": "Photo filter option: the photo as taken."
+  },
+  "cardFilterDuotone": "Duotone",
+  "@cardFilterDuotone": {
+    "description": "Photo filter: the photo in two colors of the card theme."
+  },
+  "cardFilterInk": "Ink drawing",
+  "@cardFilterInk": {
+    "description": "Photo filter: turns the photo into a pen-and-ink drawing."
+  },
+  "cardFilterEngraving": "Engraving",
+  "@cardFilterEngraving": {
+    "description": "Photo filter: engraved lines, like an old field guide illustration."
+  },
+  "cardFilterScreenprint": "Screen print",
+  "@cardFilterScreenprint": {
+    "description": "Photo filter: flat inks like a screen-printed poster."
+  },
+  "cardFilterHalftone": "Halftone",
+  "@cardFilterHalftone": {
+    "description": "Photo filter: printed dots, like a magazine."
+  },
+  "cardFilterWorking": "Applying the filter",
+  "@cardFilterWorking": {
+    "description": "Screen reader label while a photo filter is being applied."
+  },
+  "cardFilterFailed": "Couldn't apply the filter to this photo.",
+  "@cardFilterFailed": {
+    "description": "Snackbar when a photo filter fails."
   }
 }

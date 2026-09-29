@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import '../../../domain/services/ruler_scale.dart';
+import 'photo_filters.dart';
 
 enum CardStyle { board, chart, tag }
 
@@ -189,6 +190,8 @@ class CardOptions {
     this.caption,
     this.photoChosen = false,
     this.photoPath,
+    this.photoFilter = CardPhotoFilter.none,
+    this.filteredPath,
   });
 
   final CardPalette palette;
@@ -205,6 +208,24 @@ class CardOptions {
   /// card goes without a photo).
   final bool photoChosen;
   final String? photoPath;
+
+  /// The look chosen for the photo, and its separation image once it is
+  /// ready (until then the card shows the plain photo).
+  final CardPhotoFilter photoFilter;
+  final String? filteredPath;
+
+  /// The filter the card draws right now.
+  CardPhotoFilter get activeFilter =>
+      filteredPath == null ? CardPhotoFilter.none : photoFilter;
+
+  /// The photo shown before any filter, given the card's default one.
+  String? sourcePhoto(String? defaultPath) =>
+      photoChosen ? photoPath : defaultPath;
+
+  String? _shownPhoto(String? defaultPath) {
+    final source = sourcePhoto(defaultPath);
+    return source == null ? null : filteredPath ?? source;
+  }
 
   String? get _caption {
     final c = caption?.trim();
@@ -225,8 +246,11 @@ class CardOptions {
     caption: caption ?? this.caption,
     photoChosen: photoChosen,
     photoPath: photoPath,
+    photoFilter: photoFilter,
+    filteredPath: filteredPath,
   );
 
+  /// Another photo: its filtered version has to be made again.
   CardOptions withPhoto(String? path) => CardOptions(
     palette: palette,
     showPlace: showPlace,
@@ -235,7 +259,21 @@ class CardOptions {
     caption: caption,
     photoChosen: true,
     photoPath: path,
+    photoFilter: photoFilter,
   );
+
+  CardOptions withFilter(CardPhotoFilter filter, {String? filteredPath}) =>
+      CardOptions(
+        palette: palette,
+        showPlace: showPlace,
+        showWeather: showWeather,
+        showBait: showBait,
+        caption: caption,
+        photoChosen: photoChosen,
+        photoPath: photoPath,
+        photoFilter: filter,
+        filteredPath: filter == CardPhotoFilter.none ? null : filteredPath,
+      );
 }
 
 /// Record content, already localized.
@@ -378,7 +416,7 @@ class CatchCardData {
     weightLabel: weightLabel,
     baitLabel: o.showBait ? baitLabel : null,
     released: released,
-    photoPath: o.photoChosen ? o.photoPath : photoPath,
+    photoPath: o._shownPhoto(photoPath),
     photoOptions: photoOptions,
     record: record,
     previousRecordLabel: previousRecordLabel,
@@ -481,7 +519,7 @@ class TripCardData {
     place: o.showPlace ? place : null,
     biggestLabel: biggestLabel,
     topBaitLabel: o.showBait ? topBaitLabel : null,
-    photoPath: o.photoChosen ? o.photoPath : photoPath,
+    photoPath: o._shownPhoto(photoPath),
     photoOptions: photoOptions,
     recordCount: recordCount,
     wind: o.showWeather ? wind : null,

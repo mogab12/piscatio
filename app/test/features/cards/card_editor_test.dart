@@ -1,14 +1,18 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
 import 'package:piscatio/core/providers.dart';
+import 'package:piscatio/data/repositories/catch_repository.dart';
 import 'package:piscatio/domain/models/catch.dart';
 import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/features/cards/application/card_data.dart';
 import 'package:piscatio/features/cards/application/card_exporter.dart';
+import 'package:piscatio/features/cards/application/photo_filters.dart';
 import 'package:piscatio/features/cards/presentation/card_canvas.dart';
 import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
 import 'package:piscatio/features/cards/presentation/card_view.dart';
@@ -32,6 +36,7 @@ class _FakeSharer implements CardSharer {
 Future<(TestApp, String, String, _FakeSharer)> _setup(
   WidgetTester tester, {
   PrivacyLevel privacy = PrivacyLevel.exact,
+  bool photo = false,
 }) async {
   final sharer = _FakeSharer();
   final app = await TestApp.start(
@@ -66,6 +71,19 @@ Future<(TestApp, String, String, _FakeSharer)> _setup(
         released: true,
       ),
     );
+    if (photo) {
+      final file = File(p.join(app.photoRoot.path, 'photos', 'p1.jpg'))
+        ..createSync(recursive: true);
+      File('test/fixtures/card_photo.jpg').copySync(file.path);
+      await repo.addPhoto(
+        c.id,
+        const StoredPhoto(
+          relativePath: 'photos/p1.jpg',
+          width: 1200,
+          height: 1600,
+        ),
+      );
+    }
     return (trip.id, c.id);
   });
   return (app, tripId, catchId, sharer);
@@ -161,6 +179,8 @@ void main() {
       CardEditorScreen(subject: CardSubject.catchItem, id: catchId),
     );
     for (final style in ['Régua', 'Carta', 'Etiqueta']) {
+      await tester.ensureVisible(find.text(style));
+      await app.settle(tester);
       await tester.tap(find.text(style));
       await app.settle(tester);
       expect(tester.takeException(), isNull);
@@ -221,6 +241,53 @@ void main() {
     await app.settle(tester);
     expect(find.text('Mostra só a região, nunca o ponto.'), findsOneWidget);
     expect(find.text('Poço do Dourado'), findsNothing);
+    await app.dispose(tester);
+  });
+
+  testWidgets('a filter redraws the photo in the theme colors', (tester) async {
+    final (app, _, catchId, _) = await _setup(tester, photo: true);
+    await app.pumpScreen(
+      tester,
+      CardEditorScreen(subject: CardSubject.catchItem, id: catchId),
+    );
+    CatchCardView view() => tester.widget(find.byType(CatchCardView));
+    CardCanvas canvas() => tester.widget(find.byType(CardCanvas));
+    final photo = view().data.photoPath!;
+
+    await tester.tap(find.text('Foto'));
+    await app.settle(tester);
+    await tester.ensureVisible(find.text('Nanquim'));
+    await tester.tap(find.text('Nanquim'));
+    await app.settle(tester);
+    expect(app.filters.requests.single, (photo, CardPhotoFilter.ink));
+    expect(view().options.activeFilter, CardPhotoFilter.ink);
+    expect(canvas().photoFilter, CardPhotoFilter.ink);
+
+    // Without a photo there is nothing to filter.
+    await tester.tap(find.text('Sem foto'));
+    await app.settle(tester);
+    expect(view().shown.photoPath, isNull);
+    expect(canvas().photoFilter, CardPhotoFilter.none);
+
+    // Back to the photo: the filter is made for it again. When that fails,
+    // the card keeps the plain photo and says so.
+    app.filters.fail = true;
+    await tester.tap(find.bySemanticsLabel('Foto 1'));
+    await app.settle(tester);
+    expect(app.filters.requests.last, (photo, CardPhotoFilter.ink));
+    expect(
+      find.text('Não deu para aplicar o filtro nesta foto.'),
+      findsOneWidget,
+    );
+    expect(view().options.photoFilter, CardPhotoFilter.none);
+    expect(view().shown.photoPath, photo);
+
+    app.filters.fail = false;
+    await tester.ensureVisible(find.text('Original'));
+    await app.settle(tester);
+    await tester.tap(find.text('Original'));
+    await app.settle(tester);
+    expect(canvas().photoFilter, CardPhotoFilter.none);
     await app.dispose(tester);
   });
 }

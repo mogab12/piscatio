@@ -18,6 +18,7 @@ import 'package:piscatio/core/theme/app_theme.dart';
 import 'package:piscatio/data/db/app_database.dart';
 import 'package:piscatio/data/jobs/job_scheduler.dart';
 import 'package:piscatio/data/media/photo_storage.dart';
+import 'package:piscatio/features/cards/application/photo_filter_service.dart';
 import 'package:piscatio/l10n/generated/app_localizations.dart';
 
 import 'fakes.dart';
@@ -37,9 +38,11 @@ class TestApp {
     this.location,
     this.photoRoot,
     this.places,
+    this.filters,
   );
 
   final AppDatabase db;
+  final FakePhotoFilterService filters;
   final FakeLocationService location;
   final FakePlaceNameService places;
 
@@ -74,6 +77,7 @@ class TestApp {
     final ids = SequentialIdGenerator();
     location ??= FakeLocationService(fix: pantanal);
     final places = FakePlaceNameService();
+    final filters = FakePhotoFilterService();
     final photoRoot = Directory.systemTemp.createTempSync('piscatio_photos');
     final container = ProviderContainer(
       overrides: [
@@ -82,6 +86,7 @@ class TestApp {
           MockClient((_) async => http.Response('offline', 503)),
         ),
         placeNameServiceProvider.overrideWithValue(places),
+        photoFilterServiceProvider.overrideWithValue(filters),
         // A scheduler that is never started: no timers or lifecycle hooks.
         jobSchedulerProvider.overrideWith(
           (ref) => JobScheduler(
@@ -101,7 +106,16 @@ class TestApp {
         ...overrides,
       ],
     );
-    return TestApp._(db, clock, ids, container, location, photoRoot, places);
+    return TestApp._(
+      db,
+      clock,
+      ids,
+      container,
+      location,
+      photoRoot,
+      places,
+      filters,
+    );
   }
 
   T read<T>(ProviderListenable<T> provider) => container.read(provider);

@@ -1108,4 +1108,28 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get cardThemeRiver => 'Rio';
+
+  @override
+  String get cardFilterNone => 'Original';
+
+  @override
+  String get cardFilterDuotone => 'Duotom';
+
+  @override
+  String get cardFilterInk => 'Nanquim';
+
+  @override
+  String get cardFilterEngraving => 'Gravura';
+
+  @override
+  String get cardFilterScreenprint => 'Serigrafia';
+
+  @override
+  String get cardFilterHalftone => 'Retícula';
+
+  @override
+  String get cardFilterWorking => 'Aplicando o filtro';
+
+  @override
+  String get cardFilterFailed => 'Não deu para aplicar o filtro nesta foto.';
 }

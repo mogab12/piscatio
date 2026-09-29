@@ -5,6 +5,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:piscatio/domain/services/ruler_scale.dart';
 import 'package:piscatio/features/cards/application/card_data.dart';
+import 'package:piscatio/features/cards/application/photo_filter_service.dart';
+import 'package:piscatio/features/cards/application/photo_filters.dart';
 import 'package:piscatio/features/cards/presentation/card_view.dart';
 import 'package:piscatio/l10n/generated/app_localizations.dart';
 
@@ -12,6 +14,10 @@ import '../helpers/pump_app.dart';
 import '../helpers/screenshots.dart';
 
 final _photo = File('test/fixtures/card_photo.jpg').absolute.path;
+
+/// A real catch photo for reviewing filters (not in the repository):
+/// `PREVIEW_PHOTO=/path/to/photo.jpg`.
+final _preview = Platform.environment['PREVIEW_PHOTO'] ?? _photo;
 
 CatchCardData sampleCatch({String? photo, bool record = true}) => CatchCardData(
   id: '0192f7a0-7a1b-7c3d-8e4f-5a6b7c8d9e0f',
@@ -273,6 +279,37 @@ void main() {
           ),
           CardFormat.story,
           photo: _photo,
+        );
+      }
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Each photo filter on the three styles, in different themes.
+  for (final filter in CardPhotoFilter.values.skip(1)) {
+    testWidgets('filter ${filter.name}', (tester) async {
+      final root = Directory.systemTemp.createTempSync('piscatio_shots');
+      addTearDown(() => root.deleteSync(recursive: true));
+      final service = PlatformPhotoFilterService(() async => root);
+      final path = (await tester.runAsync(
+        () => service.separation(_preview, filter),
+      ))!;
+      for (final (style, palette) in [
+        (CardStyle.board, CardPalette.redHead),
+        (CardStyle.chart, CardPalette.tucunare),
+        (CardStyle.tag, CardPalette.paper),
+      ]) {
+        await shoot(
+          tester,
+          'filter_${filter.name}_${style.name}',
+          CatchCardView(
+            data: sampleCatch(photo: _preview),
+            style: style,
+            format: CardFormat.story,
+            options: CardOptions(palette: palette)
+                .withFilter(filter, filteredPath: path),
+          ),
+          CardFormat.story,
+          photo: path,
         );
       }
     }, skip: !screenshotsEnabled);

@@ -307,5 +307,13 @@
   "cardThemeTucunare": "Tucunaré",
   "cardThemeDawn": "Amanecer",
   "cardThemeMoon": "Luna",
-  "cardThemeRiver": "Río"
+  "cardThemeRiver": "Río",
+  "cardFilterNone": "Original",
+  "cardFilterDuotone": "Duotono",
+  "cardFilterInk": "Tinta china",
+  "cardFilterEngraving": "Grabado",
+  "cardFilterScreenprint": "Serigrafía",
+  "cardFilterHalftone": "Trama",
+  "cardFilterWorking": "Aplicando el filtro",
+  "cardFilterFailed": "No se pudo aplicar el filtro a esta foto."
 }

@@ -1114,4 +1114,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cardThemeRiver => 'Río';
+
+  @override
+  String get cardFilterNone => 'Original';
+
+  @override
+  String get cardFilterDuotone => 'Duotono';
+
+  @override
+  String get cardFilterInk => 'Tinta china';
+
+  @override
+  String get cardFilterEngraving => 'Grabado';
+
+  @override
+  String get cardFilterScreenprint => 'Serigrafía';
+
+  @override
+  String get cardFilterHalftone => 'Trama';
+
+  @override
+  String get cardFilterWorking => 'Aplicando el filtro';
+
+  @override
+  String get cardFilterFailed => 'No se pudo aplicar el filtro a esta foto.';
 }

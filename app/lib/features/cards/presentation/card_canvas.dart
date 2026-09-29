@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/widgets/brand.dart';
 import '../application/card_data.dart';
+import '../application/photo_filters.dart';
 import 'card_theme.dart';
 
 /// Fixed-size drawing surface for a card: [CardFormat.size] canvas pixels,
@@ -15,10 +16,12 @@ class CardCanvas extends StatelessWidget {
     required this.format,
     required this.child,
     this.palette = CardPalette.redHead,
+    this.photoFilter = CardPhotoFilter.none,
   });
 
   final CardFormat format;
   final CardPalette palette;
+  final CardPhotoFilter photoFilter;
   final Widget child;
 
   @override
@@ -28,6 +31,7 @@ class CardCanvas extends StatelessWidget {
       data: media.copyWith(textScaler: TextScaler.noScaling),
       child: CardPaletteScope(
         palette: palette,
+        photoFilter: photoFilter,
         child: SizedBox.fromSize(
           size: format.size,
           child: ClipRect(
@@ -65,16 +69,22 @@ class CardPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ground = context.cardPalette.ground;
+    final palette = context.cardPalette;
+    final ground = palette.ground;
     if (!exists(path)) return ColoredBox(color: ground);
+    final tint = photoTint(palette, context.cardPhotoFilter);
+    final image = Image.file(
+      File(path!),
+      fit: BoxFit.cover,
+      errorBuilder: (_, _, _) => ColoredBox(color: ground),
+    );
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.file(
-          File(path!),
-          fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => ColoredBox(color: ground),
-        ),
+        if (tint == null)
+          image
+        else
+          ColorFiltered(colorFilter: tint, child: image),
         if (darken > 0) ColoredBox(color: ground.withValues(alpha: darken)),
       ],
     );

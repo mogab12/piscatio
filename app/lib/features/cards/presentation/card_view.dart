@@ -30,6 +30,7 @@ class CatchCardView extends StatelessWidget {
     return CardCanvas(
       format: format,
       palette: options.palette,
+      photoFilter: options.activeFilter,
       child: switch (style) {
         CardStyle.board => BoardCatchCard(data: d, format: format),
         CardStyle.chart => ChartCatchCard(data: d, format: format),
@@ -62,6 +63,7 @@ class TripCardView extends StatelessWidget {
     return CardCanvas(
       format: format,
       palette: options.palette,
+      photoFilter: options.activeFilter,
       child: switch (style) {
         CardStyle.board => BoardTripCard(data: d, format: format),
         CardStyle.chart => ChartTripCard(data: d, format: format),

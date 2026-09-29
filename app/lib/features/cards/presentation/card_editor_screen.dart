@@ -12,6 +12,8 @@ import '../../../domain/models/enums.dart';
 import '../application/card_builder.dart';
 import '../application/card_data.dart';
 import '../application/card_exporter.dart';
+import '../application/photo_filter_service.dart';
+import '../application/photo_filters.dart';
 import 'card_view.dart';
 
 enum CardSubject { catchItem, trip }
@@ -36,6 +38,10 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
   var _options = const CardOptions();
   var _section = _Section.style;
   var _sharing = false;
+  var _filtering = false;
+
+  /// Only the latest filter request may update the card.
+  var _filterRequest = 0;
   final _boundary = GlobalKey();
   final _caption = TextEditingController();
 
@@ -73,7 +79,49 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     CardPalette.river => context.l10n.cardThemeRiver,
   };
 
+  String _filterName(CardPhotoFilter f) => switch (f) {
+    CardPhotoFilter.none => context.l10n.cardFilterNone,
+    CardPhotoFilter.duotone => context.l10n.cardFilterDuotone,
+    CardPhotoFilter.ink => context.l10n.cardFilterInk,
+    CardPhotoFilter.engraving => context.l10n.cardFilterEngraving,
+    CardPhotoFilter.screenprint => context.l10n.cardFilterScreenprint,
+    CardPhotoFilter.halftone => context.l10n.cardFilterHalftone,
+  };
+
   void _set(CardOptions o) => setState(() => _options = o);
+
+  /// Shows [filter] on [source] as soon as its filtered version is ready
+  /// (made off the UI thread, then cached).
+  Future<void> _applyFilter(CardPhotoFilter filter, String? source) async {
+    final request = ++_filterRequest;
+    final pending = filter != CardPhotoFilter.none && source != null;
+    setState(() {
+      _options = _options.withFilter(filter);
+      _filtering = pending;
+    });
+    if (!pending) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final failed = context.l10n.cardFilterFailed;
+    String? path;
+    try {
+      path = await ref
+          .read(photoFilterServiceProvider)
+          .separation(source, filter);
+    } on Exception {
+      path = null;
+    }
+    if (!mounted || request != _filterRequest) return;
+    setState(() {
+      _filtering = false;
+      _options = _options.withFilter(
+        path == null ? CardPhotoFilter.none : filter,
+        filteredPath: path,
+      );
+    });
+    if (path == null) {
+      messenger.showSnackBar(SnackBar(content: Text(failed)));
+    }
+  }
 
   Future<void> _share(String? photoPath) async {
     final l10n = context.l10n;
@@ -150,6 +198,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         );
       }(),
     };
+    final sourcePhoto = _options.sourcePhoto(defaultPhoto);
     final privacy = tripId == null
         ? null
         : ref.watch(tripProvider(tripId)).value?.privacyLevel;
@@ -212,23 +261,44 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                       .copyWith(color: context.palette.muted),
                 ),
               )
-            : _ChipRow(
-                height: 96,
+            : Column(
                 children: [
-                  _PhotoTile(
-                    label: l10n.cardNoPhoto,
-                    selected: shownPhoto == null,
-                    onTap: () => _set(_options.withPhoto(null)),
+                  _ChipRow(
+                    children: [
+                      for (final f in CardPhotoFilter.values)
+                        ChoiceChip(
+                          label: Text(_filterName(f)),
+                          selected: _options.photoFilter == f,
+                          showCheckmark: false,
+                          onSelected: sourcePhoto == null
+                              ? null
+                              : (_) => _applyFilter(f, sourcePhoto),
+                        ),
+                    ],
                   ),
-                  for (final (i, p) in photos.indexed)
-                    _PhotoTile(
-                      path: p,
-                      label: l10n.cardPhotoOption('${i + 1}'),
-                      selected: _options.photoChosen
-                          ? shownPhoto == p
-                          : defaultPhoto == p,
-                      onTap: () => _set(_options.withPhoto(p)),
-                    ),
+                  _ChipRow(
+                    height: 96,
+                    children: [
+                      _PhotoTile(
+                        label: l10n.cardNoPhoto,
+                        selected: sourcePhoto == null,
+                        onTap: () {
+                          _set(_options.withPhoto(null));
+                          _applyFilter(_options.photoFilter, null);
+                        },
+                      ),
+                      for (final (i, p) in photos.indexed)
+                        _PhotoTile(
+                          path: p,
+                          label: l10n.cardPhotoOption('${i + 1}'),
+                          selected: sourcePhoto == p,
+                          onTap: () {
+                            _set(_options.withPhoto(p));
+                            _applyFilter(_options.photoFilter, p);
+                          },
+                        ),
+                    ],
+                  ),
                 ],
               ),
       _Section.details => SingleChildScrollView(
@@ -331,7 +401,13 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                     ),
                   ),
                 ),
-                const Divider(height: 1),
+                if (_filtering)
+                  LinearProgressIndicator(
+                    minHeight: 2,
+                    semanticsLabel: l10n.cardFilterWorking,
+                  )
+                else
+                  const Divider(height: 1),
                 Row(
                   children: [
                     for (final s in _Section.values)
@@ -353,7 +429,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 136,
+                  height: 164,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: panel,

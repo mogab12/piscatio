@@ -5,6 +5,8 @@ import 'package:piscatio/core/media/photo_source.dart';
 import 'package:piscatio/data/media/photo_importer.dart';
 import 'package:piscatio/data/remote/place_name_service.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
+import 'package:piscatio/features/cards/application/photo_filter_service.dart';
+import 'package:piscatio/features/cards/application/photo_filters.dart';
 
 class FakeLocationService implements LocationService {
   FakeLocationService({this.accessResult = LocationAccess.granted, this.fix});
@@ -91,4 +93,25 @@ class FakePlaceNameService implements PlaceNameService {
     if (error != null) throw error!;
     return region;
   }
+}
+
+/// Filter stand-in: answers at once with [result] (the photo itself when
+/// null) and records every request.
+class FakePhotoFilterService implements PhotoFilterService {
+  final requests = <(String, CardPhotoFilter)>[];
+  var cleared = false;
+
+  /// Makes every request fail, like an unreadable photo.
+  var fail = false;
+  String? result;
+
+  @override
+  Future<String?> separation(String photoPath, CardPhotoFilter filter) async {
+    requests.add((photoPath, filter));
+    if (fail) return null;
+    return result ?? photoPath;
+  }
+
+  @override
+  Future<void> clear() async => cleared = true;
 }

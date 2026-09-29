@@ -121,6 +121,7 @@ void main() {
     await tester.tap(find.text('Apagar tudo'));
     await app.settle(tester);
     expect(find.byType(OnboardingScreen), findsOneWidget);
+    expect(app.filters.cleared, isTrue);
     await app.dispose(tester);
   });
 }

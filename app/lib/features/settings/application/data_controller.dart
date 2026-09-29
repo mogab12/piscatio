@@ -12,6 +12,7 @@ import '../../../core/providers.dart';
 import '../../../data/export/logbook_exporter.dart';
 import '../../../data/media/photo_importer.dart';
 import '../../../data/media/photo_storage.dart';
+import '../../cards/application/photo_filter_service.dart';
 
 /// Hands a file to the system share sheet.
 abstract interface class FileSharer {
@@ -52,13 +53,15 @@ class DataController {
         );
   }
 
-  /// The only physical deletion in the app: every record and every photo.
-  /// Settings go too, so the app starts over at onboarding.
+  /// The only physical deletion in the app: every record and every photo
+  /// (with their filtered copies). Settings go too, so the app starts over
+  /// at onboarding.
   Future<void> wipeAll() async {
     await _ref.read(appDatabaseProvider).wipeUserData();
     final root = await _ref.read(photoRootProvider.future);
     final photos = Directory(p.join(root.path, PhotoImporter.folder));
     if (photos.existsSync()) await photos.delete(recursive: true);
+    await _ref.read(photoFilterServiceProvider).clear();
   }
 }
 

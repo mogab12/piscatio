@@ -1947,6 +1947,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'River'**
   String get cardThemeRiver;
+
+  /// Photo filter option: the photo as taken.
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get cardFilterNone;
+
+  /// Photo filter: the photo in two colors of the card theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Duotone'**
+  String get cardFilterDuotone;
+
+  /// Photo filter: turns the photo into a pen-and-ink drawing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ink drawing'**
+  String get cardFilterInk;
+
+  /// Photo filter: engraved lines, like an old field guide illustration.
+  ///
+  /// In en, this message translates to:
+  /// **'Engraving'**
+  String get cardFilterEngraving;
+
+  /// Photo filter: flat inks like a screen-printed poster.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen print'**
+  String get cardFilterScreenprint;
+
+  /// Photo filter: printed dots, like a magazine.
+  ///
+  /// In en, this message translates to:
+  /// **'Halftone'**
+  String get cardFilterHalftone;
+
+  /// Screen reader label while a photo filter is being applied.
+  ///
+  /// In en, this message translates to:
+  /// **'Applying the filter'**
+  String get cardFilterWorking;
+
+  /// Snackbar when a photo filter fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t apply the filter to this photo.'**
+  String get cardFilterFailed;
 }
 
 class _AppLocalizationsDelegate
