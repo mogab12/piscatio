@@ -327,5 +327,6 @@
   "cardMapArea": "El círculo marca la zona, nunca el punto exacto.",
   "mapAttribution": "© colaboradores de OpenStreetMap",
   "settingsMapData": "Datos de mapa",
-  "settingsMapDataCredit": "© colaboradores de OpenStreetMap, disponible bajo la Open Database License (ODbL)."
+  "settingsMapDataCredit": "© colaboradores de OpenStreetMap, disponible bajo la Open Database License (ODbL).",
+  "cardStyleCover": "Portada"
 }

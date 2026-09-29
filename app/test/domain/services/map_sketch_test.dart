@@ -125,4 +125,30 @@ void main() {
       expect(MapSketch.of(roadsOnly, view), isNull);
     });
   });
+
+  test('the sea is filled from the coastline', () {
+    const spot = GeoPoint(-23.80, -45.40);
+    final area = mapAreaFor(spot, secret);
+    // A straight coast running east 2 km north of the area's center:
+    // land to the north, sea to the south.
+    final coast = PlaceMap(
+      center: area.center,
+      halfSizeMeters: OverpassMap.halfSizeMeters,
+      features: const [
+        MapFeature(MapFeatureKind.coast, [
+          [(x: -14000, y: 2000), (x: 14000, y: 2000)],
+        ]),
+      ],
+    );
+    final view = MapView.forPrivacy(PrivacyLevel.approximate, spot, secret)!;
+    final sketch = MapSketch.of(coast, view)!;
+    final sea = sketch.shapes.firstWhere((s) => s.kind == MapFeatureKind.water);
+    // In view units, y grows downwards: the sea lies below the coast.
+    final ys = [
+      for (var i = 1; i < sea.parts.single.length; i += 2) sea.parts.single[i],
+    ];
+    final coastY = -2000 / view.halfWidthMeters;
+    expect(ys.reduce(math.min), closeTo(coastY, 1e-3));
+    expect(ys.reduce(math.max), closeTo(MapSketch.extent, 1e-3));
+  });
 }

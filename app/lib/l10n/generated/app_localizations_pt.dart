@@ -1169,4 +1169,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get settingsMapDataCredit =>
       '© colaboradores do OpenStreetMap, disponível sob a Open Database License (ODbL).';
+
+  @override
+  String get cardStyleCover => 'Capa';
 }

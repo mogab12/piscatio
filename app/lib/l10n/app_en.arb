@@ -1524,5 +1524,9 @@
   "settingsMapDataCredit": "© OpenStreetMap contributors, available under the Open Database License (ODbL).",
   "@settingsMapDataCredit": {
     "description": "Settings: map data credit and license."
+  },
+  "cardStyleCover": "Cover",
+  "@cardStyleCover": {
+    "description": "Card style: the catch on the cover of a fishing magazine named after the app."
   }
 }

@@ -403,4 +403,51 @@ void main() {
       CardFormat.story,
     );
   }, skip: !screenshotsEnabled);
+
+  // The cover style in several themes, with photo, filter and caption.
+  testWidgets('cover style', (tester) async {
+    for (final (name, palette) in [
+      ('redHead', CardPalette.redHead),
+      ('paper', CardPalette.paper),
+      ('tucunare', CardPalette.tucunare),
+    ]) {
+      await shoot(
+        tester,
+        'cover_catch_${name}_story',
+        CatchCardView(
+          data: sampleCatch(photo: _preview),
+          style: CardStyle.cover,
+          format: CardFormat.story,
+          options: CardOptions(
+            palette: palette,
+            caption: 'Primeiro dourado da temporada',
+          ),
+        ),
+        CardFormat.story,
+        photo: _preview,
+      );
+    }
+    await shoot(
+      tester,
+      'cover_trip_square',
+      TripCardView(
+        data: sampleTrip(photo: _preview),
+        style: CardStyle.cover,
+        format: CardFormat.square,
+        options: const CardOptions(palette: CardPalette.moon),
+      ),
+      CardFormat.square,
+      photo: _preview,
+    );
+    await shoot(
+      tester,
+      'cover_catch_plain_story',
+      CatchCardView(
+        data: sampleCatch(record: false),
+        style: CardStyle.cover,
+        format: CardFormat.story,
+      ),
+      CardFormat.story,
+    );
+  }, skip: !screenshotsEnabled);
 }

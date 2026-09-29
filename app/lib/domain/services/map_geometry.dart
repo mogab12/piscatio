@@ -263,3 +263,110 @@ List<List<MapXY>> assembleRings(
   }
   return rings;
 }
+
+/// Joins ways head to tail, keeping their direction (coastlines are
+/// oriented). Chains whose ends meet become closed rings.
+List<List<MapXY>> joinChains(List<List<MapXY>> ways) {
+  final pool = [
+    for (final w in ways)
+      if (w.length >= 2) [...w],
+  ];
+  final chains = <List<MapXY>>[];
+  while (pool.isNotEmpty) {
+    final chain = pool.removeLast();
+    var extended = true;
+    while (extended && !_same(chain.first, chain.last)) {
+      extended = false;
+      for (var i = 0; i < pool.length; i++) {
+        final w = pool[i];
+        if (_same(chain.last, w.first)) {
+          chain.addAll(w.skip(1));
+        } else if (_same(w.last, chain.first)) {
+          chain.insertAll(0, w.take(w.length - 1));
+        } else {
+          continue;
+        }
+        pool.removeAt(i);
+        extended = true;
+        break;
+      }
+    }
+    chains.add(chain);
+  }
+  return chains;
+}
+
+/// Position along the box's edge, clockwise from the top left corner
+/// (0–4, one unit per side); negative when [p] is not on the edge.
+double _perimeter(MapXY p, MapBox b, double eps) {
+  final w = b.maxX - b.minX;
+  final h = b.maxY - b.minY;
+  if ((p.y - b.maxY).abs() <= eps) return ((p.x - b.minX) / w).clamp(0, 1);
+  if ((p.x - b.maxX).abs() <= eps) return 1 + ((b.maxY - p.y) / h).clamp(0, 1);
+  if ((p.y - b.minY).abs() <= eps) return 2 + ((b.maxX - p.x) / w).clamp(0, 1);
+  if ((p.x - b.minX).abs() <= eps) return 3 + ((p.y - b.minY) / h).clamp(0, 1);
+  return -1;
+}
+
+MapXY _corner(int k, MapBox b) => switch (k % 4) {
+  0 => (x: b.minX, y: b.maxY),
+  1 => (x: b.maxX, y: b.maxY),
+  2 => (x: b.maxX, y: b.minY),
+  _ => (x: b.minX, y: b.minY),
+};
+
+/// The sea inside [box] (y pointing north), from coastline [pieces]
+/// already clipped to it. OpenStreetMap draws coastlines with the land on
+/// the left, so the water is on the right: each piece is closed by walking
+/// the box's edge clockwise to the next piece. Closed rings are islands
+/// and come back as holes (fill even-odd).
+List<List<MapXY>> seaRings(List<List<MapXY>> pieces, MapBox box) {
+  final eps = (box.maxX - box.minX) * 1e-6;
+  final open = <List<MapXY>>[];
+  final islands = <List<MapXY>>[];
+  for (final p in pieces) {
+    if (p.length < 2) continue;
+    if (p.length >= 4 && _same(p.first, p.last, eps)) {
+      islands.add(p);
+    } else if (_perimeter(p.first, box, eps) >= 0 &&
+        _perimeter(p.last, box, eps) >= 0) {
+      open.add(p);
+    }
+  }
+  if (open.isEmpty) {
+    if (islands.isEmpty) return const [];
+    return [
+      [for (var k = 0; k < 4; k++) _corner(k, box)],
+      ...islands,
+    ];
+  }
+  final used = List<bool>.filled(open.length, false);
+  final rings = <List<MapXY>>[];
+  for (var first = 0; first < open.length; first++) {
+    if (used[first]) continue;
+    final ring = <MapXY>[];
+    var current = first;
+    for (var guard = 0; guard <= open.length; guard++) {
+      used[current] = true;
+      ring.addAll(open[current]);
+      final end = _perimeter(open[current].last, box, eps);
+      var next = first;
+      var best = double.infinity;
+      for (var j = 0; j < open.length; j++) {
+        if (used[j] && j != first) continue;
+        final d = (_perimeter(open[j].first, box, eps) - end) % 4;
+        if (d < best) {
+          best = d;
+          next = j;
+        }
+      }
+      for (var k = end.floor() + 1; k < end + best; k++) {
+        ring.add(_corner(k, box));
+      }
+      if (next == first) break;
+      current = next;
+    }
+    if (ring.length >= 3) rings.add(ring);
+  }
+  return [...rings, ...islands];
+}

@@ -58,6 +58,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
 
   String _styleName(CardStyle s) => switch (s) {
     CardStyle.board => context.l10n.cardStyleBoard,
+    CardStyle.cover => context.l10n.cardStyleCover,
     CardStyle.chart => context.l10n.cardStyleChart,
     CardStyle.tag => context.l10n.cardStyleTag,
     CardStyle.map => context.l10n.cardStyleMap,

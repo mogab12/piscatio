@@ -4,7 +4,7 @@ import '../../../domain/services/map_sketch.dart';
 import '../../../domain/services/ruler_scale.dart';
 import 'photo_filters.dart';
 
-enum CardStyle { board, chart, tag, map }
+enum CardStyle { board, cover, chart, tag, map }
 
 enum CardFormat {
   story(Size(1080, 1920)),

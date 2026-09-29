@@ -183,7 +183,7 @@ void main() {
       tester,
       CardEditorScreen(subject: CardSubject.catchItem, id: catchId),
     );
-    for (final style in ['Régua', 'Carta', 'Etiqueta']) {
+    for (final style in ['Régua', 'Capa', 'Carta', 'Etiqueta']) {
       await tester.ensureVisible(find.text(style));
       await app.settle(tester);
       await tester.tap(find.text(style));

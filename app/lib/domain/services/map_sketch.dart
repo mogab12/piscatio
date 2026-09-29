@@ -107,6 +107,42 @@ class MapSketch {
   /// Shape detail: about one pixel on a 1080 px wide map.
   static const _tolerance = 2 / 1080;
 
+  /// The sea, closed along the view's edges from the coastline (drawn only
+  /// as a line otherwise).
+  static List<Float32List> _sea(
+    PlaceMap map,
+    MapXY center,
+    double h,
+    MapBox box,
+  ) {
+    final coast = [
+      for (final f in map.features)
+        if (f.kind == MapFeatureKind.coast)
+          for (final part in f.parts)
+            [for (final p in part) (x: p.x - center.x, y: p.y - center.y)],
+    ];
+    if (coast.isEmpty) return const [];
+    final pieces = <List<MapXY>>[];
+    for (final chain in joinChains(coast)) {
+      final simple = simplify(chain, _tolerance * h);
+      final b = boundsOf(simple);
+      final closed = simple.first == simple.last;
+      final inside =
+          b != null &&
+          b.minX > box.minX &&
+          b.maxX < box.maxX &&
+          b.minY > box.minY &&
+          b.maxY < box.maxY;
+      pieces.addAll(closed && inside ? [simple] : clipLine(simple, box));
+    }
+    return [
+      for (final ring in seaRings(pieces, box))
+        Float32List.fromList([
+          for (final p in ring) ...[p.x / h, -p.y / h],
+        ]),
+    ];
+  }
+
   /// Null when there is nothing watery to show there (the map would only
   /// be roads).
   static MapSketch? of(PlaceMap map, MapView view) {
@@ -144,6 +180,8 @@ class MapSketch {
       }
       if (parts.isNotEmpty) shapes.add(SketchShape(f.kind, parts));
     }
+    final sea = _sea(map, c, h, box);
+    if (sea.isNotEmpty) shapes.add(SketchShape(MapFeatureKind.water, sea));
     if (!shapes.any((s) => s.kind != MapFeatureKind.road)) return null;
     // Areas first, then lines, roads under the water lines.
     int order(MapFeatureKind k) => switch (k) {

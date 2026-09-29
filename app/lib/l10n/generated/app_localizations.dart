@@ -2067,6 +2067,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'© OpenStreetMap contributors, available under the Open Database License (ODbL).'**
   String get settingsMapDataCredit;
+
+  /// Card style: the catch on the cover of a fishing magazine named after the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get cardStyleCover;
 }
 
 class _AppLocalizationsDelegate

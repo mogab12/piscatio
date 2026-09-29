@@ -96,4 +96,83 @@ void main() {
       isEmpty,
     );
   });
+
+  group('sea from the coastline (land on the left)', () {
+    final box = squareBox(100);
+    double area(List<MapXY> ring) {
+      var a = 0.0;
+      for (var i = 0; i < ring.length; i++) {
+        final p = ring[i];
+        final q = ring[(i + 1) % ring.length];
+        a += p.x * q.y - q.x * p.y;
+      }
+      return a.abs() / 2;
+    }
+
+    test('coast running east: the sea is to the south', () {
+      final sea = seaRings([
+        [(x: -100, y: 0), (x: 100, y: 0)],
+      ], box);
+      expect(sea, hasLength(1));
+      expect(area(sea.single), closeTo(20000, 1e-6));
+      expect(boundsOf(sea.single)!.maxY, 0);
+    });
+
+    test('coast running west: the sea is to the north', () {
+      final sea = seaRings([
+        [(x: 100, y: 0), (x: -100, y: 0)],
+      ], box);
+      expect(boundsOf(sea.single)!.minY, 0);
+    });
+
+    test('a corner of land: everything else is sea', () {
+      final sea = seaRings([
+        [(x: 0, y: 100), (x: 100, y: 0)],
+      ], box);
+      expect(area(sea.single), closeTo(40000 - 5000, 1e-6));
+    });
+
+    test('a loop of coast: the water inside it', () {
+      // The coast comes in from the west, loops east and goes back out
+      // to the west.
+      final sea = seaRings([
+        [(x: -100, y: 50), (x: 0, y: 50), (x: 0, y: -50), (x: -100, y: -50)],
+      ], box);
+      // Water on the right of that loop: the western pocket.
+      expect(area(sea.single), closeTo(100 * 100, 1e-6));
+    });
+
+    test('only islands: sea everywhere, islands as holes', () {
+      final island = <MapXY>[
+        (x: 0, y: 0),
+        (x: 10, y: 0),
+        (x: 10, y: 10),
+        (x: 0, y: 0),
+      ];
+      final sea = seaRings([island], box);
+      expect(sea, hasLength(2));
+      expect(area(sea.first), 40000);
+      expect(seaRings(const [], box), isEmpty);
+    });
+
+    test('joinChains keeps the direction of oriented ways', () {
+      final chains = joinChains([
+        [(x: 10, y: 0), (x: 20, y: 0)],
+        [(x: 0, y: 0), (x: 10, y: 0)],
+      ]);
+      expect(chains.single, [
+        (x: 0.0, y: 0.0),
+        (x: 10.0, y: 0.0),
+        (x: 20.0, y: 0.0),
+      ]);
+      // Opposite directions do not join.
+      expect(
+        joinChains([
+          [(x: 0, y: 0), (x: 10, y: 0)],
+          [(x: 20, y: 0), (x: 10, y: 0)],
+        ]),
+        hasLength(2),
+      );
+    });
+  });
 }

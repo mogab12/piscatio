@@ -4,6 +4,7 @@ import '../application/card_data.dart';
 import 'card_canvas.dart';
 import 'styles/board_card.dart';
 import 'styles/chart_card.dart';
+import 'styles/cover_card.dart';
 import 'styles/map_card.dart';
 import 'styles/tag_card.dart';
 
@@ -34,6 +35,7 @@ class CatchCardView extends StatelessWidget {
       photoFilter: options.activeFilter,
       child: switch (style) {
         CardStyle.board => BoardCatchCard(data: d, format: format),
+        CardStyle.cover => CoverCatchCard(data: d, format: format),
         CardStyle.chart => ChartCatchCard(data: d, format: format),
         CardStyle.tag => TagCatchCard(data: d, format: format),
         CardStyle.map => MapCatchCard(data: d, format: format),
@@ -68,6 +70,7 @@ class TripCardView extends StatelessWidget {
       photoFilter: options.activeFilter,
       child: switch (style) {
         CardStyle.board => BoardTripCard(data: d, format: format),
+        CardStyle.cover => CoverTripCard(data: d, format: format),
         CardStyle.chart => ChartTripCard(data: d, format: format),
         CardStyle.tag => TagTripCard(data: d, format: format),
         CardStyle.map => MapTripCard(data: d, format: format),

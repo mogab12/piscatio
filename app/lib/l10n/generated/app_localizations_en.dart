@@ -1165,4 +1165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsMapDataCredit =>
       '© OpenStreetMap contributors, available under the Open Database License (ODbL).';
+
+  @override
+  String get cardStyleCover => 'Cover';
 }
