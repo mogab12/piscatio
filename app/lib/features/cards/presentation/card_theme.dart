@@ -38,30 +38,38 @@ extension CardPaletteContext on BuildContext {
       CardPaletteScope._of(this)?.photoFilter ?? CardPhotoFilter.none;
 }
 
-/// Inks a filtered photo in the palette's colors: drawings in the board's
-/// ink on its white, the duotone from the palette's shadow to its light,
-/// the screen print with the accent as second ink.
+/// Inks a one-ink filtered photo in the palette's colors: drawings in the
+/// board's ink on its white, the duotone from the palette's shadow to its
+/// light. Null for the plain photo and for layered filters ([rupestreInks]).
 ColorFilter? photoTint(CardPalette p, CardPhotoFilter filter) {
   int argb(Color c) => c.toARGB32();
   final matrix = switch (filter) {
-    CardPhotoFilter.none => null,
+    CardPhotoFilter.none || CardPhotoFilter.rupestre => null,
     CardPhotoFilter.duotone => filterTint(
       base: argb(p.shadow),
       first: argb(p.highlight),
     ),
-    CardPhotoFilter.ink ||
-    CardPhotoFilter.engraving ||
-    CardPhotoFilter.halftone => filterTint(
+    CardPhotoFilter.engraving || CardPhotoFilter.halftone => filterTint(
       base: argb(p.board),
       first: argb(p.boardInk),
-    ),
-    CardPhotoFilter.screenprint => filterTint(
-      base: argb(p.board),
-      first: argb(p.boardInk),
-      second: argb(p.accentInk),
     ),
   };
   return matrix == null ? null : ColorFilter.matrix(matrix);
+}
+
+/// The cave painting in the theme's materials: its stone is the tag's card
+/// stock (sand, bone, moonlit grey…), the ochre its accent ink, the
+/// charcoal its typewriter ribbon.
+({Color stone, Color relief, Color ochre, Color charcoal}) rupestreInks(
+  CardPalette p,
+) {
+  final stone = Color.lerp(p.stock, p.board, 0.2)!;
+  return (
+    stone: stone,
+    relief: Color.lerp(stone, p.typed, 0.5)!,
+    ochre: p.accentInk,
+    charcoal: p.typed,
+  );
 }
 
 /// Text styles on the fixed card canvas (sizes in canvas pixels). Without a

@@ -36,10 +36,12 @@ class PlatformPhotoFilterService implements PhotoFilterService {
   static const folder = 'card_filters';
 
   /// Longest side processed: sharp on a 1080 px card, quick on a phone.
-  static const maxSide = 1440;
+  /// The cave painting is coarse by nature and the slowest: smaller.
+  static int maxSideFor(CardPhotoFilter filter) =>
+      filter == CardPhotoFilter.rupestre ? 1080 : 1440;
 
   /// Bump when the filters change so old results are not reused.
-  static const version = 1;
+  static const version = 2;
 
   Future<Directory> get _dir async =>
       Directory(p.join((await _root()).path, folder));
@@ -60,7 +62,10 @@ class PlatformPhotoFilterService implements PhotoFilterService {
     final out = File(p.join(dir.path, '$key.png'));
     if (out.existsSync()) return out.path;
 
-    final (rgba, width, height) = await _decode(await source.readAsBytes());
+    final (rgba, width, height) = await _decode(
+      await source.readAsBytes(),
+      maxSideFor(filter),
+    );
     final result = await Isolate.run(
       () => applyPhotoFilter(filter, rgba, width, height),
     );
@@ -79,7 +84,10 @@ class PlatformPhotoFilterService implements PhotoFilterService {
     if (dir.existsSync()) await dir.delete(recursive: true);
   }
 
-  static Future<(Uint8List, int, int)> _decode(Uint8List bytes) async {
+  static Future<(Uint8List, int, int)> _decode(
+    Uint8List bytes,
+    int maxSide,
+  ) async {
     final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
     final descriptor = await ui.ImageDescriptor.encoded(buffer);
     final scale = math.min(

@@ -327,13 +327,15 @@ void main() {
         () => service.separation(_preview, filter),
       ))!;
       for (final (style, palette) in [
-        (CardStyle.board, CardPalette.redHead),
+        (CardStyle.cover, CardPalette.redHead),
+        (CardStyle.board, CardPalette.moon),
         (CardStyle.chart, CardPalette.tucunare),
         (CardStyle.tag, CardPalette.paper),
+        (CardStyle.cover, CardPalette.river),
       ]) {
         await shoot(
           tester,
-          'filter_${filter.name}_${style.name}',
+          'filter_${filter.name}_${style.name}_${palette.name}',
           CatchCardView(
             data: sampleCatch(photo: _preview),
             style: style,

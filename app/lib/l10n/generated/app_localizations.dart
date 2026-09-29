@@ -1960,23 +1960,11 @@ abstract class AppLocalizations {
   /// **'Duotone'**
   String get cardFilterDuotone;
 
-  /// Photo filter: turns the photo into a pen-and-ink drawing.
-  ///
-  /// In en, this message translates to:
-  /// **'Ink drawing'**
-  String get cardFilterInk;
-
   /// Photo filter: engraved lines, like an old field guide illustration.
   ///
   /// In en, this message translates to:
   /// **'Engraving'**
   String get cardFilterEngraving;
-
-  /// Photo filter: flat inks like a screen-printed poster.
-  ///
-  /// In en, this message translates to:
-  /// **'Screen print'**
-  String get cardFilterScreenprint;
 
   /// Photo filter: printed dots, like a magazine.
   ///
@@ -2355,6 +2343,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} of {total} catches with a bait noted'**
   String insightsBaitDetail(int count, int total);
+
+  /// Card photo filter: the catch painted in ochre and charcoal on stone, like a cave painting. Colors follow the card theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Cave art'**
+  String get cardFilterRupestre;
 }
 
 class _AppLocalizationsDelegate

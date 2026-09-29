@@ -72,16 +72,30 @@ class CardPhoto extends StatelessWidget {
     final palette = context.cardPalette;
     final ground = palette.ground;
     if (!exists(path)) return ColoredBox(color: ground);
-    final tint = photoTint(palette, context.cardPhotoFilter);
+    final filter = context.cardPhotoFilter;
+    final tint = photoTint(palette, filter);
     final image = Image.file(
       File(path!),
       fit: BoxFit.cover,
       errorBuilder: (_, _, _) => ColoredBox(color: ground),
     );
+    Widget layer(Color color, int channel) => ColorFiltered(
+      colorFilter: ColorFilter.matrix(
+        channelInk(color: color.toARGB32(), channel: channel),
+      ),
+      child: image,
+    );
+    final inks = rupestreInks(palette);
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (tint == null)
+        if (filter == CardPhotoFilter.rupestre) ...[
+          // The stone, its relief, the ochre, then the charcoal on top.
+          ColoredBox(color: inks.stone),
+          layer(inks.relief, 2),
+          layer(inks.ochre, 1),
+          layer(inks.charcoal, 0),
+        ] else if (tint == null)
           image
         else
           ColorFiltered(colorFilter: tint, child: image),

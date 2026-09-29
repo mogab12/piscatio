@@ -21,7 +21,7 @@ void main() {
 
   testWidgets('makes a separation once, then reuses it', (tester) async {
     await tester.runAsync(() async {
-      final path = await service.separation(photo, CardPhotoFilter.ink);
+      final path = await service.separation(photo, CardPhotoFilter.engraving);
       expect(path, isNotNull);
       expect(path, isNot(photo));
       final codec = await ui.instantiateImageCodec(
@@ -34,7 +34,7 @@ void main() {
       codec.dispose();
 
       final modified = File(path).lastModifiedSync();
-      expect(await service.separation(photo, CardPhotoFilter.ink), path);
+      expect(await service.separation(photo, CardPhotoFilter.engraving), path);
       expect(File(path).lastModifiedSync(), modified);
       final other = await service.separation(photo, CardPhotoFilter.halftone);
       expect(other, isNot(path));
@@ -47,7 +47,10 @@ void main() {
     await tester.runAsync(() async {
       expect(await service.separation(photo, CardPhotoFilter.none), photo);
       expect(
-        await service.separation('${root.path}/gone.jpg', CardPhotoFilter.ink),
+        await service.separation(
+          '${root.path}/gone.jpg',
+          CardPhotoFilter.engraving,
+        ),
         isNull,
       );
     });

@@ -275,12 +275,12 @@ void main() {
 
     await tester.tap(find.text('Foto'));
     await app.settle(tester);
-    await tester.ensureVisible(find.text('Nanquim'));
-    await tester.tap(find.text('Nanquim'));
+    await tester.ensureVisible(find.text('Rupestre'));
+    await tester.tap(find.text('Rupestre'));
     await app.settle(tester);
-    expect(app.filters.requests.single, (photo, CardPhotoFilter.ink));
-    expect(view().options.activeFilter, CardPhotoFilter.ink);
-    expect(canvas().photoFilter, CardPhotoFilter.ink);
+    expect(app.filters.requests.single, (photo, CardPhotoFilter.rupestre));
+    expect(view().options.activeFilter, CardPhotoFilter.rupestre);
+    expect(canvas().photoFilter, CardPhotoFilter.rupestre);
 
     // Without a photo there is nothing to filter.
     await tester.tap(find.text('Sem foto'));
@@ -293,7 +293,7 @@ void main() {
     app.filters.fail = true;
     await tester.tap(find.bySemanticsLabel('Foto 1'));
     await app.settle(tester);
-    expect(app.filters.requests.last, (photo, CardPhotoFilter.ink));
+    expect(app.filters.requests.last, (photo, CardPhotoFilter.rupestre));
     expect(
       find.text('Não deu para aplicar o filtro nesta foto.'),
       findsOneWidget,

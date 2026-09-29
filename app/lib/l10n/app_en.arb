@@ -1453,17 +1453,9 @@
   "@cardFilterDuotone": {
     "description": "Photo filter: the photo in two colors of the card theme."
   },
-  "cardFilterInk": "Ink drawing",
-  "@cardFilterInk": {
-    "description": "Photo filter: turns the photo into a pen-and-ink drawing."
-  },
   "cardFilterEngraving": "Engraving",
   "@cardFilterEngraving": {
     "description": "Photo filter: engraved lines, like an old field guide illustration."
-  },
-  "cardFilterScreenprint": "Screen print",
-  "@cardFilterScreenprint": {
-    "description": "Photo filter: flat inks like a screen-printed poster."
   },
   "cardFilterHalftone": "Halftone",
   "@cardFilterHalftone": {
@@ -1766,5 +1758,9 @@
         "type": "int"
       }
     }
+  },
+  "cardFilterRupestre": "Cave art",
+  "@cardFilterRupestre": {
+    "description": "Card photo filter: the catch painted in ochre and charcoal on stone, like a cave painting. Colors follow the card theme."
   }
 }

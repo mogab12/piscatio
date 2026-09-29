@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -53,15 +54,11 @@ void main() {
     expect(red(out, w, 80, 60), lessThan(red(out, w, 154, 60)));
   });
 
-  test('ink draws a line along an edge and leaves flat areas even', () {
-    final out = applyPhotoFilter(CardPhotoFilter.ink, edge, w, h);
-    final atEdge = [for (var x = 76; x < 84; x++) red(out, w, x, 60)];
-    final farLight = red(out, w, 150, 60);
-    expect(atEdge.reduce((a, b) => a > b ? a : b), greaterThan(farLight + 100));
-    final flat = image(w, h, (_, _) => 128);
-    final plain = applyPhotoFilter(CardPhotoFilter.ink, flat, w, h);
-    final values = {for (var i = 0; i < plain.length; i += 4) plain[i]};
-    expect(values, hasLength(1));
+  test('engraving draws a line along an edge', () {
+    final out = applyPhotoFilter(CardPhotoFilter.engraving, edge, w, h);
+    // Across the edge, on its dark side, the ink is solid for a moment.
+    final column = [for (var x = 70; x < 80; x++) red(out, w, x, 60)];
+    expect(column.reduce((a, b) => a > b ? a : b), greaterThan(230));
   });
 
   test('halftone and engraving put more ink in the shadows', () {
@@ -75,14 +72,53 @@ void main() {
     }
   });
 
-  test('screen print: the dark ink only prints over the second one', () {
-    final out = applyPhotoFilter(CardPhotoFilter.screenprint, gradient, w, h);
-    for (var i = 0; i < out.length; i += 4) {
-      expect(out[i + 1], greaterThanOrEqualTo(out[i]));
+  group('rupestre', () {
+    // A bright fish-shaped blob on a dark, even background.
+    const cx = w / 2, cy = h / 2;
+    final fish = image(w, h, (x, y) {
+      final dx = (x - cx) / 48, dy = (y - cy) / 22;
+      return dx * dx + dy * dy < 1 ? 215 : 35;
+    });
+
+    test('paints what differs from the borders, not the background', () {
+      final out = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
+      // Ochre inside the figure, bare stone far outside.
+      expect(green(out, w, cx.round(), cy.round()), greaterThan(60));
+      expect(green(out, w, 12, 12), lessThan(10));
+      // A charcoal outline runs around the figure.
+      final across = [for (var x = 20; x < 40; x++) red(out, w, x, 60)];
+      expect(across.reduce((a, b) => a > b ? a : b), greaterThan(150));
+      expect(red(out, w, cx.round(), cy.round()), lessThan(60));
+    });
+
+    test('the stone has relief, and it is the same every time', () {
+      final a = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
+      final b = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
+      expect(a, b);
+      final relief = {for (var i = 2; i < a.length; i += 4) a[i]};
+      expect(relief.length, greaterThan(20));
+    });
+
+    test('nothing is drawn right at the edges', () {
+      final out = applyPhotoFilter(CardPhotoFilter.rupestre, fish, w, h);
+      for (var x = 0; x < w; x++) {
+        expect(red(out, w, x, 0), 0);
+        expect(red(out, w, x, h - 1), 0);
+      }
+    });
+  });
+
+  test('median9 is the middle of nine values', () {
+    final rng = Random(4);
+    for (var n = 0; n < 2000; n++) {
+      final v = [for (var i = 0; i < 9; i++) rng.nextInt(6).toDouble()];
+      final sorted = [...v]..sort();
+      expect(
+        median9(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8]),
+        sorted[4],
+        reason: '$v',
+      );
     }
-    // Shadows get both inks, highlights neither.
-    expect(red(out, w, 2, 60), 255);
-    expect(green(out, w, w - 3, 60), 0);
   });
 
   group('filterTint', () {
@@ -103,16 +139,24 @@ void main() {
       expect(full.map((v) => v.round()), [0x0B, 0x2A, 0x33]);
     });
 
-    test('two inks: second where only green, first where both', () {
-      final m = filterTint(
-        base: 0xFFFFFFFF,
-        first: 0xFF0B2A33,
-        second: 0xFFE4262C,
-      );
-      expect(apply(m, 0, 255, 0).map((v) => v.round()), [0xE4, 0x26, 0x2C]);
-      expect(apply(m, 255, 255, 0).map((v) => v.round()), [0x0B, 0x2A, 0x33]);
-      // Alpha is kept, so nothing around the photo gets tinted.
+    test('alpha passes through', () {
+      final m = filterTint(base: 0xFFFFFFFF, first: 0xFF0B2A33);
+      // Nothing around the photo gets tinted.
       expect(m.sublist(15), [0, 0, 0, 1, 0]);
     });
+  });
+
+  test('channelInk paints one color with one channel as its opacity', () {
+    final m = channelInk(color: 0xFFE4262C, channel: 1);
+    List<double> apply(int r, int g, int b) => [
+      for (var row = 0; row < 4; row++)
+        m[row * 5] * r +
+            m[row * 5 + 1] * g +
+            m[row * 5 + 2] * b +
+            m[row * 5 + 3] * 255 +
+            m[row * 5 + 4],
+    ];
+    expect(apply(200, 80, 10), [0xE4, 0x26, 0x2C, 80]);
+    expect(apply(0, 255, 0), [0xE4, 0x26, 0x2C, 255]);
   });
 }

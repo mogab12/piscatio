@@ -93,11 +93,10 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
 
   String _filterName(CardPhotoFilter f) => switch (f) {
     CardPhotoFilter.none => context.l10n.cardFilterNone,
-    CardPhotoFilter.duotone => context.l10n.cardFilterDuotone,
-    CardPhotoFilter.ink => context.l10n.cardFilterInk,
+    CardPhotoFilter.rupestre => context.l10n.cardFilterRupestre,
     CardPhotoFilter.engraving => context.l10n.cardFilterEngraving,
-    CardPhotoFilter.screenprint => context.l10n.cardFilterScreenprint,
     CardPhotoFilter.halftone => context.l10n.cardFilterHalftone,
+    CardPhotoFilter.duotone => context.l10n.cardFilterDuotone,
   };
 
   void _set(CardOptions o) => setState(() => _options = o);

@@ -310,9 +310,7 @@
   "cardThemeRiver": "Rio",
   "cardFilterNone": "Original",
   "cardFilterDuotone": "Duotom",
-  "cardFilterInk": "Nanquim",
   "cardFilterEngraving": "Gravura",
-  "cardFilterScreenprint": "Serigrafia",
   "cardFilterHalftone": "Retícula",
   "cardFilterWorking": "Aplicando o filtro",
   "cardFilterFailed": "Não deu para aplicar o filtro nesta foto.",
@@ -375,5 +373,6 @@
   "insightsMoonFull": "Lua cheia",
   "insightsMoonWaning": "Lua minguante",
   "insightsBait": "{species} com {bait}",
-  "insightsBaitDetail": "{count} de {total} capturas com isca anotada"
+  "insightsBaitDetail": "{count} de {total} capturas com isca anotada",
+  "cardFilterRupestre": "Rupestre"
 }

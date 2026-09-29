@@ -310,9 +310,7 @@
   "cardThemeRiver": "Río",
   "cardFilterNone": "Original",
   "cardFilterDuotone": "Duotono",
-  "cardFilterInk": "Tinta china",
   "cardFilterEngraving": "Grabado",
-  "cardFilterScreenprint": "Serigrafía",
   "cardFilterHalftone": "Trama",
   "cardFilterWorking": "Aplicando el filtro",
   "cardFilterFailed": "No se pudo aplicar el filtro a esta foto.",
@@ -375,5 +373,6 @@
   "insightsMoonFull": "Luna llena",
   "insightsMoonWaning": "Luna menguante",
   "insightsBait": "{species} con {bait}",
-  "insightsBaitDetail": "{count} de {total} capturas con carnada anotada"
+  "insightsBaitDetail": "{count} de {total} capturas con carnada anotada",
+  "cardFilterRupestre": "Rupestre"
 }

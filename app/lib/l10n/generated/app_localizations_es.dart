@@ -1122,13 +1122,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cardFilterDuotone => 'Duotono';
 
   @override
-  String get cardFilterInk => 'Tinta china';
-
-  @override
   String get cardFilterEngraving => 'Grabado';
-
-  @override
-  String get cardFilterScreenprint => 'Serigrafía';
 
   @override
   String get cardFilterHalftone => 'Trama';
@@ -1344,4 +1338,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String insightsBaitDetail(int count, int total) {
     return '$count de $total capturas con carnada anotada';
   }
+
+  @override
+  String get cardFilterRupestre => 'Rupestre';
 }
