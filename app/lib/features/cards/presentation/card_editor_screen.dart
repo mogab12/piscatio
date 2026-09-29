@@ -341,31 +341,33 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Wrap(
-              spacing: 10,
-              runSpacing: 4,
+            _ToggleGrid(
               children: [
-                FilterChip(
-                  label: Text(l10n.cardShowPlace),
-                  selected: place != null && _options.showPlace,
-                  onSelected: place == null
+                _ToggleTile(
+                  icon: Icons.place_outlined,
+                  label: l10n.cardShowPlace,
+                  value: place != null && _options.showPlace,
+                  onChanged: place == null
                       ? null
                       : (v) => _set(_options.copyWith(showPlace: v)),
                 ),
-                FilterChip(
-                  label: Text(l10n.cardShowWeather),
-                  selected: _options.showWeather,
-                  onSelected: (v) => _set(_options.copyWith(showWeather: v)),
+                _ToggleTile(
+                  icon: Icons.cloud_outlined,
+                  label: l10n.cardShowWeather,
+                  value: _options.showWeather,
+                  onChanged: (v) => _set(_options.copyWith(showWeather: v)),
                 ),
-                FilterChip(
-                  label: Text(l10n.cardShowBait),
-                  selected: _options.showBait,
-                  onSelected: (v) => _set(_options.copyWith(showBait: v)),
+                _ToggleTile(
+                  icon: Icons.set_meal_outlined,
+                  label: l10n.cardShowBait,
+                  value: _options.showBait,
+                  onChanged: (v) => _set(_options.copyWith(showBait: v)),
                 ),
-                FilterChip(
-                  label: Text(l10n.cardShowMap),
-                  selected: mapState == CardMapState.ready && _options.showMap,
-                  onSelected: mapState != CardMapState.ready
+                _ToggleTile(
+                  icon: Icons.map_outlined,
+                  label: l10n.cardShowMap,
+                  value: mapState == CardMapState.ready && _options.showMap,
+                  onChanged: mapState != CardMapState.ready
                       ? null
                       : (v) => _set(_options.copyWith(showMap: v)),
                 ),
@@ -530,6 +532,99 @@ class _ChipRow extends StatelessWidget {
 
 /// One tab of the editor: icon over a short name, the selected one marked
 /// with the accent underline.
+/// Two columns of [_ToggleTile]s.
+class _ToggleGrid extends StatelessWidget {
+  const _ToggleGrid({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      const gap = 8.0;
+      final width = (box.maxWidth - gap) / 2;
+      return Wrap(
+        spacing: gap,
+        runSpacing: gap,
+        children: [for (final c in children) SizedBox(width: width, child: c)],
+      );
+    },
+  );
+}
+
+/// One detail of the card that can be shown or hidden: its name always
+/// readable, a switch that says plainly whether it is on. The whole tile
+/// toggles it; greyed out when the card has nothing to show for it.
+class _ToggleTile extends StatelessWidget {
+  const _ToggleTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final enabled = onChanged != null;
+    final ink = enabled ? scheme.onSurface : context.palette.muted;
+    return MergeSemantics(
+      child: Material(
+        color: value ? scheme.surfaceContainerHigh : scheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(PiscatioRadii.field),
+          side: BorderSide(
+            color: value ? scheme.onSurface : scheme.outlineVariant,
+            width: value ? 2 : 1,
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: enabled ? () => onChanged!(!value) : null,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: PiscatioSizes.minTouch,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 6, 0, 6),
+              child: Row(
+                children: [
+                  Icon(icon, size: 18, color: ink),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      label,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        color: ink,
+                        fontWeight: value ? FontWeight.w700 : FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Transform.scale(
+                    scale: 0.8,
+                    child: Switch(
+                      value: value,
+                      onChanged: onChanged,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _SectionTab extends StatelessWidget {
   const _SectionTab({
     required this.icon,

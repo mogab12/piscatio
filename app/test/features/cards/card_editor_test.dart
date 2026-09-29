@@ -227,10 +227,18 @@ void main() {
       find.text('Esta pescaria é privada: o card não mostra onde foi.'),
       findsOneWidget,
     );
-    final chip = tester.widget<FilterChip>(
-      find.widgetWithText(FilterChip, 'Mostrar local'),
+    // The place switch is off and cannot be turned on.
+    final toggle = tester.widget<Switch>(
+      find.descendant(
+        of: find.ancestor(
+          of: find.text('Mostrar local'),
+          matching: find.byType(InkWell),
+        ),
+        matching: find.byType(Switch),
+      ),
     );
-    expect(chip.onSelected, isNull);
+    expect(toggle.value, isFalse);
+    expect(toggle.onChanged, isNull);
     expect(find.text('Cuiabá, MT'), findsNothing);
     await app.dispose(tester);
   });

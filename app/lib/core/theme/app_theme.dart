@@ -203,7 +203,15 @@ abstract final class AppTheme {
         space: 1,
       ),
       chipTheme: ChipThemeData(
-        labelStyle: text.labelLarge,
+        // Selected chips fill with the text color, so their label flips to
+        // the surface color (every chip type, not only choice chips).
+        labelStyle: text.labelLarge!.copyWith(
+          color: WidgetStateColor.resolveWith(
+            (s) => s.contains(WidgetState.selected)
+                ? scheme.surface
+                : scheme.onSurface,
+          ),
+        ),
         side: BorderSide.none,
         backgroundColor: scheme.surfaceContainer,
         selectedColor: scheme.onSurface,

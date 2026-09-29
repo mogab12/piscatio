@@ -158,6 +158,7 @@ class TestApp {
     WidgetTester tester,
     Widget screen, {
     Locale locale = const Locale('pt'),
+    ThemeData? theme,
   }) async {
     usePhone(tester);
     await tester.pumpWidget(
@@ -167,7 +168,7 @@ class TestApp {
           key: screenKey,
           child: MaterialApp(
             locale: locale,
-            theme: AppTheme.light(),
+            theme: theme ?? AppTheme.light(),
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: const [
               AppLocalizations.delegate,
