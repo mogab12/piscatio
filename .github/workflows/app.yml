@@ -100,9 +100,13 @@ jobs:
           PISCATIO_KEYSTORE_PASSWORD: piscatio-test
           PISCATIO_KEY_ALIAS: piscatio-test
           PISCATIO_KEY_PASSWORD: piscatio-test
+        # The run number is the version code: every build is newer than the
+        # last one, so Android offers it as an update.
         run: |
           flutter pub get
-          flutter build apk --release --split-per-abi --target-platform android-arm64
+          flutter build apk --release --split-per-abi \
+            --target-platform android-arm64 \
+            --build-number=${{ github.run_number }}
 
       - uses: actions/upload-artifact@v4
         with:
