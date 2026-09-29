@@ -1,0 +1,29 @@
+name: map-probe
+
+# Checks the live OpenStreetMap (Overpass) query when the map code changes.
+on:
+  push:
+    paths:
+      - 'app/lib/domain/services/overpass_map.dart'
+      - 'app/lib/data/remote/overpass_client.dart'
+      - 'app/tool/overpass_probe.dart'
+      - '.github/workflows/map-probe.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    name: Overpass query on real places
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.5'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart run tool/overpass_probe.dart
