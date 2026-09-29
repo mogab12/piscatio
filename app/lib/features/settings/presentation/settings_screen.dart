@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/background.dart';
 import '../../../core/formatting/formatters_provider.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/locale.dart';
@@ -12,6 +13,8 @@ import '../../../core/widgets/choice_sheet.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../domain/models/enums.dart';
 import '../../../domain/services/units.dart';
+import '../../account/application/account_controller.dart';
+import '../../account/presentation/account_screen.dart';
 import '../application/data_controller.dart';
 import '../application/preferences.dart';
 
@@ -33,11 +36,16 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _wipe(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
+    final signedIn = ref.read(accountProvider).value != null;
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.wipeTitle),
-        content: Text(l10n.wipeBody),
+        content: Text(
+          signedIn
+              ? '${l10n.wipeBody}\n\n${l10n.wipeSignedInNote}'
+              : l10n.wipeBody,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -95,6 +103,8 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            SectionLabel(l10n.settingsSectionAccount),
+            const _AccountTile(),
             SectionLabel(l10n.settingsSectionPreferences),
             ListTile(
               leading: const Icon(Icons.translate_rounded),
@@ -233,6 +243,47 @@ class SettingsScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// "Sign in" when signed out; the account and its last sync otherwise.
+class _AccountTile extends ConsumerWidget {
+  const _AccountTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final account = ref.watch(accountProvider).value;
+    void open() => context.push(AppRoutes.account);
+    if (account == null) {
+      return ListTile(
+        leading: const Icon(Icons.cloud_upload_outlined),
+        title: Text(l10n.accountSignIn),
+        subtitle: Text(l10n.settingsSignInHint),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: open,
+      );
+    }
+    final health = ref.watch(syncHealthProvider).value ?? SyncHealth.ok;
+    return ListTile(
+      leading: Icon(
+        health == SyncHealth.retrying
+            ? Icons.cloud_off_outlined
+            : Icons.cloud_done_outlined,
+      ),
+      title: Text(account.email),
+      subtitle: Text(
+        syncStatusLabel(
+          l10n,
+          context.formatters(ref),
+          account,
+          health,
+          ref.watch(clockProvider).now(),
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: open,
     );
   }
 }

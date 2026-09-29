@@ -63,12 +63,16 @@ class TripController {
   /// Ends the trip and queues its weather (published 2–3 days later).
   Future<void> finishTrip(String tripId) async {
     await _ref.read(tripRepositoryProvider).finishTrip(tripId);
-    await _ref.read(backgroundWorkProvider).weatherFor(tripId);
+    final work = _ref.read(backgroundWorkProvider);
+    await work.weatherFor(tripId);
+    await work.syncSoon();
   }
 
   Future<void> deleteTrip(String tripId) async {
     await _ref.read(tripRepositoryProvider).deleteTrip(tripId);
-    await _ref.read(backgroundWorkProvider).cancelFor(tripId);
+    final work = _ref.read(backgroundWorkProvider);
+    await work.cancelFor(tripId);
+    await work.syncSoon();
   }
 
   /// Saves edits; new times or place mean new weather, a place without
@@ -139,6 +143,7 @@ class TripController {
       await work.placeNameFor(trip.id);
     }
     if (location != null) await work.mapFor(trip.id, privacy);
+    await work.syncSoon();
     return trip;
   }
 

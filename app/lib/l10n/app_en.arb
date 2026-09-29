@@ -1528,5 +1528,159 @@
   "cardStyleCover": "Cover",
   "@cardStyleCover": {
     "description": "Card style: the catch on the cover of a fishing magazine named after the app."
+  },
+  "settingsSectionAccount": "Account",
+  "@settingsSectionAccount": {
+    "description": "Settings section heading for the sign-in account."
+  },
+  "settingsSignInHint": "Back up your logbook and use it on another phone",
+  "@settingsSignInHint": {
+    "description": "Settings: subtitle of the sign-in row when signed out."
+  },
+  "accountTitle": "Account",
+  "@accountTitle": {
+    "description": "Title of the account screen."
+  },
+  "accountIntro": "Sign in to keep your logbook and photos on the server and see them on your other phones. Without an account everything keeps working on this phone.",
+  "@accountIntro": {
+    "description": "Account screen: explanation shown when signed out."
+  },
+  "accountEmail": "Email",
+  "@accountEmail": {
+    "description": "Account screen: email field label."
+  },
+  "accountSendCode": "Send code",
+  "@accountSendCode": {
+    "description": "Account screen: button that emails a sign-in code."
+  },
+  "accountCodeSent": "We sent a 6-digit code to {email}. It is valid for 10 minutes.",
+  "@accountCodeSent": {
+    "description": "Account screen: shown after the sign-in code was emailed.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountCode": "Code",
+  "@accountCode": {
+    "description": "Account screen: sign-in code field label."
+  },
+  "accountSignIn": "Sign in",
+  "@accountSignIn": {
+    "description": "Sign-in action (settings row and account screen button)."
+  },
+  "accountChangeEmail": "Use another email",
+  "@accountChangeEmail": {
+    "description": "Account screen: go back to the email step."
+  },
+  "accountResendCode": "Send a new code",
+  "@accountResendCode": {
+    "description": "Account screen: email a new sign-in code."
+  },
+  "accountServer": "Server",
+  "@accountServer": {
+    "description": "Account screen: advanced section with the server address."
+  },
+  "accountServerHint": "Only change this if you run your own Piscatio server.",
+  "@accountServerHint": {
+    "description": "Account screen: helper under the server address field."
+  },
+  "accountServerInvalid": "Enter an address that starts with https://",
+  "@accountServerInvalid": {
+    "description": "Account screen: error when the server address is not valid."
+  },
+  "accountErrorCodeWrong": "Wrong code. Check the email and try again.",
+  "@accountErrorCodeWrong": {
+    "description": "Account screen: the sign-in code is wrong."
+  },
+  "accountErrorCodeExpired": "This code has expired. Ask for a new one.",
+  "@accountErrorCodeExpired": {
+    "description": "Account screen: the sign-in code expired."
+  },
+  "accountErrorEmailInvalid": "Check the email address.",
+  "@accountErrorEmailInvalid": {
+    "description": "Account screen: the server refused the email address."
+  },
+  "accountErrorTooMany": "Too many tries. Wait a few minutes.",
+  "@accountErrorTooMany": {
+    "description": "Account screen: the server is limiting requests."
+  },
+  "accountErrorOffline": "Could not reach the server. Check your connection and try again.",
+  "@accountErrorOffline": {
+    "description": "Account screen: the server could not be reached."
+  },
+  "accountSyncedToday": "Synced today at {time}",
+  "@accountSyncedToday": {
+    "description": "Account status: last sync happened today.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSyncedOn": "Synced on {date} at {time}",
+  "@accountSyncedOn": {
+    "description": "Account status: last sync happened on another day.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountNeverSynced": "Not synced yet",
+  "@accountNeverSynced": {
+    "description": "Account status: no sync has finished yet."
+  },
+  "accountSyncSoon": "Syncing now",
+  "@accountSyncSoon": {
+    "description": "Account status: a sync is about to run."
+  },
+  "accountSyncRetrying": "No connection to the server. It will try again by itself.",
+  "@accountSyncRetrying": {
+    "description": "Account status: the last sync failed and will be retried."
+  },
+  "accountSyncNow": "Sync now",
+  "@accountSyncNow": {
+    "description": "Account screen: button that syncs right away."
+  },
+  "accountPrivacyNote": "The server keeps the exact spot so your phones can show it. Nobody else sees it: cards follow each trip's privacy.",
+  "@accountPrivacyNote": {
+    "description": "Account screen: what the server keeps about locations."
+  },
+  "accountSignOut": "Sign out",
+  "@accountSignOut": {
+    "description": "Account screen: sign out action."
+  },
+  "accountSignOutHint": "Your logbook stays on this phone.",
+  "@accountSignOutHint": {
+    "description": "Account screen: subtitle of the sign out action."
+  },
+  "accountDelete": "Delete account",
+  "@accountDelete": {
+    "description": "Account screen: delete account action and its confirm button."
+  },
+  "accountDeleteHint": "Erases the account and the copy on the server.",
+  "@accountDeleteHint": {
+    "description": "Account screen: subtitle of the delete account action."
+  },
+  "accountDeleteTitle": "Delete your account?",
+  "@accountDeleteTitle": {
+    "description": "Delete account dialog title."
+  },
+  "accountDeleteBody": "The server erases the account, the trips and the photos. The logbook on this phone and on your other phones stays. This cannot be undone.",
+  "@accountDeleteBody": {
+    "description": "Delete account dialog text."
+  },
+  "accountDeleted": "Account deleted",
+  "@accountDeleted": {
+    "description": "Snackbar after the account was deleted."
+  },
+  "wipeSignedInNote": "You will be signed out. The copy on the server stays: to erase it, delete the account.",
+  "@wipeSignedInNote": {
+    "description": "Delete all data dialog: extra line shown when signed in."
   }
 }

@@ -88,6 +88,7 @@ class SyncJobHandler implements JobHandler {
       return JobReschedule(_clock.now().add(every));
     } on ApiSignedOut {
       await _account.signOut();
+      await _sync.forgetServer();
       return const JobDone();
     }
   }

@@ -250,11 +250,19 @@ void main() {
 
   test('a revoked session signs this phone out, the logbook stays', () async {
     final id = await logTrip(a);
+    await a.sync();
     a.tokens.token = 'revoked';
     await a.sync();
     expect(await a.account.read(), isNull);
     expect(await a.trips.getTrip(id), isNotNull);
     expect(await a.queue.find(JobKind.sync, syncSubject), isNull);
+    // Whatever account signs in next receives the whole logbook.
+    final row = (await a.db.select(a.db.trips).get()).single;
+    expect(row.syncStatus, SyncStatus.pending);
+    server.tables.clear();
+    await a.signIn();
+    await a.sync();
+    expect(server.tables['trips']!.keys, [id]);
   });
 
   test('server down: nothing is lost, the sync tries again later', () async {

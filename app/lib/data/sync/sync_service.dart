@@ -228,6 +228,22 @@ class SyncService {
     });
   }
 
+  /// After signing out: every row goes up again to whichever account
+  /// signs in next (a server that already has a row answers "stale").
+  Future<void> forgetServer() => _db.transaction(() async {
+    for (final table in tables) {
+      await _db.customUpdate(
+        'UPDATE ${_sqlTable(table)} SET sync_status = ? '
+        'WHERE sync_status != ?',
+        variables: [
+          Variable.withString(SyncStatus.pending.name),
+          Variable.withString(SyncStatus.pending.name),
+        ],
+        updates: {_tableInfo(table)},
+      );
+    }
+  });
+
   static String _sqlTable(String table) => switch (table) {
     'trips' => 'trips',
     'baits' => 'baits',

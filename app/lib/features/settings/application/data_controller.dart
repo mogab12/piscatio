@@ -13,6 +13,7 @@ import '../../../core/providers.dart';
 import '../../../data/export/logbook_exporter.dart';
 import '../../../data/media/photo_importer.dart';
 import '../../../data/media/photo_storage.dart';
+import '../../account/application/account_controller.dart';
 import '../../cards/application/photo_filter_service.dart';
 
 /// Hands a file to the system share sheet.
@@ -58,6 +59,9 @@ class DataController {
   /// (with their filtered copies). Settings go too, so the app starts over
   /// at onboarding.
   Future<void> wipeAll() async {
+    // Signs out first (the copy on the server stays; deleting the account
+    // is a separate choice).
+    await _ref.read(accountControllerProvider).signOut();
     await _ref.read(appDatabaseProvider).wipeUserData();
     final root = await _ref.read(photoRootProvider.future);
     final photos = Directory(p.join(root.path, PhotoImporter.folder));

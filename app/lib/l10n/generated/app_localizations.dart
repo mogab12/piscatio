@@ -2073,6 +2073,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cover'**
   String get cardStyleCover;
+
+  /// Settings section heading for the sign-in account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsSectionAccount;
+
+  /// Settings: subtitle of the sign-in row when signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up your logbook and use it on another phone'**
+  String get settingsSignInHint;
+
+  /// Title of the account screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountTitle;
+
+  /// Account screen: explanation shown when signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to keep your logbook and photos on the server and see them on your other phones. Without an account everything keeps working on this phone.'**
+  String get accountIntro;
+
+  /// Account screen: email field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get accountEmail;
+
+  /// Account screen: button that emails a sign-in code.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get accountSendCode;
+
+  /// Account screen: shown after the sign-in code was emailed.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}. It is valid for 10 minutes.'**
+  String accountCodeSent(String email);
+
+  /// Account screen: sign-in code field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get accountCode;
+
+  /// Sign-in action (settings row and account screen button).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get accountSignIn;
+
+  /// Account screen: go back to the email step.
+  ///
+  /// In en, this message translates to:
+  /// **'Use another email'**
+  String get accountChangeEmail;
+
+  /// Account screen: email a new sign-in code.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a new code'**
+  String get accountResendCode;
+
+  /// Account screen: advanced section with the server address.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get accountServer;
+
+  /// Account screen: helper under the server address field.
+  ///
+  /// In en, this message translates to:
+  /// **'Only change this if you run your own Piscatio server.'**
+  String get accountServerHint;
+
+  /// Account screen: error when the server address is not valid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an address that starts with https://'**
+  String get accountServerInvalid;
+
+  /// Account screen: the sign-in code is wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong code. Check the email and try again.'**
+  String get accountErrorCodeWrong;
+
+  /// Account screen: the sign-in code expired.
+  ///
+  /// In en, this message translates to:
+  /// **'This code has expired. Ask for a new one.'**
+  String get accountErrorCodeExpired;
+
+  /// Account screen: the server refused the email address.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the email address.'**
+  String get accountErrorEmailInvalid;
+
+  /// Account screen: the server is limiting requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many tries. Wait a few minutes.'**
+  String get accountErrorTooMany;
+
+  /// Account screen: the server could not be reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the server. Check your connection and try again.'**
+  String get accountErrorOffline;
+
+  /// Account status: last sync happened today.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced today at {time}'**
+  String accountSyncedToday(String time);
+
+  /// Account status: last sync happened on another day.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced on {date} at {time}'**
+  String accountSyncedOn(String date, String time);
+
+  /// Account status: no sync has finished yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get accountNeverSynced;
+
+  /// Account status: a sync is about to run.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing now'**
+  String get accountSyncSoon;
+
+  /// Account status: the last sync failed and will be retried.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection to the server. It will try again by itself.'**
+  String get accountSyncRetrying;
+
+  /// Account screen: button that syncs right away.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get accountSyncNow;
+
+  /// Account screen: what the server keeps about locations.
+  ///
+  /// In en, this message translates to:
+  /// **'The server keeps the exact spot so your phones can show it. Nobody else sees it: cards follow each trip\'s privacy.'**
+  String get accountPrivacyNote;
+
+  /// Account screen: sign out action.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get accountSignOut;
+
+  /// Account screen: subtitle of the sign out action.
+  ///
+  /// In en, this message translates to:
+  /// **'Your logbook stays on this phone.'**
+  String get accountSignOutHint;
+
+  /// Account screen: delete account action and its confirm button.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDelete;
+
+  /// Account screen: subtitle of the delete account action.
+  ///
+  /// In en, this message translates to:
+  /// **'Erases the account and the copy on the server.'**
+  String get accountDeleteHint;
+
+  /// Delete account dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get accountDeleteTitle;
+
+  /// Delete account dialog text.
+  ///
+  /// In en, this message translates to:
+  /// **'The server erases the account, the trips and the photos. The logbook on this phone and on your other phones stays. This cannot be undone.'**
+  String get accountDeleteBody;
+
+  /// Snackbar after the account was deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted'**
+  String get accountDeleted;
+
+  /// Delete all data dialog: extra line shown when signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be signed out. The copy on the server stays: to erase it, delete the account.'**
+  String get wipeSignedInNote;
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/account/presentation/account_screen.dart';
 import '../../features/active_trip/presentation/active_trip_screen.dart';
 import '../../features/cards/presentation/card_editor_screen.dart';
 import '../../features/history/presentation/catch_detail_screen.dart';
@@ -95,6 +96,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) =>
                         const TackleScreen(kind: TackleKind.gear),
+                  ),
+                  GoRoute(
+                    path: 'account',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const AccountScreen(),
                   ),
                 ],
               ),

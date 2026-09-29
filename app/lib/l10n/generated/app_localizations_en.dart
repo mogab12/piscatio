@@ -1168,4 +1168,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cardStyleCover => 'Cover';
+
+  @override
+  String get settingsSectionAccount => 'Account';
+
+  @override
+  String get settingsSignInHint =>
+      'Back up your logbook and use it on another phone';
+
+  @override
+  String get accountTitle => 'Account';
+
+  @override
+  String get accountIntro =>
+      'Sign in to keep your logbook and photos on the server and see them on your other phones. Without an account everything keeps working on this phone.';
+
+  @override
+  String get accountEmail => 'Email';
+
+  @override
+  String get accountSendCode => 'Send code';
+
+  @override
+  String accountCodeSent(String email) {
+    return 'We sent a 6-digit code to $email. It is valid for 10 minutes.';
+  }
+
+  @override
+  String get accountCode => 'Code';
+
+  @override
+  String get accountSignIn => 'Sign in';
+
+  @override
+  String get accountChangeEmail => 'Use another email';
+
+  @override
+  String get accountResendCode => 'Send a new code';
+
+  @override
+  String get accountServer => 'Server';
+
+  @override
+  String get accountServerHint =>
+      'Only change this if you run your own Piscatio server.';
+
+  @override
+  String get accountServerInvalid =>
+      'Enter an address that starts with https://';
+
+  @override
+  String get accountErrorCodeWrong =>
+      'Wrong code. Check the email and try again.';
+
+  @override
+  String get accountErrorCodeExpired =>
+      'This code has expired. Ask for a new one.';
+
+  @override
+  String get accountErrorEmailInvalid => 'Check the email address.';
+
+  @override
+  String get accountErrorTooMany => 'Too many tries. Wait a few minutes.';
+
+  @override
+  String get accountErrorOffline =>
+      'Could not reach the server. Check your connection and try again.';
+
+  @override
+  String accountSyncedToday(String time) {
+    return 'Synced today at $time';
+  }
+
+  @override
+  String accountSyncedOn(String date, String time) {
+    return 'Synced on $date at $time';
+  }
+
+  @override
+  String get accountNeverSynced => 'Not synced yet';
+
+  @override
+  String get accountSyncSoon => 'Syncing now';
+
+  @override
+  String get accountSyncRetrying =>
+      'No connection to the server. It will try again by itself.';
+
+  @override
+  String get accountSyncNow => 'Sync now';
+
+  @override
+  String get accountPrivacyNote =>
+      'The server keeps the exact spot so your phones can show it. Nobody else sees it: cards follow each trip\'s privacy.';
+
+  @override
+  String get accountSignOut => 'Sign out';
+
+  @override
+  String get accountSignOutHint => 'Your logbook stays on this phone.';
+
+  @override
+  String get accountDelete => 'Delete account';
+
+  @override
+  String get accountDeleteHint =>
+      'Erases the account and the copy on the server.';
+
+  @override
+  String get accountDeleteTitle => 'Delete your account?';
+
+  @override
+  String get accountDeleteBody =>
+      'The server erases the account, the trips and the photos. The logbook on this phone and on your other phones stays. This cannot be undone.';
+
+  @override
+  String get accountDeleted => 'Account deleted';
+
+  @override
+  String get wipeSignedInNote =>
+      'You will be signed out. The copy on the server stays: to erase it, delete the account.';
 }

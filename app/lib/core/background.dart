@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
@@ -220,6 +221,12 @@ final Provider<JobScheduler> jobSchedulerProvider = Provider<JobScheduler>((
     connectionRestored: ref.watch(connectionRestoredProvider),
   )..start();
   ref.onDispose(scheduler.dispose);
+  // A signed-in phone always has its recurring sync queued (once this
+  // provider exists: queuing it kicks the scheduler).
+  unawaited(
+    Future(() => ref.read(backgroundWorkProvider).ensureSync())
+        .catchError((Object _) {}),
+  );
   return scheduler;
 });
 

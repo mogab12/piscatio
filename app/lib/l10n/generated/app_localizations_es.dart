@@ -1179,4 +1179,121 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get cardStyleCover => 'Portada';
+
+  @override
+  String get settingsSectionAccount => 'Cuenta';
+
+  @override
+  String get settingsSignInHint => 'Guarda tu diario y úsalo en otro teléfono';
+
+  @override
+  String get accountTitle => 'Cuenta';
+
+  @override
+  String get accountIntro =>
+      'Inicia sesión para guardar tu diario y tus fotos en el servidor y verlos en tus otros teléfonos. Sin cuenta, todo sigue funcionando en este teléfono.';
+
+  @override
+  String get accountEmail => 'Correo electrónico';
+
+  @override
+  String get accountSendCode => 'Enviar código';
+
+  @override
+  String accountCodeSent(String email) {
+    return 'Enviamos un código de 6 dígitos a $email. Vale por 10 minutos.';
+  }
+
+  @override
+  String get accountCode => 'Código';
+
+  @override
+  String get accountSignIn => 'Iniciar sesión';
+
+  @override
+  String get accountChangeEmail => 'Usar otro correo';
+
+  @override
+  String get accountResendCode => 'Enviar otro código';
+
+  @override
+  String get accountServer => 'Servidor';
+
+  @override
+  String get accountServerHint =>
+      'Cámbialo solo si tienes tu propio servidor Piscatio.';
+
+  @override
+  String get accountServerInvalid =>
+      'Escribe una dirección que empiece con https://';
+
+  @override
+  String get accountErrorCodeWrong =>
+      'Código incorrecto. Revisa el correo y vuelve a intentarlo.';
+
+  @override
+  String get accountErrorCodeExpired => 'Este código venció. Pide otro.';
+
+  @override
+  String get accountErrorEmailInvalid => 'Revisa la dirección de correo.';
+
+  @override
+  String get accountErrorTooMany => 'Demasiados intentos. Espera unos minutos.';
+
+  @override
+  String get accountErrorOffline =>
+      'No se pudo conectar con el servidor. Revisa la conexión y vuelve a intentarlo.';
+
+  @override
+  String accountSyncedToday(String time) {
+    return 'Sincronizado hoy a las $time';
+  }
+
+  @override
+  String accountSyncedOn(String date, String time) {
+    return 'Sincronizado el $date a las $time';
+  }
+
+  @override
+  String get accountNeverSynced => 'Aún sin sincronizar';
+
+  @override
+  String get accountSyncSoon => 'Sincronizando ahora';
+
+  @override
+  String get accountSyncRetrying =>
+      'Sin conexión con el servidor. Lo intentará de nuevo solo.';
+
+  @override
+  String get accountSyncNow => 'Sincronizar ahora';
+
+  @override
+  String get accountPrivacyNote =>
+      'El servidor guarda el lugar exacto para que tus teléfonos lo muestren. Nadie más lo ve: las tarjetas siguen la privacidad de cada pesca.';
+
+  @override
+  String get accountSignOut => 'Cerrar sesión';
+
+  @override
+  String get accountSignOutHint => 'Tu diario sigue en este teléfono.';
+
+  @override
+  String get accountDelete => 'Eliminar cuenta';
+
+  @override
+  String get accountDeleteHint => 'Borra la cuenta y la copia en el servidor.';
+
+  @override
+  String get accountDeleteTitle => '¿Eliminar tu cuenta?';
+
+  @override
+  String get accountDeleteBody =>
+      'El servidor borra la cuenta, las pescas y las fotos. El diario en este teléfono y en los otros se queda. No se puede deshacer.';
+
+  @override
+  String get accountDeleted => 'Cuenta eliminada';
+
+  @override
+  String get wipeSignedInNote =>
+      'Se cerrará tu sesión. La copia en el servidor se queda: para borrarla, elimina la cuenta.';
 }

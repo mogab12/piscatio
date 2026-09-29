@@ -6,6 +6,7 @@ abstract final class AppRoutes {
   static const settings = '/settings';
   static const baits = '/settings/baits';
   static const gear = '/settings/gear';
+  static const account = '/settings/account';
   static const activeTrip = '/trip/active';
   static const pastTrip = '/past-trip';
 

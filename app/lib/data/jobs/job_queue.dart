@@ -57,6 +57,12 @@ class JobQueue {
   Future<JobRow?> find(JobKind kind, String subjectId) =>
       _find(kind, subjectId);
 
+  Stream<JobRow?> watch(JobKind kind, String subjectId) =>
+      (_db.select(_db.jobs)..where(
+            (j) => j.kind.equalsValue(kind) & j.subjectId.equals(subjectId),
+          ))
+          .watchSingleOrNull();
+
   /// Jobs whose time has come, oldest first.
   Future<List<JobRow>> due() =>
       (_db.select(_db.jobs)
