@@ -1,6 +1,8 @@
 from django.contrib.gis.geos import Point
 from rest_framework import serializers
 
+from venues.models import Venue
+
 from .models import Bait, Catch, CatchPhoto, CustomSpecies, Gear, Trip
 
 SYNC_FIELDS = ["id", "created_at", "updated_at", "deleted_at"]
@@ -40,7 +42,25 @@ class OwnedRelatedField(serializers.PrimaryKeyRelatedField):
         return self.queryset.filter(user=self.context["user"])
 
 
+class VenueRefField(serializers.PrimaryKeyRelatedField):
+    """A venue by id; one that no longer exists is simply dropped, so the
+    trip itself is never refused for it."""
+
+    def to_internal_value(self, data):
+        try:
+            return super().to_internal_value(data)
+        except serializers.ValidationError:
+            return None
+
+
 class TripSerializer(LatLngMixin, serializers.ModelSerializer):
+    venue_id = VenueRefField(
+        source="venue",
+        queryset=Venue.objects.all(),
+        allow_null=True,
+        required=False,
+    )
+
     class Meta:
         model = Trip
         fields = [
@@ -58,6 +78,7 @@ class TripSerializer(LatLngMixin, serializers.ModelSerializer):
             "moon_illumination",
             "notes",
             "is_retroactive",
+            "venue_id",
         ]
         extra_kwargs = {"id": {"validators": [], "read_only": False}}
 

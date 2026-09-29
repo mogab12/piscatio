@@ -36,6 +36,11 @@ class User(AbstractUser):
     # person's devices so the same spot hides the same way everywhere.
     privacy_secret = models.CharField(max_length=64, blank=True)
 
+    # Consent: anonymous totals of trips linked to a venue may be shown to
+    # that venue (never who, never where exactly). Off until the person
+    # turns it on.
+    share_insights = models.BooleanField(default=False)
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 

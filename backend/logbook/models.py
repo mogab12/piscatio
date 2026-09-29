@@ -36,6 +36,14 @@ class Trip(Synced):
     moon_illumination = models.FloatField()
     notes = models.TextField(null=True, blank=True)
     is_retroactive = models.BooleanField(default=False)
+    # The venue where the trip happened, when the person picked one.
+    venue = models.ForeignKey(
+        "venues.Venue",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="trips",
+    )
 
 
 class Bait(Synced):

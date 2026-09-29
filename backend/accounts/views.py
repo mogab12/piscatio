@@ -44,7 +44,7 @@ def _session(user: User, device: str) -> dict:
 
 
 def _me(user: User) -> dict:
-    return {"id": user.pk, "email": user.email}
+    return {"id": user.pk, "email": user.email, "share_insights": user.share_insights}
 
 
 @api_view(["POST"])
@@ -146,8 +146,19 @@ def google_login(request):
     return Response(_session(user, data.validated_data.get("device", "")))
 
 
-@api_view(["GET"])
+class MeSerializer(serializers.Serializer):
+    share_insights = serializers.BooleanField(required=False)
+
+
+@api_view(["GET", "PATCH"])
 def me(request):
+    """The account; PATCH changes its settings (e.g. the insights consent)."""
+    if request.method == "PATCH":
+        data = MeSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        for field, value in data.validated_data.items():
+            setattr(request.user, field, value)
+        request.user.save(update_fields=list(data.validated_data) or None)
     return Response(_me(request.user))
 
 

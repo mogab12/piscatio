@@ -36,10 +36,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.gis",
+    "django.contrib.postgres",
     "rest_framework",
     "accounts",
     "logbook",
     "conditions",
+    "flags",
+    "billing",
+    "venues",
 ]
 
 MIDDLEWARE = [
@@ -178,3 +182,9 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": "INFO"},
 }
+
+# Business accounts (venues): what their insights need before showing
+# anything, and the oldest app build the API still serves.
+VENUE_INSIGHTS_MIN_ANGLERS = int(os.environ.get("VENUE_INSIGHTS_MIN_ANGLERS", "10"))
+VENUE_INSIGHTS_MIN_GROUP = int(os.environ.get("VENUE_INSIGHTS_MIN_GROUP", "5"))
+MIN_APP_BUILD = int(os.environ.get("MIN_APP_BUILD", "0"))
