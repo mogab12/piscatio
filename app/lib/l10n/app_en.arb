@@ -1854,5 +1854,452 @@
   "accountShareInsightsHint": "Venues where you fish see totals such as species and best hours, only from 10 or more anglers. Never your name or your spots.",
   "@accountShareInsightsHint": {
     "description": "Account: explanation under the insights consent switch."
+  },
+  "navCommunity": "Community",
+  "@navCommunity": {
+    "description": "Bottom navigation: the community tab"
+  },
+  "communityTitle": "Community",
+  "@communityTitle": {
+    "description": "Community screen title"
+  },
+  "communitySignInTitle": "Fish together",
+  "@communitySignInTitle": {
+    "description": "Community without an account: title"
+  },
+  "communitySignInBody": "Sign in to publish cards and follow other anglers. Your logbook stays yours.",
+  "@communitySignInBody": {
+    "description": "Community without an account: explanation"
+  },
+  "communityCreateTitle": "Create your profile",
+  "@communityCreateTitle": {
+    "description": "Community without a profile: title"
+  },
+  "communityCreateBody": "Pick a @name. Your profile starts private: you approve who follows you. Nothing from your logbook is published unless you ask.",
+  "@communityCreateBody": {
+    "description": "Community without a profile: explanation"
+  },
+  "communityCreateAction": "Create profile",
+  "@communityCreateAction": {
+    "description": "Button that opens the profile setup"
+  },
+  "communityOffline": "No connection. The community needs the internet.",
+  "@communityOffline": {
+    "description": "Community could not reach the server"
+  },
+  "communityRetry": "Try again",
+  "@communityRetry": {
+    "description": "Button to repeat a failed community request"
+  },
+  "communityFailed": "That did not work. Try again.",
+  "@communityFailed": {
+    "description": "A community action failed"
+  },
+  "communityTabFollowing": "Following",
+  "@communityTabFollowing": {
+    "description": "Feed tab: posts of people you follow"
+  },
+  "communityTabDiscover": "Discover",
+  "@communityTabDiscover": {
+    "description": "Feed tab: public posts from anyone"
+  },
+  "communityFeedEmpty": "Follow anglers or publish a card to get started.",
+  "@communityFeedEmpty": {
+    "description": "Empty following feed"
+  },
+  "communityDiscoverEmpty": "Nothing here yet.",
+  "@communityDiscoverEmpty": {
+    "description": "Empty discover feed"
+  },
+  "communitySearchPeople": "Find people",
+  "@communitySearchPeople": {
+    "description": "Action and screen to search profiles"
+  },
+  "communitySearchHint": "Name or @name",
+  "@communitySearchHint": {
+    "description": "Hint of the people search field"
+  },
+  "communitySearchEmpty": "No one found.",
+  "@communitySearchEmpty": {
+    "description": "People search without results"
+  },
+  "communityRequests": "Follow requests",
+  "@communityRequests": {
+    "description": "Action and screen with pending follow requests"
+  },
+  "communityRequestsEmpty": "No requests.",
+  "@communityRequestsEmpty": {
+    "description": "No pending follow requests"
+  },
+  "communityAccept": "Accept",
+  "@communityAccept": {
+    "description": "Accept a follow request"
+  },
+  "communityDecline": "Decline",
+  "@communityDecline": {
+    "description": "Decline a follow request"
+  },
+  "communityMyProfile": "Your profile",
+  "@communityMyProfile": {
+    "description": "Opens the person's own profile"
+  },
+  "communityPostLabel": "Card by @{handle}",
+  "@communityPostLabel": {
+    "description": "Screen reader label of a post image",
+    "placeholders": {
+      "handle": {
+        "type": "String",
+        "example": "bia.pesca"
+      }
+    }
+  },
+  "communityLike": "Like",
+  "@communityLike": {
+    "description": "Like a post"
+  },
+  "communityUnlike": "Unlike",
+  "@communityUnlike": {
+    "description": "Remove a like"
+  },
+  "communityLikes": "{count, plural, =0{No likes} =1{1 like} other{{count} likes}}",
+  "@communityLikes": {
+    "description": "Screen reader: likes of a post",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityFriendsOnly": "Friends only",
+  "@communityFriendsOnly": {
+    "description": "Marks a post shown only to friends"
+  },
+  "communityMoreOptions": "More options",
+  "@communityMoreOptions": {
+    "description": "Menu button of a post or profile"
+  },
+  "communityDeletePost": "Delete post",
+  "@communityDeletePost": {
+    "description": "Menu: delete own post"
+  },
+  "communityDeletePostTitle": "Delete this post?",
+  "@communityDeletePostTitle": {
+    "description": "Confirm deleting a post: title"
+  },
+  "communityDeletePostBody": "It leaves the community for everyone. The fishing stays in your logbook.",
+  "@communityDeletePostBody": {
+    "description": "Confirm deleting a post: explanation"
+  },
+  "communityReport": "Report",
+  "@communityReport": {
+    "description": "Menu: report a post"
+  },
+  "communityReportTitle": "Why are you reporting?",
+  "@communityReportTitle": {
+    "description": "Report reasons sheet title"
+  },
+  "communityReportSpam": "Spam",
+  "@communityReportSpam": {
+    "description": "Report reason"
+  },
+  "communityReportAbuse": "Offensive or abusive",
+  "@communityReportAbuse": {
+    "description": "Report reason"
+  },
+  "communityReportLocation": "Shows a fishing spot",
+  "@communityReportLocation": {
+    "description": "Report reason: reveals someone's spot"
+  },
+  "communityReportOther": "Something else",
+  "@communityReportOther": {
+    "description": "Report reason"
+  },
+  "communityReportSent": "Report sent. Thanks.",
+  "@communityReportSent": {
+    "description": "Confirmation after reporting"
+  },
+  "communityBlock": "Block @{handle}",
+  "@communityBlock": {
+    "description": "Menu: block someone",
+    "placeholders": {
+      "handle": {
+        "type": "String",
+        "example": "bia.pesca"
+      }
+    }
+  },
+  "communityBlockTitle": "Block @{handle}?",
+  "@communityBlockTitle": {
+    "description": "Confirm blocking: title",
+    "placeholders": {
+      "handle": {
+        "type": "String",
+        "example": "bia.pesca"
+      }
+    }
+  },
+  "communityBlockBody": "You stop seeing each other in the community, and follows between you end.",
+  "@communityBlockBody": {
+    "description": "Confirm blocking: explanation"
+  },
+  "communityBlocked": "You blocked @{handle}.",
+  "@communityBlocked": {
+    "description": "Confirmation after blocking",
+    "placeholders": {
+      "handle": {
+        "type": "String",
+        "example": "bia.pesca"
+      }
+    }
+  },
+  "communityBlockAction": "Block",
+  "@communityBlockAction": {
+    "description": "Confirm button to block"
+  },
+  "communityUnblock": "Unblock",
+  "@communityUnblock": {
+    "description": "Unblock someone"
+  },
+  "communityFollow": "Follow",
+  "@communityFollow": {
+    "description": "Follow someone"
+  },
+  "communityFollowBack": "Follow back",
+  "@communityFollowBack": {
+    "description": "Follow someone who follows you"
+  },
+  "communityRequested": "Requested",
+  "@communityRequested": {
+    "description": "A follow request is waiting; tap to withdraw"
+  },
+  "communityFollowing": "Following",
+  "@communityFollowing": {
+    "description": "You follow this person; tap to unfollow"
+  },
+  "communityUnfollow": "Unfollow",
+  "@communityUnfollow": {
+    "description": "Stop following someone"
+  },
+  "communityWithdraw": "Withdraw request",
+  "@communityWithdraw": {
+    "description": "Withdraw a pending follow request"
+  },
+  "communityFollowsYou": "Follows you",
+  "@communityFollowsYou": {
+    "description": "Marks a profile that follows the person"
+  },
+  "communityFriends": "Friends",
+  "@communityFriends": {
+    "description": "Marks mutual follows"
+  },
+  "communityRemoveFollower": "Remove from followers",
+  "@communityRemoveFollower": {
+    "description": "Menu: remove someone who follows you"
+  },
+  "communityReportProfile": "Report profile",
+  "@communityReportProfile": {
+    "description": "Menu: report a profile"
+  },
+  "communityPostsCount": "{count, plural, =1{post} other{posts}}",
+  "@communityPostsCount": {
+    "description": "Word under the number of posts",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityFollowersCount": "{count, plural, =1{follower} other{followers}}",
+  "@communityFollowersCount": {
+    "description": "Word under the number of followers",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityFollowingCount": "following",
+  "@communityFollowingCount": {
+    "description": "Word under the number of people followed"
+  },
+  "communityPrivateProfile": "Private profile. Follow to see the posts.",
+  "@communityPrivateProfile": {
+    "description": "Posts hidden by a private profile"
+  },
+  "communityNoPosts": "No posts yet.",
+  "@communityNoPosts": {
+    "description": "Profile without posts"
+  },
+  "communityEditProfile": "Edit profile",
+  "@communityEditProfile": {
+    "description": "Opens the own profile editor"
+  },
+  "communityFollowersTitle": "Followers",
+  "@communityFollowersTitle": {
+    "description": "Screen listing followers"
+  },
+  "communityFollowingTitle": "Following",
+  "@communityFollowingTitle": {
+    "description": "Screen listing people followed"
+  },
+  "communityListEmpty": "No one here yet.",
+  "@communityListEmpty": {
+    "description": "Empty list of people"
+  },
+  "communityPrivateMark": "Private profile",
+  "@communityPrivateMark": {
+    "description": "Screen reader: lock icon of a private profile"
+  },
+  "profileTitleNew": "Create profile",
+  "@profileTitleNew": {
+    "description": "Profile editor title when creating"
+  },
+  "profileTitleEdit": "Edit profile",
+  "@profileTitleEdit": {
+    "description": "Profile editor title when editing"
+  },
+  "profileHandle": "@name",
+  "@profileHandle": {
+    "description": "Label of the handle field"
+  },
+  "profileHandleHelp": "3 to 30 lowercase letters, numbers, _ or .",
+  "@profileHandleHelp": {
+    "description": "Rules of the handle"
+  },
+  "profileHandleTaken": "This @name is taken.",
+  "@profileHandleTaken": {
+    "description": "Handle already used by someone"
+  },
+  "profileHandleReserved": "This @name is reserved.",
+  "@profileHandleReserved": {
+    "description": "Handle reserved by the app"
+  },
+  "profileName": "Name",
+  "@profileName": {
+    "description": "Label of the display name field"
+  },
+  "profileBio": "About you",
+  "@profileBio": {
+    "description": "Label of the bio field"
+  },
+  "profileBioHint": "Where you fish, what you like to catch",
+  "@profileBioHint": {
+    "description": "Hint of the bio field"
+  },
+  "profilePrivate": "Private profile",
+  "@profilePrivate": {
+    "description": "Switch: private profile"
+  },
+  "profilePrivateHelp": "You approve who follows you. Only followers see your posts.",
+  "@profilePrivateHelp": {
+    "description": "Explains the private profile switch"
+  },
+  "profilePhotoChange": "Change profile photo",
+  "@profilePhotoChange": {
+    "description": "Button to pick a new profile photo"
+  },
+  "profileBlocked": "Blocked people",
+  "@profileBlocked": {
+    "description": "Opens the list of blocked people"
+  },
+  "profileBlockedEmpty": "You have not blocked anyone.",
+  "@profileBlockedEmpty": {
+    "description": "Empty list of blocked people"
+  },
+  "profileLeave": "Leave the community",
+  "@profileLeave": {
+    "description": "Deletes the community profile"
+  },
+  "profileLeaveTitle": "Leave the community?",
+  "@profileLeaveTitle": {
+    "description": "Confirm leaving: title"
+  },
+  "profileLeaveBody": "Your profile, posts and follows are deleted from the server. The logbook on your phone does not change.",
+  "@profileLeaveBody": {
+    "description": "Confirm leaving: explanation"
+  },
+  "outboxSending": "Publishing card…",
+  "@outboxSending": {
+    "description": "A card is going up to the community"
+  },
+  "outboxFailed": "The card did not go up.",
+  "@outboxFailed": {
+    "description": "A queued card was refused"
+  },
+  "outboxNeedsProfile": "Create your profile first.",
+  "@outboxNeedsProfile": {
+    "description": "Why a card did not go up: no profile"
+  },
+  "outboxSignedOut": "Sign in to your account.",
+  "@outboxSignedOut": {
+    "description": "Why a card did not go up: signed out"
+  },
+  "outboxUnavailable": "No connection for a long time.",
+  "@outboxUnavailable": {
+    "description": "Why a card did not go up: offline too long"
+  },
+  "outboxRefused": "The server refused it.",
+  "@outboxRefused": {
+    "description": "Why a card did not go up: other"
+  },
+  "outboxDiscard": "Discard",
+  "@outboxDiscard": {
+    "description": "Drop a card that did not go up"
+  },
+  "publishAction": "Publish",
+  "@publishAction": {
+    "description": "Card editor: publish to the community"
+  },
+  "publishTitle": "Publish to the community",
+  "@publishTitle": {
+    "description": "Publish sheet title"
+  },
+  "publishEveryone": "Everyone",
+  "@publishEveryone": {
+    "description": "Audience: anyone who can see the profile"
+  },
+  "publishEveryoneHelp": "Anyone who can see your profile. The place follows the trip's privacy.",
+  "@publishEveryoneHelp": {
+    "description": "Explains the everyone audience"
+  },
+  "publishFriends": "Friends only",
+  "@publishFriends": {
+    "description": "Audience: mutual follows"
+  },
+  "publishFriendsHelp": "People you follow who follow you back. Trips set to Friends show the region.",
+  "@publishFriendsHelp": {
+    "description": "Explains the friends audience"
+  },
+  "publishCaptionHint": "Caption (optional)",
+  "@publishCaptionHint": {
+    "description": "Hint of the post caption"
+  },
+  "publishQueued": "Publishing to the community.",
+  "@publishQueued": {
+    "description": "Snackbar after tapping publish"
+  },
+  "publishNeedsProfile": "Create your community profile to publish.",
+  "@publishNeedsProfile": {
+    "description": "Publish without a profile"
+  },
+  "communityLoadMore": "Show more",
+  "@communityLoadMore": {
+    "description": "Loads the next page of posts"
+  },
+  "shareTitle": "Share to",
+  "@shareTitle": {
+    "description": "Title of the sheet with share destinations"
+  },
+  "shareToStories": "Instagram Stories",
+  "@shareToStories": {
+    "description": "Share destination: straight to an Instagram story"
+  },
+  "shareToApps": "Other apps",
+  "@shareToApps": {
+    "description": "Share destination: the system share sheet"
+  },
+  "storiesFailed": "Instagram did not open. Try other apps.",
+  "@storiesFailed": {
+    "description": "Direct Stories share failed"
   }
 }

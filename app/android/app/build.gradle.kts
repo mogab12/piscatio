@@ -66,3 +66,8 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // FileProvider, to hand card images to Instagram Stories.
+    implementation("androidx.core:core-ktx:1.13.1")
+}

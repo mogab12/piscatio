@@ -1404,4 +1404,354 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accountShareInsightsHint =>
       'Venues where you fish see totals such as species and best hours, only from 10 or more anglers. Never your name or your spots.';
+
+  @override
+  String get navCommunity => 'Community';
+
+  @override
+  String get communityTitle => 'Community';
+
+  @override
+  String get communitySignInTitle => 'Fish together';
+
+  @override
+  String get communitySignInBody =>
+      'Sign in to publish cards and follow other anglers. Your logbook stays yours.';
+
+  @override
+  String get communityCreateTitle => 'Create your profile';
+
+  @override
+  String get communityCreateBody =>
+      'Pick a @name. Your profile starts private: you approve who follows you. Nothing from your logbook is published unless you ask.';
+
+  @override
+  String get communityCreateAction => 'Create profile';
+
+  @override
+  String get communityOffline =>
+      'No connection. The community needs the internet.';
+
+  @override
+  String get communityRetry => 'Try again';
+
+  @override
+  String get communityFailed => 'That did not work. Try again.';
+
+  @override
+  String get communityTabFollowing => 'Following';
+
+  @override
+  String get communityTabDiscover => 'Discover';
+
+  @override
+  String get communityFeedEmpty =>
+      'Follow anglers or publish a card to get started.';
+
+  @override
+  String get communityDiscoverEmpty => 'Nothing here yet.';
+
+  @override
+  String get communitySearchPeople => 'Find people';
+
+  @override
+  String get communitySearchHint => 'Name or @name';
+
+  @override
+  String get communitySearchEmpty => 'No one found.';
+
+  @override
+  String get communityRequests => 'Follow requests';
+
+  @override
+  String get communityRequestsEmpty => 'No requests.';
+
+  @override
+  String get communityAccept => 'Accept';
+
+  @override
+  String get communityDecline => 'Decline';
+
+  @override
+  String get communityMyProfile => 'Your profile';
+
+  @override
+  String communityPostLabel(String handle) {
+    return 'Card by @$handle';
+  }
+
+  @override
+  String get communityLike => 'Like';
+
+  @override
+  String get communityUnlike => 'Unlike';
+
+  @override
+  String communityLikes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count likes',
+      one: '1 like',
+      zero: 'No likes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get communityFriendsOnly => 'Friends only';
+
+  @override
+  String get communityMoreOptions => 'More options';
+
+  @override
+  String get communityDeletePost => 'Delete post';
+
+  @override
+  String get communityDeletePostTitle => 'Delete this post?';
+
+  @override
+  String get communityDeletePostBody =>
+      'It leaves the community for everyone. The fishing stays in your logbook.';
+
+  @override
+  String get communityReport => 'Report';
+
+  @override
+  String get communityReportTitle => 'Why are you reporting?';
+
+  @override
+  String get communityReportSpam => 'Spam';
+
+  @override
+  String get communityReportAbuse => 'Offensive or abusive';
+
+  @override
+  String get communityReportLocation => 'Shows a fishing spot';
+
+  @override
+  String get communityReportOther => 'Something else';
+
+  @override
+  String get communityReportSent => 'Report sent. Thanks.';
+
+  @override
+  String communityBlock(String handle) {
+    return 'Block @$handle';
+  }
+
+  @override
+  String communityBlockTitle(String handle) {
+    return 'Block @$handle?';
+  }
+
+  @override
+  String get communityBlockBody =>
+      'You stop seeing each other in the community, and follows between you end.';
+
+  @override
+  String communityBlocked(String handle) {
+    return 'You blocked @$handle.';
+  }
+
+  @override
+  String get communityBlockAction => 'Block';
+
+  @override
+  String get communityUnblock => 'Unblock';
+
+  @override
+  String get communityFollow => 'Follow';
+
+  @override
+  String get communityFollowBack => 'Follow back';
+
+  @override
+  String get communityRequested => 'Requested';
+
+  @override
+  String get communityFollowing => 'Following';
+
+  @override
+  String get communityUnfollow => 'Unfollow';
+
+  @override
+  String get communityWithdraw => 'Withdraw request';
+
+  @override
+  String get communityFollowsYou => 'Follows you';
+
+  @override
+  String get communityFriends => 'Friends';
+
+  @override
+  String get communityRemoveFollower => 'Remove from followers';
+
+  @override
+  String get communityReportProfile => 'Report profile';
+
+  @override
+  String communityPostsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'posts',
+      one: 'post',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String communityFollowersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'followers',
+      one: 'follower',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get communityFollowingCount => 'following';
+
+  @override
+  String get communityPrivateProfile =>
+      'Private profile. Follow to see the posts.';
+
+  @override
+  String get communityNoPosts => 'No posts yet.';
+
+  @override
+  String get communityEditProfile => 'Edit profile';
+
+  @override
+  String get communityFollowersTitle => 'Followers';
+
+  @override
+  String get communityFollowingTitle => 'Following';
+
+  @override
+  String get communityListEmpty => 'No one here yet.';
+
+  @override
+  String get communityPrivateMark => 'Private profile';
+
+  @override
+  String get profileTitleNew => 'Create profile';
+
+  @override
+  String get profileTitleEdit => 'Edit profile';
+
+  @override
+  String get profileHandle => '@name';
+
+  @override
+  String get profileHandleHelp => '3 to 30 lowercase letters, numbers, _ or .';
+
+  @override
+  String get profileHandleTaken => 'This @name is taken.';
+
+  @override
+  String get profileHandleReserved => 'This @name is reserved.';
+
+  @override
+  String get profileName => 'Name';
+
+  @override
+  String get profileBio => 'About you';
+
+  @override
+  String get profileBioHint => 'Where you fish, what you like to catch';
+
+  @override
+  String get profilePrivate => 'Private profile';
+
+  @override
+  String get profilePrivateHelp =>
+      'You approve who follows you. Only followers see your posts.';
+
+  @override
+  String get profilePhotoChange => 'Change profile photo';
+
+  @override
+  String get profileBlocked => 'Blocked people';
+
+  @override
+  String get profileBlockedEmpty => 'You have not blocked anyone.';
+
+  @override
+  String get profileLeave => 'Leave the community';
+
+  @override
+  String get profileLeaveTitle => 'Leave the community?';
+
+  @override
+  String get profileLeaveBody =>
+      'Your profile, posts and follows are deleted from the server. The logbook on your phone does not change.';
+
+  @override
+  String get outboxSending => 'Publishing card…';
+
+  @override
+  String get outboxFailed => 'The card did not go up.';
+
+  @override
+  String get outboxNeedsProfile => 'Create your profile first.';
+
+  @override
+  String get outboxSignedOut => 'Sign in to your account.';
+
+  @override
+  String get outboxUnavailable => 'No connection for a long time.';
+
+  @override
+  String get outboxRefused => 'The server refused it.';
+
+  @override
+  String get outboxDiscard => 'Discard';
+
+  @override
+  String get publishAction => 'Publish';
+
+  @override
+  String get publishTitle => 'Publish to the community';
+
+  @override
+  String get publishEveryone => 'Everyone';
+
+  @override
+  String get publishEveryoneHelp =>
+      'Anyone who can see your profile. The place follows the trip\'s privacy.';
+
+  @override
+  String get publishFriends => 'Friends only';
+
+  @override
+  String get publishFriendsHelp =>
+      'People you follow who follow you back. Trips set to Friends show the region.';
+
+  @override
+  String get publishCaptionHint => 'Caption (optional)';
+
+  @override
+  String get publishQueued => 'Publishing to the community.';
+
+  @override
+  String get publishNeedsProfile => 'Create your community profile to publish.';
+
+  @override
+  String get communityLoadMore => 'Show more';
+
+  @override
+  String get shareTitle => 'Share to';
+
+  @override
+  String get shareToStories => 'Instagram Stories';
+
+  @override
+  String get shareToApps => 'Other apps';
+
+  @override
+  String get storiesFailed => 'Instagram did not open. Try other apps.';
 }

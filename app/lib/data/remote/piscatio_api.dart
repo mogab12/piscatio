@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
+import '../../domain/models/social.dart';
+
 /// The server address baked into builds; the person can change it in the
 /// account screen (it is theirs to host).
 const defaultApiBase = String.fromEnvironment(
@@ -146,7 +148,16 @@ class PiscatioApi {
     if (r.statusCode >= 400) {
       String? code;
       try {
-        code = (jsonDecode(r.body) as Map)['detail'] as String?;
+        final j = jsonDecode(r.body) as Map;
+        // `{"detail": "code"}`, or a field's first error, e.g.
+        // `{"handle": ["handle_taken"]}`.
+        code =
+            j['detail'] as String? ??
+            j.values
+                .whereType<List<Object?>>()
+                .expand((e) => e)
+                .whereType<String>()
+                .firstOrNull;
       } on Object {
         code = null;
       }
@@ -325,4 +336,162 @@ class PiscatioApi {
       headers: _headers,
     ),
   )).bodyBytes;
+
+  // Community (see backend/social). Errors come as [ApiRejected] with the
+  // server's code, e.g. `profile_required`, `handle_taken`.
+
+  Future<Map<String, Object?>> _getMap(
+    String path, [
+    Map<String, String>? query,
+  ]) async =>
+      (await _json(() => _http.get(_uri(path, query), headers: _headers)))!
+          as Map<String, Object?>;
+
+  Future<Object?> _put(String path, Object body) => _json(
+    () => _http.put(
+      _uri(path),
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    ),
+  );
+
+  Future<Object?> _delete(String path) =>
+      _json(() => _http.delete(_uri(path), headers: _headers));
+
+  static String _h(String handle) => Uri.encodeComponent(handle);
+
+  static List<SocialProfile> _people(Map<String, Object?> j) => [
+    for (final p in (j['results'] as List? ?? const []))
+      SocialProfile.fromJson((p as Map).cast<String, Object?>()),
+  ];
+
+  static FeedPage _feed(Map<String, Object?> j) => FeedPage([
+    for (final p in (j['results'] as List? ?? const []))
+      FeedPost.fromJson((p as Map).cast<String, Object?>()),
+  ], j['next'] as String?);
+
+  /// The person's own profile; null when they have not set one up.
+  Future<SocialProfile?> myProfile() async {
+    try {
+      return SocialProfile.fromJson(await _getMap('/api/social/profile'));
+    } on ApiRejected catch (e) {
+      if (e.status == 404) return null;
+      rethrow;
+    }
+  }
+
+  Future<SocialProfile> saveProfile({
+    required String handle,
+    required String displayName,
+    required String bio,
+    required bool isPrivate,
+  }) async => SocialProfile.fromJson(
+    (await _put('/api/social/profile', {
+          'handle': handle,
+          'display_name': displayName,
+          'bio': bio,
+          'is_private': isPrivate,
+        }))!
+        as Map<String, Object?>,
+  );
+
+  /// Leaves the community: profile, posts and follows go.
+  Future<void> deleteProfile() => _delete('/api/social/profile');
+
+  Future<void> uploadAvatar(Uint8List jpeg) => _send(
+    () => _http.put(
+      _uri('/api/social/profile/avatar'),
+      headers: {..._headers, 'Content-Type': 'image/jpeg'},
+      body: jpeg,
+    ),
+  );
+
+  Future<List<SocialProfile>> searchPeople(String query) async =>
+      _people(await _getMap('/api/social/people', {'q': query}));
+
+  Future<SocialProfile> person(String handle) async =>
+      SocialProfile.fromJson(await _getMap('/api/social/people/${_h(handle)}'));
+
+  Future<FeedPage> personPosts(String handle, {String? before}) async => _feed(
+    await _getMap('/api/social/people/${_h(handle)}/posts', {
+      'before': ?before,
+    }),
+  );
+
+  Future<List<SocialProfile>> followers(String handle) async =>
+      _people(await _getMap('/api/social/people/${_h(handle)}/followers'));
+
+  Future<List<SocialProfile>> following(String handle) async =>
+      _people(await _getMap('/api/social/people/${_h(handle)}/following'));
+
+  Future<FollowState> follow(String handle) async => followStateOf(
+    ((await _post('/api/social/people/${_h(handle)}/follow', const {}))!
+        as Map)['status'],
+  );
+
+  Future<void> unfollow(String handle) =>
+      _delete('/api/social/people/${_h(handle)}/follow');
+
+  Future<void> removeFollower(String handle) =>
+      _delete('/api/social/people/${_h(handle)}/follower');
+
+  Future<void> block(String handle) =>
+      _post('/api/social/people/${_h(handle)}/block', const {});
+
+  Future<void> unblock(String handle) =>
+      _delete('/api/social/people/${_h(handle)}/block');
+
+  Future<List<SocialProfile>> blocked() async =>
+      _people(await _getMap('/api/social/blocks'));
+
+  Future<List<SocialProfile>> followRequests() async =>
+      _people(await _getMap('/api/social/requests'));
+
+  Future<void> answerRequest(String handle, {required bool accept}) => accept
+      ? _post('/api/social/requests/${_h(handle)}', const {})
+      : _delete('/api/social/requests/${_h(handle)}');
+
+  /// [discover]: public posts from public profiles; otherwise the people
+  /// the person follows, and their own.
+  Future<FeedPage> feed({bool discover = false, String? before}) async => _feed(
+    await _getMap('/api/social/feed', {
+      'scope': discover ? 'discover' : 'following',
+      'before': ?before,
+    }),
+  );
+
+  /// Publishes (or updates) a post; true when the server has no image yet.
+  Future<bool> putPost(String id, Map<String, Object?> body) async =>
+      ((await _put('/api/social/posts/$id', body))! as Map)['needs_image'] ==
+      true;
+
+  Future<void> uploadPostImage(String id, Uint8List png) => _send(
+    () => _http.put(
+      _uri('/api/social/posts/$id/image'),
+      headers: {..._headers, 'Content-Type': 'image/png'},
+      body: png,
+    ),
+  );
+
+  Future<void> deletePost(String id) => _delete('/api/social/posts/$id');
+
+  /// Likes or unlikes; the server's count after it.
+  Future<(bool, int)> like(String id, {required bool liked}) async {
+    final path = '/api/social/posts/$id/like';
+    final j =
+        (liked ? await _post(path, const {}) : await _delete(path))! as Map;
+    return (j['liked'] == true, (j['like_count'] as num?)?.toInt() ?? 0);
+  }
+
+  Future<void> report({
+    String? postId,
+    String? handle,
+    required ReportReason reason,
+    String note = '',
+  }) => _post('/api/social/reports', {
+    'post_id': ?postId,
+    'handle': ?handle,
+    'reason': reason.name,
+    'note': note,
+  });
 }

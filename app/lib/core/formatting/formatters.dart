@@ -94,6 +94,12 @@ class Formatters {
   /// `12 de set. de 2026`, `Sep 12, 2026`.
   String date(DateTime utc) => DateFormat.yMMMd(_locale).format(utc.toLocal());
 
+  /// `12 de set.`, `Sep 12` in the year of [now]; with the year otherwise.
+  String shortDate(DateTime utc, {required DateTime now}) =>
+      utc.toLocal().year == now.toLocal().year
+      ? DateFormat.MMMd(_locale).format(utc.toLocal())
+      : date(utc);
+
   /// `Sáb., 12 de set.`, `Sat, Sep 12` (capitalized: it starts a line).
   String weekdayDate(DateTime utc) =>
       _capitalize(DateFormat.MMMEd(_locale).format(utc.toLocal()));

@@ -10,6 +10,10 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location saves where each trip happened and lets Piscatio look up that day's weather. It stays on your phone.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>instagram-stories</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>Take photos of your catches.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -69,7 +69,15 @@ class WeatherSnapshots extends Table {
 /// Work that needs the network. Rows exist only while pending: a finished
 /// job is deleted. Retried on app start, resume and when the connection
 /// returns, honoring [nextAttemptAt].
-enum JobKind { weather, placeName, placeMap, sync, photoUpload, photoDownload }
+enum JobKind {
+  weather,
+  placeName,
+  placeMap,
+  sync,
+  photoUpload,
+  photoDownload,
+  postUpload,
+}
 
 @DataClassName('JobRow')
 class Jobs extends Table {
@@ -123,6 +131,36 @@ class VenueCache extends Table {
   /// The server's venue JSON (see `Venue.fromJson`).
   TextColumn get data => text()();
   DateTimeColumn get fetchedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+/// Cards waiting to go up to the community. A queue, not the person's
+/// data: a row lives until its upload finishes or is discarded, is never
+/// synced, and "delete all data" clears it.
+@DataClassName('OutboxPostRow')
+class OutboxPosts extends Table {
+  TextColumn get id => text()();
+
+  /// `PostKind.wire`: catch, trip or year.
+  TextColumn get kind => text()();
+  TextColumn get audience => textEnum<CardAudience>()();
+  TextColumn get tripId => text().nullable()();
+  TextColumn get catchId => text().nullable()();
+  TextColumn get speciesId => text().nullable()();
+  TextColumn get venueId => text().nullable()();
+  TextColumn get caption => text().nullable()();
+
+  /// The card image, relative to the app's documents (`outbox/<id>.png`).
+  TextColumn get imagePath => text()();
+  IntColumn get width => integer()();
+  IntColumn get height => integer()();
+
+  /// The server's reason when it refused the post (e.g. no profile yet).
+  TextColumn get error => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

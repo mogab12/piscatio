@@ -2487,6 +2487,618 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Venues where you fish see totals such as species and best hours, only from 10 or more anglers. Never your name or your spots.'**
   String get accountShareInsightsHint;
+
+  /// Bottom navigation: the community tab
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get navCommunity;
+
+  /// Community screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get communityTitle;
+
+  /// Community without an account: title
+  ///
+  /// In en, this message translates to:
+  /// **'Fish together'**
+  String get communitySignInTitle;
+
+  /// Community without an account: explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to publish cards and follow other anglers. Your logbook stays yours.'**
+  String get communitySignInBody;
+
+  /// Community without a profile: title
+  ///
+  /// In en, this message translates to:
+  /// **'Create your profile'**
+  String get communityCreateTitle;
+
+  /// Community without a profile: explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a @name. Your profile starts private: you approve who follows you. Nothing from your logbook is published unless you ask.'**
+  String get communityCreateBody;
+
+  /// Button that opens the profile setup
+  ///
+  /// In en, this message translates to:
+  /// **'Create profile'**
+  String get communityCreateAction;
+
+  /// Community could not reach the server
+  ///
+  /// In en, this message translates to:
+  /// **'No connection. The community needs the internet.'**
+  String get communityOffline;
+
+  /// Button to repeat a failed community request
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get communityRetry;
+
+  /// A community action failed
+  ///
+  /// In en, this message translates to:
+  /// **'That did not work. Try again.'**
+  String get communityFailed;
+
+  /// Feed tab: posts of people you follow
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get communityTabFollowing;
+
+  /// Feed tab: public posts from anyone
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get communityTabDiscover;
+
+  /// Empty following feed
+  ///
+  /// In en, this message translates to:
+  /// **'Follow anglers or publish a card to get started.'**
+  String get communityFeedEmpty;
+
+  /// Empty discover feed
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet.'**
+  String get communityDiscoverEmpty;
+
+  /// Action and screen to search profiles
+  ///
+  /// In en, this message translates to:
+  /// **'Find people'**
+  String get communitySearchPeople;
+
+  /// Hint of the people search field
+  ///
+  /// In en, this message translates to:
+  /// **'Name or @name'**
+  String get communitySearchHint;
+
+  /// People search without results
+  ///
+  /// In en, this message translates to:
+  /// **'No one found.'**
+  String get communitySearchEmpty;
+
+  /// Action and screen with pending follow requests
+  ///
+  /// In en, this message translates to:
+  /// **'Follow requests'**
+  String get communityRequests;
+
+  /// No pending follow requests
+  ///
+  /// In en, this message translates to:
+  /// **'No requests.'**
+  String get communityRequestsEmpty;
+
+  /// Accept a follow request
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get communityAccept;
+
+  /// Decline a follow request
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get communityDecline;
+
+  /// Opens the person's own profile
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile'**
+  String get communityMyProfile;
+
+  /// Screen reader label of a post image
+  ///
+  /// In en, this message translates to:
+  /// **'Card by @{handle}'**
+  String communityPostLabel(String handle);
+
+  /// Like a post
+  ///
+  /// In en, this message translates to:
+  /// **'Like'**
+  String get communityLike;
+
+  /// Remove a like
+  ///
+  /// In en, this message translates to:
+  /// **'Unlike'**
+  String get communityUnlike;
+
+  /// Screen reader: likes of a post
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No likes} =1{1 like} other{{count} likes}}'**
+  String communityLikes(int count);
+
+  /// Marks a post shown only to friends
+  ///
+  /// In en, this message translates to:
+  /// **'Friends only'**
+  String get communityFriendsOnly;
+
+  /// Menu button of a post or profile
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get communityMoreOptions;
+
+  /// Menu: delete own post
+  ///
+  /// In en, this message translates to:
+  /// **'Delete post'**
+  String get communityDeletePost;
+
+  /// Confirm deleting a post: title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this post?'**
+  String get communityDeletePostTitle;
+
+  /// Confirm deleting a post: explanation
+  ///
+  /// In en, this message translates to:
+  /// **'It leaves the community for everyone. The fishing stays in your logbook.'**
+  String get communityDeletePostBody;
+
+  /// Menu: report a post
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get communityReport;
+
+  /// Report reasons sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you reporting?'**
+  String get communityReportTitle;
+
+  /// Report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get communityReportSpam;
+
+  /// Report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Offensive or abusive'**
+  String get communityReportAbuse;
+
+  /// Report reason: reveals someone's spot
+  ///
+  /// In en, this message translates to:
+  /// **'Shows a fishing spot'**
+  String get communityReportLocation;
+
+  /// Report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get communityReportOther;
+
+  /// Confirmation after reporting
+  ///
+  /// In en, this message translates to:
+  /// **'Report sent. Thanks.'**
+  String get communityReportSent;
+
+  /// Menu: block someone
+  ///
+  /// In en, this message translates to:
+  /// **'Block @{handle}'**
+  String communityBlock(String handle);
+
+  /// Confirm blocking: title
+  ///
+  /// In en, this message translates to:
+  /// **'Block @{handle}?'**
+  String communityBlockTitle(String handle);
+
+  /// Confirm blocking: explanation
+  ///
+  /// In en, this message translates to:
+  /// **'You stop seeing each other in the community, and follows between you end.'**
+  String get communityBlockBody;
+
+  /// Confirmation after blocking
+  ///
+  /// In en, this message translates to:
+  /// **'You blocked @{handle}.'**
+  String communityBlocked(String handle);
+
+  /// Confirm button to block
+  ///
+  /// In en, this message translates to:
+  /// **'Block'**
+  String get communityBlockAction;
+
+  /// Unblock someone
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock'**
+  String get communityUnblock;
+
+  /// Follow someone
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get communityFollow;
+
+  /// Follow someone who follows you
+  ///
+  /// In en, this message translates to:
+  /// **'Follow back'**
+  String get communityFollowBack;
+
+  /// A follow request is waiting; tap to withdraw
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get communityRequested;
+
+  /// You follow this person; tap to unfollow
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get communityFollowing;
+
+  /// Stop following someone
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get communityUnfollow;
+
+  /// Withdraw a pending follow request
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw request'**
+  String get communityWithdraw;
+
+  /// Marks a profile that follows the person
+  ///
+  /// In en, this message translates to:
+  /// **'Follows you'**
+  String get communityFollowsYou;
+
+  /// Marks mutual follows
+  ///
+  /// In en, this message translates to:
+  /// **'Friends'**
+  String get communityFriends;
+
+  /// Menu: remove someone who follows you
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from followers'**
+  String get communityRemoveFollower;
+
+  /// Menu: report a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Report profile'**
+  String get communityReportProfile;
+
+  /// Word under the number of posts
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{post} other{posts}}'**
+  String communityPostsCount(int count);
+
+  /// Word under the number of followers
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{follower} other{followers}}'**
+  String communityFollowersCount(int count);
+
+  /// Word under the number of people followed
+  ///
+  /// In en, this message translates to:
+  /// **'following'**
+  String get communityFollowingCount;
+
+  /// Posts hidden by a private profile
+  ///
+  /// In en, this message translates to:
+  /// **'Private profile. Follow to see the posts.'**
+  String get communityPrivateProfile;
+
+  /// Profile without posts
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet.'**
+  String get communityNoPosts;
+
+  /// Opens the own profile editor
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get communityEditProfile;
+
+  /// Screen listing followers
+  ///
+  /// In en, this message translates to:
+  /// **'Followers'**
+  String get communityFollowersTitle;
+
+  /// Screen listing people followed
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get communityFollowingTitle;
+
+  /// Empty list of people
+  ///
+  /// In en, this message translates to:
+  /// **'No one here yet.'**
+  String get communityListEmpty;
+
+  /// Screen reader: lock icon of a private profile
+  ///
+  /// In en, this message translates to:
+  /// **'Private profile'**
+  String get communityPrivateMark;
+
+  /// Profile editor title when creating
+  ///
+  /// In en, this message translates to:
+  /// **'Create profile'**
+  String get profileTitleNew;
+
+  /// Profile editor title when editing
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get profileTitleEdit;
+
+  /// Label of the handle field
+  ///
+  /// In en, this message translates to:
+  /// **'@name'**
+  String get profileHandle;
+
+  /// Rules of the handle
+  ///
+  /// In en, this message translates to:
+  /// **'3 to 30 lowercase letters, numbers, _ or .'**
+  String get profileHandleHelp;
+
+  /// Handle already used by someone
+  ///
+  /// In en, this message translates to:
+  /// **'This @name is taken.'**
+  String get profileHandleTaken;
+
+  /// Handle reserved by the app
+  ///
+  /// In en, this message translates to:
+  /// **'This @name is reserved.'**
+  String get profileHandleReserved;
+
+  /// Label of the display name field
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get profileName;
+
+  /// Label of the bio field
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get profileBio;
+
+  /// Hint of the bio field
+  ///
+  /// In en, this message translates to:
+  /// **'Where you fish, what you like to catch'**
+  String get profileBioHint;
+
+  /// Switch: private profile
+  ///
+  /// In en, this message translates to:
+  /// **'Private profile'**
+  String get profilePrivate;
+
+  /// Explains the private profile switch
+  ///
+  /// In en, this message translates to:
+  /// **'You approve who follows you. Only followers see your posts.'**
+  String get profilePrivateHelp;
+
+  /// Button to pick a new profile photo
+  ///
+  /// In en, this message translates to:
+  /// **'Change profile photo'**
+  String get profilePhotoChange;
+
+  /// Opens the list of blocked people
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked people'**
+  String get profileBlocked;
+
+  /// Empty list of blocked people
+  ///
+  /// In en, this message translates to:
+  /// **'You have not blocked anyone.'**
+  String get profileBlockedEmpty;
+
+  /// Deletes the community profile
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the community'**
+  String get profileLeave;
+
+  /// Confirm leaving: title
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the community?'**
+  String get profileLeaveTitle;
+
+  /// Confirm leaving: explanation
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile, posts and follows are deleted from the server. The logbook on your phone does not change.'**
+  String get profileLeaveBody;
+
+  /// A card is going up to the community
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing card…'**
+  String get outboxSending;
+
+  /// A queued card was refused
+  ///
+  /// In en, this message translates to:
+  /// **'The card did not go up.'**
+  String get outboxFailed;
+
+  /// Why a card did not go up: no profile
+  ///
+  /// In en, this message translates to:
+  /// **'Create your profile first.'**
+  String get outboxNeedsProfile;
+
+  /// Why a card did not go up: signed out
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to your account.'**
+  String get outboxSignedOut;
+
+  /// Why a card did not go up: offline too long
+  ///
+  /// In en, this message translates to:
+  /// **'No connection for a long time.'**
+  String get outboxUnavailable;
+
+  /// Why a card did not go up: other
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused it.'**
+  String get outboxRefused;
+
+  /// Drop a card that did not go up
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get outboxDiscard;
+
+  /// Card editor: publish to the community
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get publishAction;
+
+  /// Publish sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Publish to the community'**
+  String get publishTitle;
+
+  /// Audience: anyone who can see the profile
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get publishEveryone;
+
+  /// Explains the everyone audience
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone who can see your profile. The place follows the trip\'s privacy.'**
+  String get publishEveryoneHelp;
+
+  /// Audience: mutual follows
+  ///
+  /// In en, this message translates to:
+  /// **'Friends only'**
+  String get publishFriends;
+
+  /// Explains the friends audience
+  ///
+  /// In en, this message translates to:
+  /// **'People you follow who follow you back. Trips set to Friends show the region.'**
+  String get publishFriendsHelp;
+
+  /// Hint of the post caption
+  ///
+  /// In en, this message translates to:
+  /// **'Caption (optional)'**
+  String get publishCaptionHint;
+
+  /// Snackbar after tapping publish
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing to the community.'**
+  String get publishQueued;
+
+  /// Publish without a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Create your community profile to publish.'**
+  String get publishNeedsProfile;
+
+  /// Loads the next page of posts
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get communityLoadMore;
+
+  /// Title of the sheet with share destinations
+  ///
+  /// In en, this message translates to:
+  /// **'Share to'**
+  String get shareTitle;
+
+  /// Share destination: straight to an Instagram story
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram Stories'**
+  String get shareToStories;
+
+  /// Share destination: the system share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Other apps'**
+  String get shareToApps;
+
+  /// Direct Stories share failed
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram did not open. Try other apps.'**
+  String get storiesFailed;
 }
 
 class _AppLocalizationsDelegate

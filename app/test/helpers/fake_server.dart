@@ -33,6 +33,72 @@ class FakeServer {
   final venueSearches = <Map<String, String>>[];
   var shareInsights = false;
 
+  /// The account's community profile (`/api/social/profile`); null until
+  /// set up.
+  Map<String, Object?>? profile;
+
+  /// Other people, by handle, as `/api/social/people/<handle>` shows them.
+  final people = <String, Map<String, Object?>>{};
+
+  /// Follows from the account: handle → "pending" or "accepted".
+  final follows = <String, String>{};
+  final blocks = <String>{};
+
+  /// Handles waiting for the account to accept them.
+  final followRequests = <String>[];
+
+  /// Posts of other people in the feed (following) and in discover.
+  final feedPosts = <Map<String, Object?>>[];
+  final discoverPosts = <Map<String, Object?>>[];
+
+  /// The account's published posts (id → body) and their images.
+  final posts = <String, Map<String, Object?>>{};
+  final postImages = <String, Uint8List>{};
+  final reports = <Map<String, Object?>>[];
+  Uint8List? avatar;
+
+  /// A post by [handle] as the feed lists it.
+  static Map<String, Object?> post(
+    String id, {
+    String handle = 'bia',
+    String caption = 'Tucunaré de 3 kg',
+    int likes = 0,
+    bool liked = false,
+    String audience = 'public',
+  }) => {
+    'id': id,
+    'author': {'handle': handle, 'display_name': handle, 'avatar_url': null},
+    'kind': 'catch',
+    'audience': audience,
+    'species_id': 'cichla-ocellaris',
+    'venue': null,
+    'caption': caption,
+    'image_url': 'https://media.test/$id.png',
+    'width': 1080,
+    'height': 1920,
+    'like_count': likes,
+    'liked': liked,
+    'mine': false,
+    'created_at': '2026-09-12T09:00:00Z',
+  };
+
+  /// Someone else's profile as the server shows it.
+  static Map<String, Object?> person(
+    String handle, {
+    bool private = false,
+    String? name,
+  }) => {
+    'handle': handle,
+    'display_name': name ?? handle,
+    'bio': '',
+    'avatar_url': null,
+    'is_private': private,
+    'followers': 0,
+    'following': 0,
+    'posts': 0,
+    'can_see': !private,
+  };
+
   /// What `/api/conditions/weather` answers (null: MET is down).
   Map<String, Object?>? weather = {
     'time': '2026-09-12T09:00:00Z',
@@ -105,6 +171,7 @@ class FakeServer {
           ? _json({'detail': 'weather_unavailable'}, 503)
           : _json(weather!);
     }
+    if (path.startsWith('/api/social/')) return _social(r);
     if (path == '/api/sync/push') return _push(r);
     if (path == '/api/sync/pull') return _pull(r);
     if (path == '/api/account' && r.method == 'DELETE') {
@@ -126,6 +193,182 @@ class FakeServer {
       return file == null
           ? _json({'detail': 'not found'}, 404)
           : http.Response.bytes(file, 200);
+    }
+    return http.Response('no route $path', 404);
+  }
+
+  http.Response _social(http.Request r) {
+    final path = r.url.path.substring('/api/social'.length);
+    final m = r.method;
+    Map<String, Object?> body() => r.body.isEmpty
+        ? const {}
+        : (jsonDecode(r.body) as Map).cast<String, Object?>();
+    final noContent = http.Response('', 204);
+    if (path == '/profile') {
+      if (m == 'GET') {
+        return profile == null
+            ? _json({'detail': 'not found'}, 404)
+            : _json({...profile!, 'requests': followRequests.length});
+      }
+      if (m == 'DELETE') {
+        profile = null;
+        return noContent;
+      }
+      final b = body();
+      final handle = '${b['handle']}'.toLowerCase();
+      if (people.containsKey(handle)) {
+        return _json({
+          'handle': ['handle_taken'],
+        }, 400);
+      }
+      profile = {
+        'handle': handle,
+        'display_name': b['display_name'],
+        'bio': b['bio'] ?? '',
+        'avatar_url': avatar == null ? null : 'https://media.test/avatar.jpg',
+        'is_private': b['is_private'] ?? true,
+        'followers': 0,
+        'following': follows.values.where((s) => s == 'accepted').length,
+        'posts': posts.length,
+      };
+      return _json(profile!);
+    }
+    if (path == '/profile/avatar') {
+      if (profile == null) return _json({'detail': 'profile_required'}, 409);
+      avatar = r.bodyBytes;
+      profile!['avatar_url'] = 'https://media.test/avatar.jpg';
+      return _json({'avatar_url': profile!['avatar_url']});
+    }
+    if (path == '/people') {
+      final q = (r.url.queryParameters['q'] ?? '').toLowerCase();
+      return _json({
+        'results': [
+          if (q.length >= 2)
+            for (final p in people.values)
+              if (!blocks.contains(p['handle']) &&
+                  ('${p['handle']}${p['display_name']}'.toLowerCase().contains(
+                    q,
+                  )))
+                p,
+        ],
+      });
+    }
+    if (path == '/blocks') {
+      return _json({
+        'results': [for (final h in blocks) person(h)],
+      });
+    }
+    if (path == '/requests') {
+      return _json({
+        'results': [for (final h in followRequests) people[h] ?? person(h)],
+      });
+    }
+    final answer = RegExp(r'^/requests/([^/]+)$').firstMatch(path);
+    if (answer != null) {
+      followRequests.remove(answer.group(1));
+      return noContent;
+    }
+    final who = RegExp(r'^/people/([^/]+)(/[a-z]+)?$').firstMatch(path);
+    if (who != null) {
+      final handle = Uri.decodeComponent(who.group(1)!);
+      final p = people[handle];
+      if (p == null) return _json({'detail': 'not found'}, 404);
+      final state = follows[handle];
+      final canSee = p['is_private'] != true || state == 'accepted';
+      switch (who.group(2)) {
+        case null:
+          return _json({
+            ...p,
+            'can_see': canSee,
+            'relationship': {
+              'following': state,
+              'follows_you': false,
+              'friends': false,
+              'blocked': blocks.contains(handle),
+            },
+          });
+        case '/posts':
+          return _json({
+            'results': canSee
+                ? [
+                    for (final post in [...feedPosts, ...discoverPosts])
+                      if ((post['author']! as Map)['handle'] == handle) post,
+                  ]
+                : <Object>[],
+            'next': null,
+          });
+        case '/followers' || '/following':
+          return _json({'results': <Object>[]});
+        case '/follow':
+          if (m == 'DELETE') {
+            follows.remove(handle);
+            return _json({'status': null});
+          }
+          if (profile == null) {
+            return _json({'detail': 'profile_required'}, 409);
+          }
+          final next = p['is_private'] == true ? 'pending' : 'accepted';
+          follows[handle] = next;
+          return _json({'status': next});
+        case '/follower':
+          return noContent;
+        case '/block':
+          if (m == 'DELETE') {
+            blocks.remove(handle);
+          } else {
+            blocks.add(handle);
+            follows.remove(handle);
+          }
+          return noContent;
+      }
+    }
+    if (path == '/feed') {
+      final discover = r.url.queryParameters['scope'] == 'discover';
+      final source = discover ? discoverPosts : feedPosts;
+      return _json({
+        'results': [
+          for (final post in source)
+            if (!blocks.contains((post['author']! as Map)['handle'])) post,
+        ],
+        'next': null,
+      });
+    }
+    final postMatch = RegExp(r'^/posts/([^/]+)(/[a-z]+)?$').firstMatch(path);
+    if (postMatch != null) {
+      final id = postMatch.group(1)!;
+      switch ((postMatch.group(2), m)) {
+        case (null, 'PUT'):
+          if (profile == null) {
+            return _json({'detail': 'profile_required'}, 409);
+          }
+          posts[id] = body();
+          return _json({'needs_image': !postImages.containsKey(id)});
+        case (null, 'DELETE'):
+          posts.remove(id);
+          postImages.remove(id);
+          feedPosts.removeWhere((p) => p['id'] == id);
+          return noContent;
+        case ('/image', 'PUT'):
+          if (!posts.containsKey(id)) return _json({'detail': 'no'}, 404);
+          postImages[id] = r.bodyBytes;
+          return noContent;
+        case ('/like', _):
+          final post = [
+            ...feedPosts,
+            ...discoverPosts,
+          ].firstWhere((p) => p['id'] == id);
+          final liked = m == 'POST';
+          if (liked != post['liked']) {
+            post['liked'] = liked;
+            post['like_count'] =
+                (post['like_count']! as int) + (liked ? 1 : -1);
+          }
+          return _json({'liked': liked, 'like_count': post['like_count']});
+      }
+    }
+    if (path == '/reports') {
+      reports.add(body());
+      return http.Response('', 201);
     }
     return http.Response('no route $path', 404);
   }

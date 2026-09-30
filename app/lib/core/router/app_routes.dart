@@ -3,6 +3,11 @@ abstract final class AppRoutes {
   static const home = '/home';
   static const history = '/history';
   static const stats = '/stats';
+  static const community = '/community';
+  static const communityProfile = '/community/profile';
+  static const communitySearch = '/community/people';
+  static const communityRequests = '/community/requests';
+  static const communityBlocked = '/community/blocked';
   static const settings = '/settings';
   static const baits = '/settings/baits';
   static const gear = '/settings/gear';
@@ -10,6 +15,9 @@ abstract final class AppRoutes {
   static const activeTrip = '/trip/active';
   static const pastTrip = '/past-trip';
 
+  static String person(String handle) => '/people/$handle';
+  static String followers(String handle) => '/people/$handle/followers';
+  static String following(String handle) => '/people/$handle/following';
   static String trip(String id) => '/trip/$id';
   static String editTrip(String id) => '/trip/$id/edit';
   static String capture(String tripId, {String? photo}) => photo == null

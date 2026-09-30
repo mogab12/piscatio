@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../features/account/presentation/account_screen.dart';
 import '../../features/active_trip/presentation/active_trip_screen.dart';
 import '../../features/cards/presentation/card_editor_screen.dart';
+import '../../features/community/presentation/community_screen.dart';
+import '../../features/community/presentation/people_screens.dart';
+import '../../features/community/presentation/person_screen.dart';
+import '../../features/community/presentation/profile_edit_screen.dart';
 import '../../features/history/presentation/catch_detail_screen.dart';
 import '../../features/history/presentation/edit_trip_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
@@ -68,6 +72,36 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.history,
                 builder: (context, state) => const HistoryScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.community,
+                builder: (context, state) => const CommunityScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'profile',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const ProfileEditScreen(),
+                  ),
+                  GoRoute(
+                    path: 'people',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const PeopleSearchScreen(),
+                  ),
+                  GoRoute(
+                    path: 'requests',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const FollowRequestsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'blocked',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const BlockedPeopleScreen(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -163,6 +197,28 @@ final routerProvider = Provider<GoRouter>((ref) {
           subject: CardSubject.catchItem,
           id: state.pathParameters['catchId']!,
         ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/people/:handle',
+        builder: (context, state) =>
+            PersonScreen(handle: state.pathParameters['handle']!),
+        routes: [
+          GoRoute(
+            path: 'followers',
+            builder: (context, state) => FollowListScreen(
+              handle: state.pathParameters['handle']!,
+              followers: true,
+            ),
+          ),
+          GoRoute(
+            path: 'following',
+            builder: (context, state) => FollowListScreen(
+              handle: state.pathParameters['handle']!,
+              followers: false,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,

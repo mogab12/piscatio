@@ -7202,6 +7202,813 @@ class VenueCacheCompanion extends UpdateCompanion<VenueCacheRow> {
   }
 }
 
+class $OutboxPostsTable extends OutboxPosts
+    with TableInfo<$OutboxPostsTable, OutboxPostRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OutboxPostsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<CardAudience, String> audience =
+      GeneratedColumn<String>(
+        'audience',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<CardAudience>($OutboxPostsTable.$converteraudience);
+  static const VerificationMeta _tripIdMeta = const VerificationMeta('tripId');
+  @override
+  late final GeneratedColumn<String> tripId = GeneratedColumn<String>(
+    'trip_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _catchIdMeta = const VerificationMeta(
+    'catchId',
+  );
+  @override
+  late final GeneratedColumn<String> catchId = GeneratedColumn<String>(
+    'catch_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _speciesIdMeta = const VerificationMeta(
+    'speciesId',
+  );
+  @override
+  late final GeneratedColumn<String> speciesId = GeneratedColumn<String>(
+    'species_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _venueIdMeta = const VerificationMeta(
+    'venueId',
+  );
+  @override
+  late final GeneratedColumn<String> venueId = GeneratedColumn<String>(
+    'venue_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _captionMeta = const VerificationMeta(
+    'caption',
+  );
+  @override
+  late final GeneratedColumn<String> caption = GeneratedColumn<String>(
+    'caption',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _imagePathMeta = const VerificationMeta(
+    'imagePath',
+  );
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+    'image_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _widthMeta = const VerificationMeta('width');
+  @override
+  late final GeneratedColumn<int> width = GeneratedColumn<int>(
+    'width',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _heightMeta = const VerificationMeta('height');
+  @override
+  late final GeneratedColumn<int> height = GeneratedColumn<int>(
+    'height',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _errorMeta = const VerificationMeta('error');
+  @override
+  late final GeneratedColumn<String> error = GeneratedColumn<String>(
+    'error',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    kind,
+    audience,
+    tripId,
+    catchId,
+    speciesId,
+    venueId,
+    caption,
+    imagePath,
+    width,
+    height,
+    error,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'outbox_posts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<OutboxPostRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('trip_id')) {
+      context.handle(
+        _tripIdMeta,
+        tripId.isAcceptableOrUnknown(data['trip_id']!, _tripIdMeta),
+      );
+    }
+    if (data.containsKey('catch_id')) {
+      context.handle(
+        _catchIdMeta,
+        catchId.isAcceptableOrUnknown(data['catch_id']!, _catchIdMeta),
+      );
+    }
+    if (data.containsKey('species_id')) {
+      context.handle(
+        _speciesIdMeta,
+        speciesId.isAcceptableOrUnknown(data['species_id']!, _speciesIdMeta),
+      );
+    }
+    if (data.containsKey('venue_id')) {
+      context.handle(
+        _venueIdMeta,
+        venueId.isAcceptableOrUnknown(data['venue_id']!, _venueIdMeta),
+      );
+    }
+    if (data.containsKey('caption')) {
+      context.handle(
+        _captionMeta,
+        caption.isAcceptableOrUnknown(data['caption']!, _captionMeta),
+      );
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(
+        _imagePathMeta,
+        imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_imagePathMeta);
+    }
+    if (data.containsKey('width')) {
+      context.handle(
+        _widthMeta,
+        width.isAcceptableOrUnknown(data['width']!, _widthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_widthMeta);
+    }
+    if (data.containsKey('height')) {
+      context.handle(
+        _heightMeta,
+        height.isAcceptableOrUnknown(data['height']!, _heightMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_heightMeta);
+    }
+    if (data.containsKey('error')) {
+      context.handle(
+        _errorMeta,
+        error.isAcceptableOrUnknown(data['error']!, _errorMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OutboxPostRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OutboxPostRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      audience: $OutboxPostsTable.$converteraudience.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}audience'],
+        )!,
+      ),
+      tripId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}trip_id'],
+      ),
+      catchId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}catch_id'],
+      ),
+      speciesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}species_id'],
+      ),
+      venueId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}venue_id'],
+      ),
+      caption: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}caption'],
+      ),
+      imagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_path'],
+      )!,
+      width: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}width'],
+      )!,
+      height: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}height'],
+      )!,
+      error: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}error'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $OutboxPostsTable createAlias(String alias) {
+    return $OutboxPostsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<CardAudience, String, String> $converteraudience =
+      const EnumNameConverter<CardAudience>(CardAudience.values);
+}
+
+class OutboxPostRow extends DataClass implements Insertable<OutboxPostRow> {
+  final String id;
+
+  /// `PostKind.wire`: catch, trip or year.
+  final String kind;
+  final CardAudience audience;
+  final String? tripId;
+  final String? catchId;
+  final String? speciesId;
+  final String? venueId;
+  final String? caption;
+
+  /// The card image, relative to the app's documents (`outbox/<id>.png`).
+  final String imagePath;
+  final int width;
+  final int height;
+
+  /// The server's reason when it refused the post (e.g. no profile yet).
+  final String? error;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const OutboxPostRow({
+    required this.id,
+    required this.kind,
+    required this.audience,
+    this.tripId,
+    this.catchId,
+    this.speciesId,
+    this.venueId,
+    this.caption,
+    required this.imagePath,
+    required this.width,
+    required this.height,
+    this.error,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['kind'] = Variable<String>(kind);
+    {
+      map['audience'] = Variable<String>(
+        $OutboxPostsTable.$converteraudience.toSql(audience),
+      );
+    }
+    if (!nullToAbsent || tripId != null) {
+      map['trip_id'] = Variable<String>(tripId);
+    }
+    if (!nullToAbsent || catchId != null) {
+      map['catch_id'] = Variable<String>(catchId);
+    }
+    if (!nullToAbsent || speciesId != null) {
+      map['species_id'] = Variable<String>(speciesId);
+    }
+    if (!nullToAbsent || venueId != null) {
+      map['venue_id'] = Variable<String>(venueId);
+    }
+    if (!nullToAbsent || caption != null) {
+      map['caption'] = Variable<String>(caption);
+    }
+    map['image_path'] = Variable<String>(imagePath);
+    map['width'] = Variable<int>(width);
+    map['height'] = Variable<int>(height);
+    if (!nullToAbsent || error != null) {
+      map['error'] = Variable<String>(error);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  OutboxPostsCompanion toCompanion(bool nullToAbsent) {
+    return OutboxPostsCompanion(
+      id: Value(id),
+      kind: Value(kind),
+      audience: Value(audience),
+      tripId: tripId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tripId),
+      catchId: catchId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(catchId),
+      speciesId: speciesId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(speciesId),
+      venueId: venueId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(venueId),
+      caption: caption == null && nullToAbsent
+          ? const Value.absent()
+          : Value(caption),
+      imagePath: Value(imagePath),
+      width: Value(width),
+      height: Value(height),
+      error: error == null && nullToAbsent
+          ? const Value.absent()
+          : Value(error),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory OutboxPostRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OutboxPostRow(
+      id: serializer.fromJson<String>(json['id']),
+      kind: serializer.fromJson<String>(json['kind']),
+      audience: $OutboxPostsTable.$converteraudience.fromJson(
+        serializer.fromJson<String>(json['audience']),
+      ),
+      tripId: serializer.fromJson<String?>(json['tripId']),
+      catchId: serializer.fromJson<String?>(json['catchId']),
+      speciesId: serializer.fromJson<String?>(json['speciesId']),
+      venueId: serializer.fromJson<String?>(json['venueId']),
+      caption: serializer.fromJson<String?>(json['caption']),
+      imagePath: serializer.fromJson<String>(json['imagePath']),
+      width: serializer.fromJson<int>(json['width']),
+      height: serializer.fromJson<int>(json['height']),
+      error: serializer.fromJson<String?>(json['error']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'kind': serializer.toJson<String>(kind),
+      'audience': serializer.toJson<String>(
+        $OutboxPostsTable.$converteraudience.toJson(audience),
+      ),
+      'tripId': serializer.toJson<String?>(tripId),
+      'catchId': serializer.toJson<String?>(catchId),
+      'speciesId': serializer.toJson<String?>(speciesId),
+      'venueId': serializer.toJson<String?>(venueId),
+      'caption': serializer.toJson<String?>(caption),
+      'imagePath': serializer.toJson<String>(imagePath),
+      'width': serializer.toJson<int>(width),
+      'height': serializer.toJson<int>(height),
+      'error': serializer.toJson<String?>(error),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  OutboxPostRow copyWith({
+    String? id,
+    String? kind,
+    CardAudience? audience,
+    Value<String?> tripId = const Value.absent(),
+    Value<String?> catchId = const Value.absent(),
+    Value<String?> speciesId = const Value.absent(),
+    Value<String?> venueId = const Value.absent(),
+    Value<String?> caption = const Value.absent(),
+    String? imagePath,
+    int? width,
+    int? height,
+    Value<String?> error = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => OutboxPostRow(
+    id: id ?? this.id,
+    kind: kind ?? this.kind,
+    audience: audience ?? this.audience,
+    tripId: tripId.present ? tripId.value : this.tripId,
+    catchId: catchId.present ? catchId.value : this.catchId,
+    speciesId: speciesId.present ? speciesId.value : this.speciesId,
+    venueId: venueId.present ? venueId.value : this.venueId,
+    caption: caption.present ? caption.value : this.caption,
+    imagePath: imagePath ?? this.imagePath,
+    width: width ?? this.width,
+    height: height ?? this.height,
+    error: error.present ? error.value : this.error,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  OutboxPostRow copyWithCompanion(OutboxPostsCompanion data) {
+    return OutboxPostRow(
+      id: data.id.present ? data.id.value : this.id,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      audience: data.audience.present ? data.audience.value : this.audience,
+      tripId: data.tripId.present ? data.tripId.value : this.tripId,
+      catchId: data.catchId.present ? data.catchId.value : this.catchId,
+      speciesId: data.speciesId.present ? data.speciesId.value : this.speciesId,
+      venueId: data.venueId.present ? data.venueId.value : this.venueId,
+      caption: data.caption.present ? data.caption.value : this.caption,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
+      width: data.width.present ? data.width.value : this.width,
+      height: data.height.present ? data.height.value : this.height,
+      error: data.error.present ? data.error.value : this.error,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OutboxPostRow(')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('audience: $audience, ')
+          ..write('tripId: $tripId, ')
+          ..write('catchId: $catchId, ')
+          ..write('speciesId: $speciesId, ')
+          ..write('venueId: $venueId, ')
+          ..write('caption: $caption, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('width: $width, ')
+          ..write('height: $height, ')
+          ..write('error: $error, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    kind,
+    audience,
+    tripId,
+    catchId,
+    speciesId,
+    venueId,
+    caption,
+    imagePath,
+    width,
+    height,
+    error,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OutboxPostRow &&
+          other.id == this.id &&
+          other.kind == this.kind &&
+          other.audience == this.audience &&
+          other.tripId == this.tripId &&
+          other.catchId == this.catchId &&
+          other.speciesId == this.speciesId &&
+          other.venueId == this.venueId &&
+          other.caption == this.caption &&
+          other.imagePath == this.imagePath &&
+          other.width == this.width &&
+          other.height == this.height &&
+          other.error == this.error &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class OutboxPostsCompanion extends UpdateCompanion<OutboxPostRow> {
+  final Value<String> id;
+  final Value<String> kind;
+  final Value<CardAudience> audience;
+  final Value<String?> tripId;
+  final Value<String?> catchId;
+  final Value<String?> speciesId;
+  final Value<String?> venueId;
+  final Value<String?> caption;
+  final Value<String> imagePath;
+  final Value<int> width;
+  final Value<int> height;
+  final Value<String?> error;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const OutboxPostsCompanion({
+    this.id = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.audience = const Value.absent(),
+    this.tripId = const Value.absent(),
+    this.catchId = const Value.absent(),
+    this.speciesId = const Value.absent(),
+    this.venueId = const Value.absent(),
+    this.caption = const Value.absent(),
+    this.imagePath = const Value.absent(),
+    this.width = const Value.absent(),
+    this.height = const Value.absent(),
+    this.error = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  OutboxPostsCompanion.insert({
+    required String id,
+    required String kind,
+    required CardAudience audience,
+    this.tripId = const Value.absent(),
+    this.catchId = const Value.absent(),
+    this.speciesId = const Value.absent(),
+    this.venueId = const Value.absent(),
+    this.caption = const Value.absent(),
+    required String imagePath,
+    required int width,
+    required int height,
+    this.error = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       kind = Value(kind),
+       audience = Value(audience),
+       imagePath = Value(imagePath),
+       width = Value(width),
+       height = Value(height),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<OutboxPostRow> custom({
+    Expression<String>? id,
+    Expression<String>? kind,
+    Expression<String>? audience,
+    Expression<String>? tripId,
+    Expression<String>? catchId,
+    Expression<String>? speciesId,
+    Expression<String>? venueId,
+    Expression<String>? caption,
+    Expression<String>? imagePath,
+    Expression<int>? width,
+    Expression<int>? height,
+    Expression<String>? error,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (kind != null) 'kind': kind,
+      if (audience != null) 'audience': audience,
+      if (tripId != null) 'trip_id': tripId,
+      if (catchId != null) 'catch_id': catchId,
+      if (speciesId != null) 'species_id': speciesId,
+      if (venueId != null) 'venue_id': venueId,
+      if (caption != null) 'caption': caption,
+      if (imagePath != null) 'image_path': imagePath,
+      if (width != null) 'width': width,
+      if (height != null) 'height': height,
+      if (error != null) 'error': error,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  OutboxPostsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? kind,
+    Value<CardAudience>? audience,
+    Value<String?>? tripId,
+    Value<String?>? catchId,
+    Value<String?>? speciesId,
+    Value<String?>? venueId,
+    Value<String?>? caption,
+    Value<String>? imagePath,
+    Value<int>? width,
+    Value<int>? height,
+    Value<String?>? error,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return OutboxPostsCompanion(
+      id: id ?? this.id,
+      kind: kind ?? this.kind,
+      audience: audience ?? this.audience,
+      tripId: tripId ?? this.tripId,
+      catchId: catchId ?? this.catchId,
+      speciesId: speciesId ?? this.speciesId,
+      venueId: venueId ?? this.venueId,
+      caption: caption ?? this.caption,
+      imagePath: imagePath ?? this.imagePath,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      error: error ?? this.error,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (audience.present) {
+      map['audience'] = Variable<String>(
+        $OutboxPostsTable.$converteraudience.toSql(audience.value),
+      );
+    }
+    if (tripId.present) {
+      map['trip_id'] = Variable<String>(tripId.value);
+    }
+    if (catchId.present) {
+      map['catch_id'] = Variable<String>(catchId.value);
+    }
+    if (speciesId.present) {
+      map['species_id'] = Variable<String>(speciesId.value);
+    }
+    if (venueId.present) {
+      map['venue_id'] = Variable<String>(venueId.value);
+    }
+    if (caption.present) {
+      map['caption'] = Variable<String>(caption.value);
+    }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
+    if (width.present) {
+      map['width'] = Variable<int>(width.value);
+    }
+    if (height.present) {
+      map['height'] = Variable<int>(height.value);
+    }
+    if (error.present) {
+      map['error'] = Variable<String>(error.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OutboxPostsCompanion(')
+          ..write('id: $id, ')
+          ..write('kind: $kind, ')
+          ..write('audience: $audience, ')
+          ..write('tripId: $tripId, ')
+          ..write('catchId: $catchId, ')
+          ..write('speciesId: $speciesId, ')
+          ..write('venueId: $venueId, ')
+          ..write('caption: $caption, ')
+          ..write('imagePath: $imagePath, ')
+          ..write('width: $width, ')
+          ..write('height: $height, ')
+          ..write('error: $error, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7219,6 +8026,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $JobsTable jobs = $JobsTable(this);
   late final $PlaceMapsTable placeMaps = $PlaceMapsTable(this);
   late final $VenueCacheTable venueCache = $VenueCacheTable(this);
+  late final $OutboxPostsTable outboxPosts = $OutboxPostsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7236,6 +8044,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     jobs,
     placeMaps,
     venueCache,
+    outboxPosts,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -12168,6 +12977,387 @@ typedef $$VenueCacheTableProcessedTableManager =
       VenueCacheRow,
       PrefetchHooks Function()
     >;
+typedef $$OutboxPostsTableCreateCompanionBuilder =
+    OutboxPostsCompanion Function({
+      required String id,
+      required String kind,
+      required CardAudience audience,
+      Value<String?> tripId,
+      Value<String?> catchId,
+      Value<String?> speciesId,
+      Value<String?> venueId,
+      Value<String?> caption,
+      required String imagePath,
+      required int width,
+      required int height,
+      Value<String?> error,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$OutboxPostsTableUpdateCompanionBuilder =
+    OutboxPostsCompanion Function({
+      Value<String> id,
+      Value<String> kind,
+      Value<CardAudience> audience,
+      Value<String?> tripId,
+      Value<String?> catchId,
+      Value<String?> speciesId,
+      Value<String?> venueId,
+      Value<String?> caption,
+      Value<String> imagePath,
+      Value<int> width,
+      Value<int> height,
+      Value<String?> error,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$OutboxPostsTableFilterComposer
+    extends Composer<_$AppDatabase, $OutboxPostsTable> {
+  $$OutboxPostsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<CardAudience, CardAudience, String>
+  get audience => $composableBuilder(
+    column: $table.audience,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get tripId => $composableBuilder(
+    column: $table.tripId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get catchId => $composableBuilder(
+    column: $table.catchId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get speciesId => $composableBuilder(
+    column: $table.speciesId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get venueId => $composableBuilder(
+    column: $table.venueId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get caption => $composableBuilder(
+    column: $table.caption,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+    column: $table.imagePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get width => $composableBuilder(
+    column: $table.width,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get height => $composableBuilder(
+    column: $table.height,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get error => $composableBuilder(
+    column: $table.error,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$OutboxPostsTableOrderingComposer
+    extends Composer<_$AppDatabase, $OutboxPostsTable> {
+  $$OutboxPostsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get audience => $composableBuilder(
+    column: $table.audience,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tripId => $composableBuilder(
+    column: $table.tripId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get catchId => $composableBuilder(
+    column: $table.catchId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get speciesId => $composableBuilder(
+    column: $table.speciesId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get venueId => $composableBuilder(
+    column: $table.venueId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get caption => $composableBuilder(
+    column: $table.caption,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+    column: $table.imagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get width => $composableBuilder(
+    column: $table.width,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get height => $composableBuilder(
+    column: $table.height,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get error => $composableBuilder(
+    column: $table.error,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$OutboxPostsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $OutboxPostsTable> {
+  $$OutboxPostsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<CardAudience, String> get audience =>
+      $composableBuilder(column: $table.audience, builder: (column) => column);
+
+  GeneratedColumn<String> get tripId =>
+      $composableBuilder(column: $table.tripId, builder: (column) => column);
+
+  GeneratedColumn<String> get catchId =>
+      $composableBuilder(column: $table.catchId, builder: (column) => column);
+
+  GeneratedColumn<String> get speciesId =>
+      $composableBuilder(column: $table.speciesId, builder: (column) => column);
+
+  GeneratedColumn<String> get venueId =>
+      $composableBuilder(column: $table.venueId, builder: (column) => column);
+
+  GeneratedColumn<String> get caption =>
+      $composableBuilder(column: $table.caption, builder: (column) => column);
+
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
+  GeneratedColumn<int> get width =>
+      $composableBuilder(column: $table.width, builder: (column) => column);
+
+  GeneratedColumn<int> get height =>
+      $composableBuilder(column: $table.height, builder: (column) => column);
+
+  GeneratedColumn<String> get error =>
+      $composableBuilder(column: $table.error, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$OutboxPostsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $OutboxPostsTable,
+          OutboxPostRow,
+          $$OutboxPostsTableFilterComposer,
+          $$OutboxPostsTableOrderingComposer,
+          $$OutboxPostsTableAnnotationComposer,
+          $$OutboxPostsTableCreateCompanionBuilder,
+          $$OutboxPostsTableUpdateCompanionBuilder,
+          (
+            OutboxPostRow,
+            BaseReferences<_$AppDatabase, $OutboxPostsTable, OutboxPostRow>,
+          ),
+          OutboxPostRow,
+          PrefetchHooks Function()
+        > {
+  $$OutboxPostsTableTableManager(_$AppDatabase db, $OutboxPostsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$OutboxPostsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$OutboxPostsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$OutboxPostsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<CardAudience> audience = const Value.absent(),
+                Value<String?> tripId = const Value.absent(),
+                Value<String?> catchId = const Value.absent(),
+                Value<String?> speciesId = const Value.absent(),
+                Value<String?> venueId = const Value.absent(),
+                Value<String?> caption = const Value.absent(),
+                Value<String> imagePath = const Value.absent(),
+                Value<int> width = const Value.absent(),
+                Value<int> height = const Value.absent(),
+                Value<String?> error = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => OutboxPostsCompanion(
+                id: id,
+                kind: kind,
+                audience: audience,
+                tripId: tripId,
+                catchId: catchId,
+                speciesId: speciesId,
+                venueId: venueId,
+                caption: caption,
+                imagePath: imagePath,
+                width: width,
+                height: height,
+                error: error,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String kind,
+                required CardAudience audience,
+                Value<String?> tripId = const Value.absent(),
+                Value<String?> catchId = const Value.absent(),
+                Value<String?> speciesId = const Value.absent(),
+                Value<String?> venueId = const Value.absent(),
+                Value<String?> caption = const Value.absent(),
+                required String imagePath,
+                required int width,
+                required int height,
+                Value<String?> error = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => OutboxPostsCompanion.insert(
+                id: id,
+                kind: kind,
+                audience: audience,
+                tripId: tripId,
+                catchId: catchId,
+                speciesId: speciesId,
+                venueId: venueId,
+                caption: caption,
+                imagePath: imagePath,
+                width: width,
+                height: height,
+                error: error,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$OutboxPostsTable, OutboxPostRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $OutboxPostsTable,
+                    OutboxPostRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$OutboxPostsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $OutboxPostsTable,
+      OutboxPostRow,
+      $$OutboxPostsTableFilterComposer,
+      $$OutboxPostsTableOrderingComposer,
+      $$OutboxPostsTableAnnotationComposer,
+      $$OutboxPostsTableCreateCompanionBuilder,
+      $$OutboxPostsTableUpdateCompanionBuilder,
+      (
+        OutboxPostRow,
+        BaseReferences<_$AppDatabase, $OutboxPostsTable, OutboxPostRow>,
+      ),
+      OutboxPostRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12195,4 +13385,6 @@ class $AppDatabaseManager {
       $$PlaceMapsTableTableManager(_db, _db.placeMaps);
   $$VenueCacheTableTableManager get venueCache =>
       $$VenueCacheTableTableManager(_db, _db.venueCache);
+  $$OutboxPostsTableTableManager get outboxPosts =>
+      $$OutboxPostsTableTableManager(_db, _db.outboxPosts);
 }

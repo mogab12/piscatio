@@ -103,6 +103,9 @@ jobs:
           # Server address baked into the build (repository variable
           # PISCATIO_API); the account screen can still change it.
           PISCATIO_API: ${{ vars.PISCATIO_API || 'https://piscatio-api.onrender.com' }}
+          # Meta app id Instagram asks for when sharing to Stories (repository
+          # variable FACEBOOK_APP_ID). Without it the app uses the share sheet.
+          FACEBOOK_APP_ID: ${{ vars.FACEBOOK_APP_ID }}
         # The run number is the version code: every build is newer than the
         # last one, so Android offers it as an update.
         run: |
@@ -110,7 +113,8 @@ jobs:
           flutter build apk --release --split-per-abi \
             --target-platform android-arm64 \
             --build-number=${{ github.run_number }} \
-            --dart-define=PISCATIO_API="$PISCATIO_API"
+            --dart-define=PISCATIO_API="$PISCATIO_API" \
+            --dart-define=FACEBOOK_APP_ID="$FACEBOOK_APP_ID"
 
       - uses: actions/upload-artifact@v4
         with:

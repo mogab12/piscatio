@@ -13,6 +13,7 @@ import '../data/jobs/job_runner.dart';
 import '../data/jobs/job_scheduler.dart';
 import '../data/jobs/place_map_job.dart';
 import '../data/jobs/place_name_job.dart';
+import '../data/jobs/post_upload_job.dart';
 import '../data/jobs/sync_job.dart';
 import '../data/jobs/weather_job.dart';
 import '../data/media/photo_storage.dart';
@@ -23,6 +24,7 @@ import '../data/remote/place_name_service.dart';
 import '../data/repositories/place_map_repository.dart';
 import '../data/repositories/venue_repository.dart';
 import '../data/repositories/weather_repository.dart';
+import '../data/social/social_repository.dart';
 import '../data/sync/sync_service.dart';
 import '../domain/models/enums.dart';
 import '../domain/models/geo_point.dart';
@@ -102,6 +104,17 @@ final venueRepositoryProvider = Provider(
 /// A venue from the cache (null until seen online).
 final venueProvider = StreamProvider.family<Venue?, String>(
   (ref, id) => ref.watch(venueRepositoryProvider).watch(id),
+);
+
+final socialRepositoryProvider = Provider(
+  (ref) => SocialRepository(
+    db: ref.watch(appDatabaseProvider),
+    account: ref.watch(accountRepositoryProvider),
+    api: ref.watch(apiFactoryProvider),
+    clock: ref.watch(clockProvider),
+    ids: ref.watch(idGeneratorProvider),
+    root: () => ref.read(photoRootProvider.future),
+  ),
 );
 
 /// Talks to a Piscatio server at [base] (with a session [token] if any).
@@ -228,6 +241,7 @@ final Provider<JobRunner> jobRunnerProvider = Provider<JobRunner>(
       api: ref.watch(apiFactoryProvider),
       root: () => ref.read(photoRootProvider.future),
     ),
+    PostUploadHandler(ref.watch(socialRepositoryProvider)),
   ], ref.watch(clockProvider)),
 );
 
@@ -297,6 +311,12 @@ class BackgroundWork {
     if (await _ref.read(accountRepositoryProvider).read() == null) return;
     if (await _queue.find(JobKind.sync, syncSubject) != null) return;
     await syncSoon();
+  }
+
+  /// Sends a card queued for the community as soon as possible.
+  Future<void> uploadPost(String postId) async {
+    await _queue.enqueue(JobKind.postUpload, postId);
+    _ref.read(jobSchedulerProvider).kick();
   }
 
   Future<void> cancelSync() => _queue.cancel(JobKind.sync, syncSubject);

@@ -11,6 +11,7 @@ import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
 import 'generated/schema_v3.dart' as v3;
 import 'generated/schema_v4.dart' as v4;
+import 'generated/schema_v5.dart' as v5;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -321,6 +322,55 @@ void main() {
         expect(trip.syncStatus, 'synced');
         expect(trip.venueId, equals(null));
         expect(await newDb.select(newDb.venueCache).get(), isEmpty);
+      },
+    );
+  });
+
+  // v4 → v5 adds the community outbox; trips and pending jobs stay.
+  test('migration from v4 to v5 keeps trips and jobs', () async {
+    const t = '2026-09-12T09:00:00.000Z';
+    await verifier.testWithDataIntegrity(
+      oldVersion: 4,
+      newVersion: 5,
+      createOld: v4.DatabaseAtV4.new,
+      createNew: v5.DatabaseAtV5.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch
+          ..insert(
+            oldDb.trips,
+            const v4.TripsData(
+              createdAt: t,
+              updatedAt: t,
+              syncStatus: 'synced',
+              id: 'trip-1',
+              startedAt: t,
+              timezone: 'America/Cuiaba',
+              privacyLevel: 'friends',
+              moonPhase: 'fullMoon',
+              moonIllumination: 1,
+              isRetroactive: 0,
+              venueId: 'venue-1',
+            ),
+          )
+          ..insert(
+            oldDb.jobs,
+            const v4.JobsData(
+              id: 'job-1',
+              kind: 'sync',
+              subjectId: 'account',
+              attempts: 0,
+              nextAttemptAt: t,
+              createdAt: t,
+              updatedAt: t,
+            ),
+          );
+      },
+      validateItems: (newDb) async {
+        final trip = (await newDb.select(newDb.trips).get()).single;
+        expect(trip.venueId, 'venue-1');
+        expect((await newDb.select(newDb.jobs).get()).single.id, 'job-1');
+        expect(await newDb.select(newDb.outboxPosts).get(), isEmpty);
       },
     );
   });

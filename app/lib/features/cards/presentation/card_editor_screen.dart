@@ -1,27 +1,37 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/background.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/providers.dart';
+import '../../../core/router/app_routes.dart';
 import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/action_slab.dart';
+import '../../../core/widgets/choice_sheet.dart';
 import '../../../domain/models/enums.dart';
+import '../../../domain/models/social.dart';
+import '../../community/application/community.dart';
+import '../../community/presentation/publish_sheet.dart';
 import '../application/card_builder.dart';
 import '../application/card_data.dart';
 import '../application/card_exporter.dart';
 import '../application/card_map.dart';
 import '../application/photo_filter_service.dart';
 import '../application/photo_filters.dart';
+import '../application/stories_sharer.dart';
 import 'card_view.dart';
 
 enum CardSubject { catchItem, trip }
 
 enum _Section { style, theme, photo, frame, details, caption }
+
+enum _ShareTarget { community, stories, apps }
 
 /// Make the card yours: style and format, color theme, photo, which
 /// details show, a caption. Then share.
@@ -143,27 +153,192 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
     }
   }
 
+  /// The card as shown, as PNG at its canvas size.
+  Future<Uint8List> _capture(String? photoPath) async {
+    if (photoPath != null && File(photoPath).existsSync()) {
+      await precacheImage(FileImage(File(photoPath)), context);
+    }
+    await WidgetsBinding.instance.endOfFrame;
+    final boundary =
+        _boundary.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    return captureCard(boundary);
+  }
+
+  /// Where the card goes: the community (signed in), Instagram Stories
+  /// (when it can take it) or any other app. With only the last, straight
+  /// to the share sheet.
   Future<void> _share(String? photoPath, CardStyle style) async {
+    final l10n = context.l10n;
+    FocusScope.of(context).unfocus();
+    final signedIn = await ref.read(accountRepositoryProvider).read() != null;
+    final stories = await ref.read(storiesSharerProvider).available();
+    if (!mounted) return;
+    var target = _ShareTarget.apps;
+    if (signedIn || stories) {
+      final picked = await showModalBottomSheet<_ShareTarget>(
+        context: context,
+        useRootNavigator: true,
+        builder: (context) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  PiscatioSizes.gutter,
+                  0,
+                  PiscatioSizes.gutter,
+                  12,
+                ),
+                child: Text(
+                  l10n.shareTitle,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
+              for (final (t, label) in [
+                if (signedIn) (_ShareTarget.community, l10n.publishTitle),
+                if (stories) (_ShareTarget.stories, l10n.shareToStories),
+                (_ShareTarget.apps, l10n.shareToApps),
+              ])
+                ChoiceRow(
+                  label: label,
+                  selected: false,
+                  onTap: () => Navigator.of(context).pop(t),
+                ),
+            ],
+          ),
+        ),
+      );
+      if (picked == null || !mounted) return;
+      target = picked;
+    }
+    switch (target) {
+      case _ShareTarget.community:
+        await _publish(photoPath);
+      case _ShareTarget.stories:
+        await _toStories(photoPath);
+      case _ShareTarget.apps:
+        await _toApps(photoPath, style);
+    }
+  }
+
+  Future<void> _toApps(String? photoPath, CardStyle style) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final sharer = ref.read(cardSharerProvider);
-    FocusScope.of(context).unfocus();
     setState(() => _sharing = true);
     try {
-      if (photoPath != null && File(photoPath).existsSync()) {
-        await precacheImage(FileImage(File(photoPath)), context);
-      }
-      await WidgetsBinding.instance.endOfFrame;
-      final boundary =
-          _boundary.currentContext!.findRenderObject()!
-              as RenderRepaintBoundary;
-      final png = await captureCard(boundary);
+      final png = await _capture(photoPath);
       final name = 'piscatio-${style.name}-${_format.name}.png';
       await sharer.sharePng(png, name);
     } on Exception {
       messenger.showSnackBar(SnackBar(content: Text(l10n.cardShareFailed)));
     } finally {
       if (mounted) setState(() => _sharing = false);
+    }
+  }
+
+  Future<void> _toStories(String? photoPath) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final stories = ref.read(storiesSharerProvider);
+    setState(() => _sharing = true);
+    try {
+      final png = await _capture(photoPath);
+      final ground = _options.palette.ground;
+      final opened = await stories.share(
+        png,
+        sticker: _format != CardFormat.story,
+        top: ground,
+        bottom: ground,
+      );
+      if (!opened) {
+        messenger.showSnackBar(SnackBar(content: Text(l10n.storiesFailed)));
+      }
+    } on Exception {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.cardShareFailed)));
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
+  }
+
+  /// Publishes the card to the community: the person picks who sees it,
+  /// the card is drawn for that audience (friends may see the region) and
+  /// queued; it goes up as soon as there is internet.
+  Future<void> _publish(String? photoPath) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final router = GoRouter.of(context);
+    SocialProfile? profile;
+    var known = false;
+    // Listened while asked: a provider nobody listens to is paused.
+    final listening = ref.listenManual(myProfileProvider, (_, _) {});
+    try {
+      profile = await ref
+          .read(myProfileProvider.future)
+          .timeout(const Duration(seconds: 8));
+      known = true;
+    } on Object {
+      // Offline: queue anyway; the community tab explains if it fails.
+    } finally {
+      listening.close();
+    }
+    if (!mounted) return;
+    if (known && profile == null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.publishNeedsProfile),
+          action: SnackBarAction(
+            label: l10n.communityCreateAction,
+            onPressed: () => router.push(AppRoutes.communityProfile),
+          ),
+        ),
+      );
+      return;
+    }
+    final choice = await showPublishSheet(context);
+    if (choice == null || !mounted) return;
+    final (audience, caption) = choice;
+    final community = ref.read(communityControllerProvider);
+    final (kind, tripId, catchId, speciesId) = switch (widget.subject) {
+      CardSubject.catchItem => () {
+        final item = ref.read(catchProvider(widget.id)).value;
+        return (PostKind.catchCard, item?.tripId, widget.id, item?.speciesId);
+      }(),
+      CardSubject.trip => (PostKind.tripCard, widget.id, null, null),
+    };
+    final venueId = tripId == null
+        ? null
+        : ref.read(tripProvider(tripId)).value?.venueId;
+    setState(() {
+      _sharing = true;
+      _options = _options.copyWith(audience: audience);
+    });
+    try {
+      final png = await _capture(photoPath);
+      final size = _format.size;
+      await community.publish(
+        png: png,
+        width: size.width.round(),
+        height: size.height.round(),
+        kind: kind,
+        audience: audience,
+        tripId: tripId,
+        catchId: catchId,
+        speciesId: speciesId,
+        venueId: venueId,
+        caption: caption,
+      );
+      messenger.showSnackBar(SnackBar(content: Text(l10n.publishQueued)));
+    } on Exception {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.cardShareFailed)));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _sharing = false;
+          _options = _options.copyWith(audience: CardAudience.everyone);
+        });
+      }
     }
   }
 

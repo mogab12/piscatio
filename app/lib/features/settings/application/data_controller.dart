@@ -13,6 +13,7 @@ import '../../../core/providers.dart';
 import '../../../data/export/logbook_exporter.dart';
 import '../../../data/media/photo_importer.dart';
 import '../../../data/media/photo_storage.dart';
+import '../../../data/social/social_repository.dart';
 import '../../account/application/account_controller.dart';
 import '../../cards/application/photo_filter_service.dart';
 
@@ -64,8 +65,10 @@ class DataController {
     await _ref.read(accountControllerProvider).signOut();
     await _ref.read(appDatabaseProvider).wipeUserData();
     final root = await _ref.read(photoRootProvider.future);
-    final photos = Directory(p.join(root.path, PhotoImporter.folder));
-    if (photos.existsSync()) await photos.delete(recursive: true);
+    for (final folder in [PhotoImporter.folder, SocialRepository.folder]) {
+      final dir = Directory(p.join(root.path, folder));
+      if (dir.existsSync()) await dir.delete(recursive: true);
+    }
     await _ref.read(photoFilterServiceProvider).clear();
     // A new install secret will be made: forget the old one.
     _ref.invalidate(privacySecretProvider);
