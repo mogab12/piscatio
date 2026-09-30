@@ -103,8 +103,10 @@ abstract final class AppTheme {
         backgroundColor: scheme.surface,
         indicatorColor: scheme.secondaryContainer,
         surfaceTintColor: Colors.transparent,
+        // Condensed: five tabs, and "Comunidade" still fits on one line.
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => text.labelMedium!.copyWith(
+            fontFamily: PiscatioFonts.condensed,
             fontWeight: states.contains(WidgetState.selected)
                 ? FontWeight.w700
                 : FontWeight.w500,

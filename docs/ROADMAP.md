@@ -77,7 +77,7 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
 - [x] **Checkpoint 1D**: testado no celular (pedidos para a Fase 2: atualizar
       sem desinstalar, nome do app com mais personalidade no logo)
 
-## Fase 2 — Backend e sincronização (atual)
+## Fase 2 — Backend e sincronização
 
 - [x] Django + DRF + PostgreSQL + PostGIS em `/backend`, CI própria, Docker e
       blueprint do Render (`render.yaml`)
@@ -104,14 +104,29 @@ Marque `[x]` quando a tarefa estiver pronta, testada e commitada.
       Detalhes com chaves liga/desliga legíveis; aba Enquadrar (zoom e posição da
       foto e do mapa, por gesto ou controle); filtros Rupestre (novo, nas cores do
       tema) e Gravura refeita; Nanquim e Serigrafia removidos
+- [x] Pedidos do teste 2.1: Rupestre refeito (pintura rupestre com pigmentos de
+      terra), opção "Cores do tema na foto" para qualquer filtro
+- [x] Base para contas de negócios (pesqueiros, pousadas, guias, lojas):
+      perfis públicos pesquisáveis, planos, assinaturas, chaves de recurso e
+      totais anônimos para quem consentir (`docs/NEGOCIOS.md`)
 - [ ] **Checkpoint 2**: publicar o servidor e testar no celular
 
-## Fase 3 — Social
+## Fase 3 — Social (atual)
 
-- [ ] Feed, seguidores, perfil público
-- [ ] Nível de privacidade "amigos" efetivo
-- [ ] Resumo do ano
-- [ ] Compartilhamento direto para Stories do Instagram
+- [x] Comunidade: perfil público (@nome, nasce fechado), seguir e pedidos para
+      seguir, busca de pessoas, feed "Seguindo" e "Descobrir", curtidas,
+      denúncias, bloqueio, sair da comunidade (`backend/social`)
+- [x] Publicar card na Comunidade a partir do editor, para todos ou só amigos;
+      fila no celular (funciona offline) e moderação no admin
+- [x] Nível de privacidade "amigos" efetivo: amigos = quem se segue; o card para
+      amigos mostra a região, o card para fora do app não mostra local
+- [x] Resumo do ano na aba Números, com card próprio (temas, formatos, foto)
+- [x] Compartilhamento direto para Stories do Instagram (Android e iOS), quando
+      o `FACEBOOK_APP_ID` estiver configurado; senão, a folha de
+      compartilhamento do sistema
+- [ ] Comentários e notificações
+- [ ] Publicações nos perfis dos pesqueiros
+- [ ] **Checkpoint 3**: testar a Comunidade com duas contas
 
 ## Fase 4 — Inteligência
 

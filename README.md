@@ -18,9 +18,13 @@ de foto e mapa estilizado do local, estatísticas, iscas e equipamentos, pescari
 passada a partir das fotos, busca de local por nome, exportação e exclusão de
 dados.
 
-Fase 2 em teste: conta por e-mail, sincronização entre aparelhos, backup de
-fotos, clima agora na pescaria em andamento, "O que funcionou?" na aba Números e
+Fase 2 pronta: conta por e-mail, sincronização entre aparelhos, backup de fotos,
+clima agora na pescaria em andamento, "O que funcionou?" na aba Números e
 exclusão de conta. Sem conta, tudo continua funcionando só no celular.
+
+Fase 3 em teste: Comunidade (perfil, seguir, feed, curtidas, denúncias e
+bloqueio), publicar cards para todos ou só amigos, privacidade "Amigos" efetiva,
+Resumo do ano com card próprio e envio direto para os Stories do Instagram.
 
 ## Jeito mais rápido de testar (Android, sem instalar nada)
 
@@ -65,6 +69,27 @@ O servidor precisa estar publicado: veja [`backend/README.md`](backend/README.md
 `https://piscatio-api.onrender.com`; se o Render der outro nome, crie a variável
 `PISCATIO_API` do repositório (**Settings → Secrets and variables → Actions →
 Variables**) com o endereço, e os próximos APKs já saem com ele.
+
+## Comunidade (Fase 3)
+
+A aba **Comunidade** precisa de conta. Na primeira vez, crie um perfil com um
+`@nome`; ele nasce **fechado** (você aprova quem te segue). Nada do diário é
+publicado sem você pedir.
+
+- **Publicar:** no editor do card, **Compartilhar → Publicar na Comunidade**,
+  escolha **Todos** ou **Só amigos** e, se quiser, uma legenda. Sem internet, o
+  card espera na fila e sobe sozinho.
+- **Amigos** são pessoas que se seguem. Uma pescaria em privacidade "Amigos"
+  mostra a região no card publicado para amigos e nenhum local em qualquer outro
+  lugar.
+- **Denunciar e bloquear** ficam no menu de cada publicação e perfil. Denúncias
+  chegam ao admin do servidor (**Social → Reports**), com a ação "esconder
+  publicação".
+- **Stories do Instagram:** a Meta exige um *App ID* de desenvolvedor para o envio
+  direto. Crie um app em developers.facebook.com, copie o App ID e crie a variável
+  `FACEBOOK_APP_ID` do repositório (**Settings → Secrets and variables → Actions →
+  Variables**). Com ela, o editor oferece **Stories do Instagram**; sem ela, o card
+  vai pela folha de compartilhamento do sistema (onde o Instagram também aparece).
 
 ## Rodar a partir do código
 
@@ -169,6 +194,39 @@ conta, o pedido passa pelo servidor, que guarda um cache por região; sem conta,
 vai direto ao Overpass. O workflow `map-probe`
 testa a consulta real em quatro lugares sempre que o código do mapa muda.
 
+## O que testar no checkpoint 3
+
+Pedidos do teste anterior:
+
+- **Rupestre** refeito como pintura de caverna: pigmento de terra aplicado em
+  camadas, contorno de carvão e textura de pedra.
+- **Cores do tema na foto** (aba Tema): liga as cores do tema em qualquer filtro,
+  inclusive Gravura, Retícula e Duotone.
+- **Negócios:** a base para pesqueiros, pousadas e lojas está no servidor (veja
+  `docs/NEGOCIOS.md`), desligada até a chave `venues` ser ligada no admin.
+
+Roteiro da fase (precisa de duas contas, em dois celulares ou um celular e o
+admin do servidor):
+
+1. **Perfil:** aba Comunidade → Criar perfil. Um `@nome` que já existe mostra "Esse
+   @nome já tem dono". O perfil nasce fechado.
+2. **Seguir:** na outra conta, busque o `@nome` (ícone de pessoa com lupa) e toque
+   em **Seguir**: aparece "Solicitado". Na primeira conta, o ícone de pedidos mostra
+   o número; aceite. Siga de volta: os dois viram **Amigos**.
+3. **Publicar:** num card, **Compartilhar → Publicar na Comunidade → Só amigos**.
+   Em modo avião, o aviso "Publicando card…" fica no topo da Comunidade até a
+   internet voltar.
+4. **Privacidade Amigos:** numa pescaria em "Amigos", o card compartilhado fora do
+   app não mostra local; o publicado para amigos mostra a região.
+5. **Feed:** curta, denuncie ("Mostra um ponto de pesca") e bloqueie. O bloqueio
+   some com as publicações dos dois lados.
+6. **Resumo do ano** (aba Números): números do ano, capturas por mês e **Criar card
+   do ano**, com temas, formatos e foto.
+7. **Stories:** com `FACEBOOK_APP_ID` configurado e o Instagram instalado,
+   **Compartilhar → Stories do Instagram** abre o editor de story com o card.
+8. **Sair da comunidade** (Seu perfil → Editar perfil): apaga perfil e publicações
+   do servidor; o diário continua.
+
 ## O que testar no checkpoint 2
 
 Mudanças pedidas no teste desta fase:
@@ -263,6 +321,9 @@ Roteiro da fase:
   precisam de internet; sem ela, o nome da região fica na fila.
 - A exportação leva os dados em JSON; as fotos vão para o servidor só com conta.
 - Login com Google e Apple ainda não está no app (só e-mail).
+- A Comunidade não tem comentários nem notificações ainda; o feed atualiza ao
+  puxar para baixo.
+- O envio direto para os Stories depende do App ID da Meta (ver "Comunidade").
 - A sincronização roda com o app aberto (sem execução em segundo plano).
 - No plano gratuito do Render o servidor dorme sem uso: o primeiro acesso do dia
   pode levar uns 30 segundos, e o banco gratuito expira depois de 30 dias.

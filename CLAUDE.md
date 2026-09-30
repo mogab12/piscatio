@@ -113,6 +113,23 @@ Regras:
 - Negócios só veem totais anônimos de quem consentiu (`share_insights`), com mínimo
   de pessoas e grupos pequenos omitidos. Nunca dados individuais nem coordenadas.
 
+## Comunidade
+
+- Só participa quem cria um perfil (`@nome`); o perfil nasce fechado. Sem perfil a
+  conta é só backup. Regras de quem vê o quê ficam em `backend/social/rules.py`.
+- O que é de outras pessoas (feed, perfis) é online por natureza: as telas buscam
+  na hora e mostram "sem conexão" com "Tentar de novo". O que a pessoa publica vai
+  para a fila (`outbox_posts` + `JobKind.postUpload`) e sobe sozinho.
+- A publicação é a imagem do card já desenhada para o público escolhido (nunca
+  coordenadas) mais tipo, espécie e pesqueiro. Foto de perfil é reencodada sem
+  metadados antes de subir.
+- Providers da Comunidade não tentam de novo sozinhos (`retry: _noRetry`); ao
+  esperar um provider fora de um widget, mantenha-o ouvido (`listenManual`), pois
+  provider sem ouvinte fica pausado no Riverpod 3.
+- Stories do Instagram: canal `piscatio/stories` (Android: intent + FileProvider;
+  iOS: pasteboard). Só aparece com `--dart-define=FACEBOOK_APP_ID` e o Instagram
+  instalado.
+
 ## Internacionalização
 
 - Idiomas: `en` (modelo), `pt` (conteúdo pt-BR), `es`. Padrão = idioma do aparelho,
@@ -125,10 +142,12 @@ Regras:
 
 ## Privacidade (inegociável)
 
-- Níveis: `private` (padrão), `friends`, `approximate`, `exact`. No MVP `friends`
-  se comporta como `private`.
+- Níveis: `private` (padrão), `friends`, `approximate`, `exact`. Amigos = pessoas
+  que se seguem na Comunidade.
 - Cards **nunca** recebem coordenadas: o modelo de dados do card não tem lat/lng.
-  Local no card: private → nenhum; friends/approximate → região; exact → nome do local.
+  Local no card: private → nenhum; friends → região só no card para amigos
+  (`CardAudience.friends`), nenhum fora do app; approximate → região; exact → nome
+  do local (`domain/services/card_privacy`).
 - Fotos têm EXIF/GPS removido **na importação** (reencode). Data e local do EXIF são
   lidos antes e salvos no banco.
 - Modo aproximado: `domain/services/privacy_offset` — encaixe em grade (~1 km) +

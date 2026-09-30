@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:piscatio/core/background.dart';
 import 'package:piscatio/core/media/photo_source.dart';
 import 'package:piscatio/core/providers.dart';
+import 'package:piscatio/core/router/app_router.dart';
+import 'package:piscatio/core/router/app_routes.dart';
 import 'package:piscatio/data/media/photo_importer.dart';
 import 'package:piscatio/data/remote/piscatio_api.dart';
 import 'package:piscatio/domain/models/catch.dart';
@@ -11,9 +16,11 @@ import 'package:piscatio/domain/models/geo_point.dart';
 import 'package:piscatio/features/account/presentation/account_screen.dart';
 import 'package:piscatio/features/active_trip/presentation/active_trip_screen.dart';
 import 'package:piscatio/features/cards/presentation/card_editor_screen.dart';
+import 'package:piscatio/features/community/application/community.dart';
 import 'package:piscatio/features/stats/presentation/stats_screen.dart';
 import 'package:piscatio/features/summary/presentation/trip_summary_screen.dart';
 
+import '../features/community/community_test.dart' show pixel;
 import '../features/summary/trip_summary_test.dart' show seedSummaryTrip;
 import '../helpers/fake_server.dart';
 import '../helpers/fakes.dart';
@@ -428,6 +435,120 @@ void main() {
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -260));
     await app.settle(tester);
     await saveScreenshot(tester, 'stats_what_worked');
+    await app.dispose(tester);
+  }, skip: !screenshotsEnabled);
+
+  // Needs the card screenshots first (test/screenshots/cards_*): the feed
+  // shows real cards.
+  testWidgets('phase 3 screens', (tester) async {
+    usePhoneSurface(tester);
+    final cards = {
+      for (final name in [
+        'card_catch_cover_story_photo',
+        'card_trip_chart_square_plain',
+        'card_year_story_plain',
+      ])
+        name: File('build/screenshots/$name.png'),
+    };
+    final server = FakeServer()
+      ..profile = {
+        ...FakeServer.person('ana.pesca', name: 'Ana'),
+        'bio': 'Dourado no Cuiabá, tucunaré no Araguaia',
+        'is_private': true,
+        'followers': 38,
+        'following': 41,
+        'posts': 12,
+      }
+      ..people['bia'] = {
+        ...FakeServer.person('bia', name: 'Bia Ribeiro'),
+        'bio': 'Pesca esportiva, sempre soltando',
+        'followers': 210,
+        'following': 95,
+        'posts': 3,
+      }
+      ..followRequests.addAll(['cid', 'dani'])
+      ..feedPosts.addAll([
+        {
+          ...FakeServer.post('card_catch_cover_story_photo', likes: 14),
+          'author': {
+            'handle': 'bia',
+            'display_name': 'Bia Ribeiro',
+            'avatar_url': null,
+          },
+          'caption': 'Primeiro dourado do ano, voltou pra água',
+          'liked': true,
+        },
+        {
+          ...FakeServer.post(
+            'card_trip_chart_square_plain',
+            handle: 'joao',
+            caption: 'Manhã boa na represa',
+            likes: 3,
+            audience: 'friends',
+          ),
+          'width': 1080,
+          'height': 1080,
+        },
+      ]);
+    final app = await TestApp.start(
+      tester,
+      overrides: [
+        apiFactoryProvider.overrideWithValue(
+          (base, token) =>
+              PiscatioApi(server.client(), base: base, token: token),
+        ),
+        socialImageProvider.overrideWithValue((url) {
+          final id = Uri.parse(url).pathSegments.last.replaceAll('.png', '');
+          final file = cards[id];
+          return file != null && file.existsSync()
+              ? FileImage(file)
+              : MemoryImage(pixel);
+        }),
+      ],
+    );
+    await app.run(tester, () async {
+      await app.read(settingsRepositoryProvider).completeOnboarding();
+      await app
+          .read(accountRepositoryProvider)
+          .signedIn(
+            const ApiSession(token: FakeServer.token, email: FakeServer.email),
+          );
+    });
+    await seedSummaryTrip(app, tester);
+    await app.pumpApp(tester);
+    // Card images decode on the real event loop.
+    final context = tester.element(find.byType(Scaffold).first);
+    for (final f in cards.values.where((f) => f.existsSync())) {
+      await tester.runAsync(() => precacheImage(FileImage(f), context));
+    }
+    await tester.tap(find.text('Comunidade'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'community_feed');
+    await tester.drag(find.byType(ListView).first, const Offset(0, -560));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'community_feed_scrolled');
+
+    server.people['bia']!['can_see'] = true;
+    unawaited(app.read(routerProvider).push(AppRoutes.person('bia')));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'community_person');
+    app.read(routerProvider).pop();
+    await app.settle(tester);
+    await tester.tap(find.byTooltip('Pedidos para seguir'));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'community_requests');
+    app.read(routerProvider).pop();
+    await app.settle(tester);
+
+    unawaited(app.read(routerProvider).push(AppRoutes.communityProfile));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'community_profile_edit');
+    app.read(routerProvider).pop();
+    await app.settle(tester);
+
+    unawaited(app.read(routerProvider).push(AppRoutes.yearSummary(2026)));
+    await app.settle(tester);
+    await saveScreenshot(tester, 'year_summary');
     await app.dispose(tester);
   }, skip: !screenshotsEnabled);
 }
