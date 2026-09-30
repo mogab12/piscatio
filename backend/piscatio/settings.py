@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "flags",
     "billing",
     "venues",
+    "social",
 ]
 
 MIDDLEWARE = [

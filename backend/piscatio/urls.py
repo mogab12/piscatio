@@ -6,6 +6,7 @@ from accounts import views as accounts
 from conditions import views as conditions
 from flags import views as flags
 from logbook import views as logbook
+from social import views as social
 from venues import views as venues
 
 
@@ -34,4 +35,23 @@ urlpatterns = [
     path("api/venues/<uuid:venue_id>/favorite", venues.favorite),
     path("api/venues/<uuid:venue_id>/insights", venues.insights),
     path("api/me/venues", venues.my_venues),
+    path("api/social/profile", social.profile),
+    path("api/social/profile/avatar", social.avatar),
+    path("api/social/people", social.people),
+    path("api/social/people/<str:handle>", social.person),
+    path("api/social/people/<str:handle>/posts", social.person_posts),
+    path("api/social/people/<str:handle>/followers", social.followers),
+    path("api/social/people/<str:handle>/following", social.following),
+    path("api/social/people/<str:handle>/follow", social.follow),
+    path("api/social/people/<str:handle>/follower", social.follower),
+    path("api/social/people/<str:handle>/block", social.block),
+    path("api/social/blocks", social.blocks),
+    path("api/social/requests", social.follow_requests),
+    path("api/social/requests/<str:handle>", social.request_answer),
+    path("api/social/feed", social.feed),
+    path("api/social/posts/<uuid:post_id>", social.post),
+    path("api/social/posts/<uuid:post_id>/image", social.post_image),
+    path("api/social/posts/<uuid:post_id>/like", social.like),
+    path("api/social/reports", social.report),
+    path("api/social/media/<str:token>", social.media_file),
 ]

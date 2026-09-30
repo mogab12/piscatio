@@ -19,9 +19,35 @@ pela fila de jobs quando há internet.
 | `GET /api/account` · `DELETE /api/account` | exportar tudo · apagar a conta e todos os dados (LGPD/GDPR) |
 | `GET /api/conditions/weather?lat=&lon=` | clima agora (MET Norway), ponto arredondado a ~1 km |
 | `GET /api/conditions/map?lat=&lon=` | dados de mapa do OpenStreetMap, com cache por região |
+| `GET/PUT/DELETE /api/social/profile` · `PUT /api/social/profile/avatar` | perfil público: criar, mudar, sair da comunidade; foto do perfil |
+| `GET /api/social/people?q=` · `GET /api/social/people/<handle>` | buscar pessoas · perfil com contagens e relação |
+| `POST/DELETE /api/social/people/<handle>/follow` | seguir (ou pedir, se o perfil for fechado) · deixar de seguir |
+| `GET /api/social/requests` · `POST/DELETE /api/social/requests/<handle>` | pedidos para seguir · aceitar/recusar |
+| `POST/DELETE /api/social/people/<handle>/block` · `GET /api/social/blocks` | bloquear · desbloquear · bloqueados |
+| `GET /api/social/feed?scope=following\|discover&before=` | feed (quem você segue) ou descobrir (perfis abertos) |
+| `PUT/GET/DELETE /api/social/posts/<id>` · `PUT …/image` · `POST/DELETE …/like` | publicar um card · imagem · curtir |
+| `POST /api/social/reports` | denunciar publicação ou perfil (vai para o admin) |
 | `GET /health` | verificação do servidor |
 
-Tudo em `/api` exige `Authorization: Bearer <token>`, menos o login.
+Tudo em `/api` exige `Authorization: Bearer <token>`, menos o login e os links
+assinados de imagem (`/api/social/media/<assinatura>`).
+
+### Comunidade
+
+- Só participa quem cria um perfil (`@nome`); sem perfil, a conta é só backup
+  do diário. Perfil nasce **fechado**: seguir exige aprovação.
+- Amigos = pessoas que se seguem. Publicação "amigos" só chega a amigos;
+  "pública" chega a todos se o perfil for aberto, e só a seguidores aceitos se
+  for fechado. Bloqueio esconde tudo nos dois sentidos. Regras em
+  `social/rules.py`, usadas por todas as rotas.
+- A publicação é a imagem do card (que nunca tem coordenadas) com poucos dados
+  (tipo, espécie, pesqueiro). O id vem do app, então reenviar não duplica.
+- Imagens saem por link assinado que vale de 1 a 2 dias e não muda no mesmo
+  dia (o app guarda em cache). Com S3/R2, o próprio storage assina.
+- Moderação no admin: denúncias, "esconder publicação" (só o autor continua
+  vendo).
+- Exportar a conta inclui perfil, publicações, quem segue e é seguido;
+  apagar a conta apaga as imagens.
 
 ### Sincronização
 

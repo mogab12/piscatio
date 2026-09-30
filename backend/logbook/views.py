@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import BaseParser
 from rest_framework.response import Response
 
+from social import views as social
+
 from . import sync
 from .models import CatchPhoto
 
@@ -82,7 +84,14 @@ def account(request):
     DELETE: the account and all its data, photos included, for good."""
     if request.method == "GET":
         data = sync.pull(request.user, 0, limit=10**9)
-        return Response({"email": request.user.email, "changes": data["changes"]})
+        return Response(
+            {
+                "email": request.user.email,
+                "changes": data["changes"],
+                "social": social.export(request.user, request),
+            }
+        )
+    social.leave(request.user)
     names = list(
         CatchPhoto.objects.filter(user=request.user)
         .exclude(file_name="")
