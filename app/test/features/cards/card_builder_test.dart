@@ -158,6 +158,36 @@ void main() {
       expect(hidden.speciesName, 'Dourado');
     });
 
+    test('a card for friends shows the region of a friends-only trip', () {
+      final item = _c('a', mm: 400);
+      final card = buildCatchCard(
+        item: item,
+        trip: _trip(privacy: PrivacyLevel.friends),
+        allCatches: [item],
+        species: _dourado,
+        f: _f,
+        lang: 'pt',
+      );
+      expect(card.customized(const CardOptions()).place, isNull);
+      expect(
+        card
+            .customized(const CardOptions(audience: CardAudience.friends))
+            .place,
+        'Cuiabá, MT',
+      );
+      expect(
+        card
+            .customized(
+              const CardOptions(
+                audience: CardAudience.friends,
+                showPlace: false,
+              ),
+            )
+            .place,
+        isNull,
+      );
+    });
+
     test('customizing only removes details, applies photo and caption', () {
       final item = _c('a', mm: 400, baitId: 'x');
       final card = buildCatchCard(

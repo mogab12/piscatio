@@ -118,7 +118,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get privacyFriendsDescription =>
-      'Por enquanto funciona como “Só eu”. Amigos chegam numa próxima versão.';
+      'Só amigos (quem você segue e te segue de volta) veem a região, dentro do app. Cards compartilhados fora dele não mostram o local.';
 
   @override
   String get privacyApproximateDescription =>

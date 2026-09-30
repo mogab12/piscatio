@@ -304,10 +304,10 @@ abstract class AppLocalizations {
   /// **'Cards never show where you fished.'**
   String get privacyPrivateDescription;
 
-  /// Explains the friends level in the MVP.
+  /// Explains the friends privacy level
   ///
   /// In en, this message translates to:
-  /// **'For now, works like “Only me”. Friends arrive in a future version.'**
+  /// **'Only friends (people you follow who follow you back) see the region, in the app. Cards shared outside it show no place.'**
   String get privacyFriendsDescription;
 
   /// Explains the approximate level.

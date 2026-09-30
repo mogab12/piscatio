@@ -149,9 +149,9 @@
   "@privacyPrivateDescription": {
     "description": "Explains the private level."
   },
-  "privacyFriendsDescription": "For now, works like “Only me”. Friends arrive in a future version.",
+  "privacyFriendsDescription": "Only friends (people you follow who follow you back) see the region, in the app. Cards shared outside it show no place.",
   "@privacyFriendsDescription": {
-    "description": "Explains the friends level in the MVP."
+    "description": "Explains the friends privacy level"
   },
   "privacyApproximateDescription": "Cards show only the region, like the city. The spot is shifted a few kilometers.",
   "@privacyApproximateDescription": {

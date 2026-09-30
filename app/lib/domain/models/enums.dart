@@ -12,3 +12,7 @@ enum SyncStatus { pending, synced, rejected }
 enum BaitType { natural, artificial, fly, other }
 
 enum GearType { combo, rod, reel, line, other }
+
+/// Who sees a card: anyone (shared out of the app or posted publicly), or
+/// only friends (mutual follows) in the app's feed.
+enum CardAudience { everyone, friends }

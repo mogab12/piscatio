@@ -10,6 +10,7 @@ import '../../../core/formatting/formatters.dart';
 import '../../../core/providers.dart';
 import '../../../data/media/photo_storage.dart';
 import '../../../domain/models/catch.dart';
+import '../../../domain/models/enums.dart';
 import '../../../domain/models/species.dart';
 import '../../../domain/models/tackle.dart';
 import '../../../domain/models/trip.dart';
@@ -164,6 +165,12 @@ CatchCardData buildCatchCard({
       name: trip.locationName,
       region: trip.locationRegion,
     ),
+    friendsPlace: cardPlace(
+      trip.privacyLevel,
+      name: trip.locationName,
+      region: trip.locationRegion,
+      audience: CardAudience.friends,
+    ),
     lengthLabel: item.lengthMillimeters == null
         ? null
         : f.length(item.lengthMillimeters!),
@@ -255,6 +262,12 @@ TripCardData buildTripCard({
       trip.privacyLevel,
       name: trip.locationName,
       region: trip.locationRegion,
+    ),
+    friendsPlace: cardPlace(
+      trip.privacyLevel,
+      name: trip.locationName,
+      region: trip.locationRegion,
+      audience: CardAudience.friends,
     ),
     durationLabel: f.duration(summary.duration),
     timeRangeLabel: trip.endedAt == null

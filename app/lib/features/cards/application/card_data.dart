@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import '../../../domain/models/enums.dart';
 import '../../../domain/services/map_sketch.dart';
 import '../../../domain/services/ruler_scale.dart';
 import 'photo_filters.dart';
@@ -197,6 +198,7 @@ class CardOptions {
     this.photoFrame = CardFrame.fill,
     this.mapFrame = CardFrame.fill,
     this.photoThemed = false,
+    this.audience = CardAudience.everyone,
   });
 
   final CardPalette palette;
@@ -230,6 +232,9 @@ class CardOptions {
   /// of natural ones.
   final bool photoThemed;
 
+  /// Who will see the card: a card for friends may show more of the place.
+  final CardAudience audience;
+
   /// The filter the card draws right now.
   CardPhotoFilter get activeFilter =>
       filteredPath == null ? CardPhotoFilter.none : photoFilter;
@@ -258,6 +263,7 @@ class CardOptions {
     CardFrame? photoFrame,
     CardFrame? mapFrame,
     bool? photoThemed,
+    CardAudience? audience,
   }) => CardOptions(
     palette: palette ?? this.palette,
     showPlace: showPlace ?? this.showPlace,
@@ -272,6 +278,7 @@ class CardOptions {
     photoFrame: photoFrame ?? this.photoFrame,
     mapFrame: mapFrame ?? this.mapFrame,
     photoThemed: photoThemed ?? this.photoThemed,
+    audience: audience ?? this.audience,
   );
 
   /// Another photo: its filtered version has to be made again, and it is
@@ -288,6 +295,7 @@ class CardOptions {
     photoFilter: photoFilter,
     mapFrame: mapFrame,
     photoThemed: photoThemed,
+    audience: audience,
   );
 
   CardOptions withFilter(CardPhotoFilter filter, {String? filteredPath}) =>
@@ -305,6 +313,7 @@ class CardOptions {
         photoFrame: photoFrame,
         mapFrame: mapFrame,
         photoThemed: photoThemed,
+        audience: audience,
       );
 }
 
@@ -438,6 +447,7 @@ class CatchCardData {
     this.headline = const [],
     this.scientificName,
     this.place,
+    this.friendsPlace,
     this.lengthLabel,
     this.weightLabel,
     this.baitLabel,
@@ -461,6 +471,9 @@ class CatchCardData {
   final String timeLabel;
   final String romanDate;
   final String? place;
+
+  /// The place allowed on a card shown only to friends (see [cardPlace]).
+  final String? friendsPlace;
   final String? lengthLabel;
   final String? weightLabel;
   final String? baitLabel;
@@ -513,7 +526,9 @@ class CatchCardData {
     rulerUnit: rulerUnit,
     headline: headline,
     moon: o.showWeather ? moon : null,
-    place: o.showPlace ? place : null,
+    place: o.showPlace
+        ? (o.audience == CardAudience.friends ? friendsPlace : place)
+        : null,
     lengthLabel: lengthLabel,
     weightLabel: weightLabel,
     baitLabel: o.showBait ? baitLabel : null,
@@ -565,6 +580,7 @@ class TripCardData {
     required this.elapsedFraction,
     this.moon,
     this.place,
+    this.friendsPlace,
     this.biggestLabel,
     this.topBaitLabel,
     this.photoPath,
@@ -582,6 +598,9 @@ class TripCardData {
   final String dateLabel;
   final String romanDate;
   final String? place;
+
+  /// The place allowed on a card shown only to friends (see [cardPlace]).
+  final String? friendsPlace;
   final String durationLabel;
   final String timeRangeLabel;
   final int catchCount;
@@ -624,7 +643,9 @@ class TripCardData {
     spanHours: spanHours,
     elapsedFraction: elapsedFraction,
     moon: o.showWeather ? moon : null,
-    place: o.showPlace ? place : null,
+    place: o.showPlace
+        ? (o.audience == CardAudience.friends ? friendsPlace : place)
+        : null,
     biggestLabel: biggestLabel,
     topBaitLabel: o.showBait ? topBaitLabel : null,
     photoPath: o._shownPhoto(photoPath),

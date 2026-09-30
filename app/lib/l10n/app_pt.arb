@@ -34,7 +34,7 @@
   "privacyApproximate": "Região aproximada",
   "privacyExact": "Local exato",
   "privacyPrivateDescription": "Os cards nunca mostram onde você pescou.",
-  "privacyFriendsDescription": "Por enquanto funciona como “Só eu”. Amigos chegam numa próxima versão.",
+  "privacyFriendsDescription": "Só amigos (quem você segue e te segue de volta) veem a região, dentro do app. Cards compartilhados fora dele não mostram o local.",
   "privacyApproximateDescription": "Os cards mostram só a região, como a cidade. O ponto é deslocado alguns quilômetros.",
   "privacyExactDescription": "Os cards mostram o nome do local. Coordenadas nunca aparecem.",
   "unitsMetric": "Métrico",

@@ -10,10 +10,40 @@ void main() {
     const name = 'Pesqueiro do Zé';
     const region = 'Cuiabá, MT';
 
-    test('private and friends never show a place', () {
+    test('private and friends never show a place to everyone', () {
       for (final level in [PrivacyLevel.private, PrivacyLevel.friends]) {
         expect(cardPlace(level, name: name, region: region), isNull);
       }
+    });
+
+    test('friends shows the region, never the name, only to friends', () {
+      expect(
+        cardPlace(
+          PrivacyLevel.friends,
+          name: name,
+          region: region,
+          audience: CardAudience.friends,
+        ),
+        region,
+      );
+      expect(
+        cardPlace(
+          PrivacyLevel.private,
+          name: name,
+          region: region,
+          audience: CardAudience.friends,
+        ),
+        isNull,
+      );
+      expect(
+        cardPlace(
+          PrivacyLevel.exact,
+          name: name,
+          region: region,
+          audience: CardAudience.friends,
+        ),
+        name,
+      );
     });
 
     test('approximate shows only the region, never the name', () {
