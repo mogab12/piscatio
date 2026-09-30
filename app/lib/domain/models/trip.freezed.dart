@@ -21,7 +21,8 @@ mixin _$Trip {
  DateTime? get endedAt;/// IANA time zone where the trip happened, for display.
  String get timezone; GeoPoint? get location; double? get locationAccuracyMeters; String? get locationName;/// City/state level description, the most a card may show for
 /// approximate privacy.
- String? get locationRegion; PrivacyLevel get privacyLevel; MoonPhase get moonPhase; double get moonIllumination; String? get notes; bool get isRetroactive; DateTime get createdAt; DateTime get updatedAt;
+ String? get locationRegion; PrivacyLevel get privacyLevel; MoonPhase get moonPhase; double get moonIllumination; String? get notes; bool get isRetroactive;/// The venue (pay lake, lodge…) where it happened, if picked.
+ String? get venueId; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -35,20 +36,20 @@ $TripCopyWith<Trip> get copyWith => _$TripCopyWithImpl<Trip>(this as Trip, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Trip;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trip&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.startedAt, _this.startedAt) || other.startedAt == _this.startedAt)&&(identical(other.endedAt, _this.endedAt) || other.endedAt == _this.endedAt)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.locationAccuracyMeters, _this.locationAccuracyMeters) || other.locationAccuracyMeters == _this.locationAccuracyMeters)&&(identical(other.locationName, _this.locationName) || other.locationName == _this.locationName)&&(identical(other.locationRegion, _this.locationRegion) || other.locationRegion == _this.locationRegion)&&(identical(other.privacyLevel, _this.privacyLevel) || other.privacyLevel == _this.privacyLevel)&&(identical(other.moonPhase, _this.moonPhase) || other.moonPhase == _this.moonPhase)&&(identical(other.moonIllumination, _this.moonIllumination) || other.moonIllumination == _this.moonIllumination)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.isRetroactive, _this.isRetroactive) || other.isRetroactive == _this.isRetroactive)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trip&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.startedAt, _this.startedAt) || other.startedAt == _this.startedAt)&&(identical(other.endedAt, _this.endedAt) || other.endedAt == _this.endedAt)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.locationAccuracyMeters, _this.locationAccuracyMeters) || other.locationAccuracyMeters == _this.locationAccuracyMeters)&&(identical(other.locationName, _this.locationName) || other.locationName == _this.locationName)&&(identical(other.locationRegion, _this.locationRegion) || other.locationRegion == _this.locationRegion)&&(identical(other.privacyLevel, _this.privacyLevel) || other.privacyLevel == _this.privacyLevel)&&(identical(other.moonPhase, _this.moonPhase) || other.moonPhase == _this.moonPhase)&&(identical(other.moonIllumination, _this.moonIllumination) || other.moonIllumination == _this.moonIllumination)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.isRetroactive, _this.isRetroactive) || other.isRetroactive == _this.isRetroactive)&&(identical(other.venueId, _this.venueId) || other.venueId == _this.venueId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Trip;
-  return Object.hash(runtimeType,_this.id,_this.startedAt,_this.endedAt,_this.timezone,_this.location,_this.locationAccuracyMeters,_this.locationName,_this.locationRegion,_this.privacyLevel,_this.moonPhase,_this.moonIllumination,_this.notes,_this.isRetroactive,_this.createdAt,_this.updatedAt);
+  return Object.hash(runtimeType,_this.id,_this.startedAt,_this.endedAt,_this.timezone,_this.location,_this.locationAccuracyMeters,_this.locationName,_this.locationRegion,_this.privacyLevel,_this.moonPhase,_this.moonIllumination,_this.notes,_this.isRetroactive,_this.venueId,_this.createdAt,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as Trip;
-  return 'Trip(id: ${_this.id}, startedAt: ${_this.startedAt}, endedAt: ${_this.endedAt}, timezone: ${_this.timezone}, location: ${_this.location}, locationAccuracyMeters: ${_this.locationAccuracyMeters}, locationName: ${_this.locationName}, locationRegion: ${_this.locationRegion}, privacyLevel: ${_this.privacyLevel}, moonPhase: ${_this.moonPhase}, moonIllumination: ${_this.moonIllumination}, notes: ${_this.notes}, isRetroactive: ${_this.isRetroactive}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
+  return 'Trip(id: ${_this.id}, startedAt: ${_this.startedAt}, endedAt: ${_this.endedAt}, timezone: ${_this.timezone}, location: ${_this.location}, locationAccuracyMeters: ${_this.locationAccuracyMeters}, locationName: ${_this.locationName}, locationRegion: ${_this.locationRegion}, privacyLevel: ${_this.privacyLevel}, moonPhase: ${_this.moonPhase}, moonIllumination: ${_this.moonIllumination}, notes: ${_this.notes}, isRetroactive: ${_this.isRetroactive}, venueId: ${_this.venueId}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -59,7 +60,7 @@ abstract mixin class $TripCopyWith<$Res>  {
   factory $TripCopyWith(Trip value, $Res Function(Trip) _then) = _$TripCopyWithImpl;
 @useResult
 $Res call({
- String id, DateTime startedAt, DateTime? endedAt, String timezone, GeoPoint? location, double? locationAccuracyMeters, String? locationName, String? locationRegion, PrivacyLevel privacyLevel, MoonPhase moonPhase, double moonIllumination, String? notes, bool isRetroactive, DateTime createdAt, DateTime updatedAt
+ String id, DateTime startedAt, DateTime? endedAt, String timezone, GeoPoint? location, double? locationAccuracyMeters, String? locationName, String? locationRegion, PrivacyLevel privacyLevel, MoonPhase moonPhase, double moonIllumination, String? notes, bool isRetroactive, String? venueId, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -76,7 +77,7 @@ class _$TripCopyWithImpl<$Res>
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startedAt = null,Object? endedAt = freezed,Object? timezone = null,Object? location = freezed,Object? locationAccuracyMeters = freezed,Object? locationName = freezed,Object? locationRegion = freezed,Object? privacyLevel = null,Object? moonPhase = null,Object? moonIllumination = null,Object? notes = freezed,Object? isRetroactive = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startedAt = null,Object? endedAt = freezed,Object? timezone = null,Object? location = freezed,Object? locationAccuracyMeters = freezed,Object? locationName = freezed,Object? locationRegion = freezed,Object? privacyLevel = null,Object? moonPhase = null,Object? moonIllumination = null,Object? notes = freezed,Object? isRetroactive = null,Object? venueId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(Trip(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,startedAt: null == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
@@ -91,7 +92,8 @@ as PrivacyLevel,moonPhase: null == moonPhase ? _self.moonPhase : moonPhase // ig
 as MoonPhase,moonIllumination: null == moonIllumination ? _self.moonIllumination : moonIllumination // ignore: cast_nullable_to_non_nullable
 as double,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,isRetroactive: null == isRetroactive ? _self.isRetroactive : isRetroactive // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as bool,venueId: freezed == venueId ? _self.venueId : venueId // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -190,10 +192,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime startedAt,  DateTime? endedAt,  String timezone,  GeoPoint? location,  double? locationAccuracyMeters,  String? locationName,  String? locationRegion,  PrivacyLevel privacyLevel,  MoonPhase moonPhase,  double moonIllumination,  String? notes,  bool isRetroactive,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime startedAt,  DateTime? endedAt,  String timezone,  GeoPoint? location,  double? locationAccuracyMeters,  String? locationName,  String? locationRegion,  PrivacyLevel privacyLevel,  MoonPhase moonPhase,  double moonIllumination,  String? notes,  bool isRetroactive,  String? venueId,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Trip() when $default != null:
-return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.location,_that.locationAccuracyMeters,_that.locationName,_that.locationRegion,_that.privacyLevel,_that.moonPhase,_that.moonIllumination,_that.notes,_that.isRetroactive,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.location,_that.locationAccuracyMeters,_that.locationName,_that.locationRegion,_that.privacyLevel,_that.moonPhase,_that.moonIllumination,_that.notes,_that.isRetroactive,_that.venueId,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -211,10 +213,10 @@ return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.loca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime startedAt,  DateTime? endedAt,  String timezone,  GeoPoint? location,  double? locationAccuracyMeters,  String? locationName,  String? locationRegion,  PrivacyLevel privacyLevel,  MoonPhase moonPhase,  double moonIllumination,  String? notes,  bool isRetroactive,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime startedAt,  DateTime? endedAt,  String timezone,  GeoPoint? location,  double? locationAccuracyMeters,  String? locationName,  String? locationRegion,  PrivacyLevel privacyLevel,  MoonPhase moonPhase,  double moonIllumination,  String? notes,  bool isRetroactive,  String? venueId,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Trip():
-return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.location,_that.locationAccuracyMeters,_that.locationName,_that.locationRegion,_that.privacyLevel,_that.moonPhase,_that.moonIllumination,_that.notes,_that.isRetroactive,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.location,_that.locationAccuracyMeters,_that.locationName,_that.locationRegion,_that.privacyLevel,_that.moonPhase,_that.moonIllumination,_that.notes,_that.isRetroactive,_that.venueId,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -231,10 +233,10 @@ return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.loca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime startedAt,  DateTime? endedAt,  String timezone,  GeoPoint? location,  double? locationAccuracyMeters,  String? locationName,  String? locationRegion,  PrivacyLevel privacyLevel,  MoonPhase moonPhase,  double moonIllumination,  String? notes,  bool isRetroactive,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime startedAt,  DateTime? endedAt,  String timezone,  GeoPoint? location,  double? locationAccuracyMeters,  String? locationName,  String? locationRegion,  PrivacyLevel privacyLevel,  MoonPhase moonPhase,  double moonIllumination,  String? notes,  bool isRetroactive,  String? venueId,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Trip() when $default != null:
-return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.location,_that.locationAccuracyMeters,_that.locationName,_that.locationRegion,_that.privacyLevel,_that.moonPhase,_that.moonIllumination,_that.notes,_that.isRetroactive,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.location,_that.locationAccuracyMeters,_that.locationName,_that.locationRegion,_that.privacyLevel,_that.moonPhase,_that.moonIllumination,_that.notes,_that.isRetroactive,_that.venueId,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -246,7 +248,7 @@ return $default(_that.id,_that.startedAt,_that.endedAt,_that.timezone,_that.loca
 @JsonSerializable()
 
 class _Trip extends Trip {
-  const _Trip({required this.id, required this.startedAt, this.endedAt, required this.timezone, this.location, this.locationAccuracyMeters, this.locationName, this.locationRegion, required this.privacyLevel, required this.moonPhase, required this.moonIllumination, this.notes, this.isRetroactive = false, required this.createdAt, required this.updatedAt}): super._();
+  const _Trip({required this.id, required this.startedAt, this.endedAt, required this.timezone, this.location, this.locationAccuracyMeters, this.locationName, this.locationRegion, required this.privacyLevel, required this.moonPhase, required this.moonIllumination, this.notes, this.isRetroactive = false, this.venueId, required this.createdAt, required this.updatedAt}): super._();
   factory _Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);
 
 @override final  String id;
@@ -267,6 +269,8 @@ class _Trip extends Trip {
 @override final  double moonIllumination;
 @override final  String? notes;
 @override@JsonKey() final  bool isRetroactive;
+/// The venue (pay lake, lodge…) where it happened, if picked.
+@override final  String? venueId;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 
@@ -283,18 +287,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trip&&(identical(other.id, id) || other.id == id)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationAccuracyMeters, locationAccuracyMeters) || other.locationAccuracyMeters == locationAccuracyMeters)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.locationRegion, locationRegion) || other.locationRegion == locationRegion)&&(identical(other.privacyLevel, privacyLevel) || other.privacyLevel == privacyLevel)&&(identical(other.moonPhase, moonPhase) || other.moonPhase == moonPhase)&&(identical(other.moonIllumination, moonIllumination) || other.moonIllumination == moonIllumination)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isRetroactive, isRetroactive) || other.isRetroactive == isRetroactive)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trip&&(identical(other.id, id) || other.id == id)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationAccuracyMeters, locationAccuracyMeters) || other.locationAccuracyMeters == locationAccuracyMeters)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.locationRegion, locationRegion) || other.locationRegion == locationRegion)&&(identical(other.privacyLevel, privacyLevel) || other.privacyLevel == privacyLevel)&&(identical(other.moonPhase, moonPhase) || other.moonPhase == moonPhase)&&(identical(other.moonIllumination, moonIllumination) || other.moonIllumination == moonIllumination)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isRetroactive, isRetroactive) || other.isRetroactive == isRetroactive)&&(identical(other.venueId, venueId) || other.venueId == venueId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,startedAt,endedAt,timezone,location,locationAccuracyMeters,locationName,locationRegion,privacyLevel,moonPhase,moonIllumination,notes,isRetroactive,createdAt,updatedAt);
+    return Object.hash(runtimeType,id,startedAt,endedAt,timezone,location,locationAccuracyMeters,locationName,locationRegion,privacyLevel,moonPhase,moonIllumination,notes,isRetroactive,venueId,createdAt,updatedAt);
 }
 
 @override
 String toString() {
-    return 'Trip(id: $id, startedAt: $startedAt, endedAt: $endedAt, timezone: $timezone, location: $location, locationAccuracyMeters: $locationAccuracyMeters, locationName: $locationName, locationRegion: $locationRegion, privacyLevel: $privacyLevel, moonPhase: $moonPhase, moonIllumination: $moonIllumination, notes: $notes, isRetroactive: $isRetroactive, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Trip(id: $id, startedAt: $startedAt, endedAt: $endedAt, timezone: $timezone, location: $location, locationAccuracyMeters: $locationAccuracyMeters, locationName: $locationName, locationRegion: $locationRegion, privacyLevel: $privacyLevel, moonPhase: $moonPhase, moonIllumination: $moonIllumination, notes: $notes, isRetroactive: $isRetroactive, venueId: $venueId, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -305,7 +309,7 @@ abstract mixin class _$TripCopyWith<$Res> implements $TripCopyWith<$Res> {
   factory _$TripCopyWith(_Trip value, $Res Function(_Trip) _then) = __$TripCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DateTime startedAt, DateTime? endedAt, String timezone, GeoPoint? location, double? locationAccuracyMeters, String? locationName, String? locationRegion, PrivacyLevel privacyLevel, MoonPhase moonPhase, double moonIllumination, String? notes, bool isRetroactive, DateTime createdAt, DateTime updatedAt
+ String id, DateTime startedAt, DateTime? endedAt, String timezone, GeoPoint? location, double? locationAccuracyMeters, String? locationName, String? locationRegion, PrivacyLevel privacyLevel, MoonPhase moonPhase, double moonIllumination, String? notes, bool isRetroactive, String? venueId, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -322,7 +326,7 @@ class __$TripCopyWithImpl<$Res>
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? startedAt = null,Object? endedAt = freezed,Object? timezone = null,Object? location = freezed,Object? locationAccuracyMeters = freezed,Object? locationName = freezed,Object? locationRegion = freezed,Object? privacyLevel = null,Object? moonPhase = null,Object? moonIllumination = null,Object? notes = freezed,Object? isRetroactive = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? startedAt = null,Object? endedAt = freezed,Object? timezone = null,Object? location = freezed,Object? locationAccuracyMeters = freezed,Object? locationName = freezed,Object? locationRegion = freezed,Object? privacyLevel = null,Object? moonPhase = null,Object? moonIllumination = null,Object? notes = freezed,Object? isRetroactive = null,Object? venueId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_Trip(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,startedAt: null == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
@@ -337,7 +341,8 @@ as PrivacyLevel,moonPhase: null == moonPhase ? _self.moonPhase : moonPhase // ig
 as MoonPhase,moonIllumination: null == moonIllumination ? _self.moonIllumination : moonIllumination // ignore: cast_nullable_to_non_nullable
 as double,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,isRetroactive: null == isRetroactive ? _self.isRetroactive : isRetroactive // ignore: cast_nullable_to_non_nullable
-as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as bool,venueId: freezed == venueId ? _self.venueId : venueId // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

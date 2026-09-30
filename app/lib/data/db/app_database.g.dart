@@ -202,6 +202,17 @@ class $TripsTable extends Trips with TableInfo<$TripsTable, TripRow> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _venueIdMeta = const VerificationMeta(
+    'venueId',
+  );
+  @override
+  late final GeneratedColumn<String> venueId = GeneratedColumn<String>(
+    'venue_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     createdAt,
@@ -222,6 +233,7 @@ class $TripsTable extends Trips with TableInfo<$TripsTable, TripRow> {
     moonIllumination,
     notes,
     isRetroactive,
+    venueId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -349,6 +361,12 @@ class $TripsTable extends Trips with TableInfo<$TripsTable, TripRow> {
         ),
       );
     }
+    if (data.containsKey('venue_id')) {
+      context.handle(
+        _venueIdMeta,
+        venueId.isAcceptableOrUnknown(data['venue_id']!, _venueIdMeta),
+      );
+    }
     return context;
   }
 
@@ -436,6 +454,10 @@ class $TripsTable extends Trips with TableInfo<$TripsTable, TripRow> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_retroactive'],
       )!,
+      venueId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}venue_id'],
+      ),
     );
   }
 
@@ -473,6 +495,10 @@ class TripRow extends DataClass implements Insertable<TripRow> {
   final double moonIllumination;
   final String? notes;
   final bool isRetroactive;
+
+  /// The venue (pay lake, lodge…) where it happened, if the person picked
+  /// one. Its details live in [VenueCache].
+  final String? venueId;
   const TripRow({
     required this.createdAt,
     required this.updatedAt,
@@ -492,6 +518,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
     required this.moonIllumination,
     this.notes,
     required this.isRetroactive,
+    this.venueId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -542,6 +569,9 @@ class TripRow extends DataClass implements Insertable<TripRow> {
       map['notes'] = Variable<String>(notes);
     }
     map['is_retroactive'] = Variable<bool>(isRetroactive);
+    if (!nullToAbsent || venueId != null) {
+      map['venue_id'] = Variable<String>(venueId);
+    }
     return map;
   }
 
@@ -581,6 +611,9 @@ class TripRow extends DataClass implements Insertable<TripRow> {
           ? const Value.absent()
           : Value(notes),
       isRetroactive: Value(isRetroactive),
+      venueId: venueId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(venueId),
     );
   }
 
@@ -616,6 +649,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
       moonIllumination: serializer.fromJson<double>(json['moonIllumination']),
       notes: serializer.fromJson<String?>(json['notes']),
       isRetroactive: serializer.fromJson<bool>(json['isRetroactive']),
+      venueId: serializer.fromJson<String?>(json['venueId']),
     );
   }
   @override
@@ -646,6 +680,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
       'moonIllumination': serializer.toJson<double>(moonIllumination),
       'notes': serializer.toJson<String?>(notes),
       'isRetroactive': serializer.toJson<bool>(isRetroactive),
+      'venueId': serializer.toJson<String?>(venueId),
     };
   }
 
@@ -668,6 +703,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
     double? moonIllumination,
     Value<String?> notes = const Value.absent(),
     bool? isRetroactive,
+    Value<String?> venueId = const Value.absent(),
   }) => TripRow(
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -691,6 +727,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
     moonIllumination: moonIllumination ?? this.moonIllumination,
     notes: notes.present ? notes.value : this.notes,
     isRetroactive: isRetroactive ?? this.isRetroactive,
+    venueId: venueId.present ? venueId.value : this.venueId,
   );
   TripRow copyWithCompanion(TripsCompanion data) {
     return TripRow(
@@ -726,6 +763,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
       isRetroactive: data.isRetroactive.present
           ? data.isRetroactive.value
           : this.isRetroactive,
+      venueId: data.venueId.present ? data.venueId.value : this.venueId,
     );
   }
 
@@ -749,7 +787,8 @@ class TripRow extends DataClass implements Insertable<TripRow> {
           ..write('moonPhase: $moonPhase, ')
           ..write('moonIllumination: $moonIllumination, ')
           ..write('notes: $notes, ')
-          ..write('isRetroactive: $isRetroactive')
+          ..write('isRetroactive: $isRetroactive, ')
+          ..write('venueId: $venueId')
           ..write(')'))
         .toString();
   }
@@ -774,6 +813,7 @@ class TripRow extends DataClass implements Insertable<TripRow> {
     moonIllumination,
     notes,
     isRetroactive,
+    venueId,
   );
   @override
   bool operator ==(Object other) =>
@@ -796,7 +836,8 @@ class TripRow extends DataClass implements Insertable<TripRow> {
           other.moonPhase == this.moonPhase &&
           other.moonIllumination == this.moonIllumination &&
           other.notes == this.notes &&
-          other.isRetroactive == this.isRetroactive);
+          other.isRetroactive == this.isRetroactive &&
+          other.venueId == this.venueId);
 }
 
 class TripsCompanion extends UpdateCompanion<TripRow> {
@@ -818,6 +859,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
   final Value<double> moonIllumination;
   final Value<String?> notes;
   final Value<bool> isRetroactive;
+  final Value<String?> venueId;
   final Value<int> rowid;
   const TripsCompanion({
     this.createdAt = const Value.absent(),
@@ -838,6 +880,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
     this.moonIllumination = const Value.absent(),
     this.notes = const Value.absent(),
     this.isRetroactive = const Value.absent(),
+    this.venueId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TripsCompanion.insert({
@@ -859,6 +902,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
     required double moonIllumination,
     this.notes = const Value.absent(),
     this.isRetroactive = const Value.absent(),
+    this.venueId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
@@ -887,6 +931,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
     Expression<double>? moonIllumination,
     Expression<String>? notes,
     Expression<bool>? isRetroactive,
+    Expression<String>? venueId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -908,6 +953,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
       if (moonIllumination != null) 'moon_illumination': moonIllumination,
       if (notes != null) 'notes': notes,
       if (isRetroactive != null) 'is_retroactive': isRetroactive,
+      if (venueId != null) 'venue_id': venueId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -931,6 +977,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
     Value<double>? moonIllumination,
     Value<String?>? notes,
     Value<bool>? isRetroactive,
+    Value<String?>? venueId,
     Value<int>? rowid,
   }) {
     return TripsCompanion(
@@ -952,6 +999,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
       moonIllumination: moonIllumination ?? this.moonIllumination,
       notes: notes ?? this.notes,
       isRetroactive: isRetroactive ?? this.isRetroactive,
+      venueId: venueId ?? this.venueId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1019,6 +1067,9 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
     if (isRetroactive.present) {
       map['is_retroactive'] = Variable<bool>(isRetroactive.value);
     }
+    if (venueId.present) {
+      map['venue_id'] = Variable<String>(venueId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1046,6 +1097,7 @@ class TripsCompanion extends UpdateCompanion<TripRow> {
           ..write('moonIllumination: $moonIllumination, ')
           ..write('notes: $notes, ')
           ..write('isRetroactive: $isRetroactive, ')
+          ..write('venueId: $venueId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6889,6 +6941,267 @@ class PlaceMapsCompanion extends UpdateCompanion<PlaceMapRow> {
   }
 }
 
+class $VenueCacheTable extends VenueCache
+    with TableInfo<$VenueCacheTable, VenueCacheRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $VenueCacheTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+    'data',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fetchedAtMeta = const VerificationMeta(
+    'fetchedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fetchedAt = GeneratedColumn<DateTime>(
+    'fetched_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, data, fetchedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'venue_cache';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<VenueCacheRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+        _dataMeta,
+        this.data.isAcceptableOrUnknown(data['data']!, _dataMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('fetched_at')) {
+      context.handle(
+        _fetchedAtMeta,
+        fetchedAt.isAcceptableOrUnknown(data['fetched_at']!, _fetchedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fetchedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  VenueCacheRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return VenueCacheRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      data: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data'],
+      )!,
+      fetchedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}fetched_at'],
+      )!,
+    );
+  }
+
+  @override
+  $VenueCacheTable createAlias(String alias) {
+    return $VenueCacheTable(attachedDatabase, alias);
+  }
+}
+
+class VenueCacheRow extends DataClass implements Insertable<VenueCacheRow> {
+  final String id;
+
+  /// The server's venue JSON (see `Venue.fromJson`).
+  final String data;
+  final DateTime fetchedAt;
+  const VenueCacheRow({
+    required this.id,
+    required this.data,
+    required this.fetchedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['data'] = Variable<String>(data);
+    map['fetched_at'] = Variable<DateTime>(fetchedAt);
+    return map;
+  }
+
+  VenueCacheCompanion toCompanion(bool nullToAbsent) {
+    return VenueCacheCompanion(
+      id: Value(id),
+      data: Value(data),
+      fetchedAt: Value(fetchedAt),
+    );
+  }
+
+  factory VenueCacheRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return VenueCacheRow(
+      id: serializer.fromJson<String>(json['id']),
+      data: serializer.fromJson<String>(json['data']),
+      fetchedAt: serializer.fromJson<DateTime>(json['fetchedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'data': serializer.toJson<String>(data),
+      'fetchedAt': serializer.toJson<DateTime>(fetchedAt),
+    };
+  }
+
+  VenueCacheRow copyWith({String? id, String? data, DateTime? fetchedAt}) =>
+      VenueCacheRow(
+        id: id ?? this.id,
+        data: data ?? this.data,
+        fetchedAt: fetchedAt ?? this.fetchedAt,
+      );
+  VenueCacheRow copyWithCompanion(VenueCacheCompanion data) {
+    return VenueCacheRow(
+      id: data.id.present ? data.id.value : this.id,
+      data: data.data.present ? data.data.value : this.data,
+      fetchedAt: data.fetchedAt.present ? data.fetchedAt.value : this.fetchedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('VenueCacheRow(')
+          ..write('id: $id, ')
+          ..write('data: $data, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, data, fetchedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is VenueCacheRow &&
+          other.id == this.id &&
+          other.data == this.data &&
+          other.fetchedAt == this.fetchedAt);
+}
+
+class VenueCacheCompanion extends UpdateCompanion<VenueCacheRow> {
+  final Value<String> id;
+  final Value<String> data;
+  final Value<DateTime> fetchedAt;
+  final Value<int> rowid;
+  const VenueCacheCompanion({
+    this.id = const Value.absent(),
+    this.data = const Value.absent(),
+    this.fetchedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  VenueCacheCompanion.insert({
+    required String id,
+    required String data,
+    required DateTime fetchedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       data = Value(data),
+       fetchedAt = Value(fetchedAt);
+  static Insertable<VenueCacheRow> custom({
+    Expression<String>? id,
+    Expression<String>? data,
+    Expression<DateTime>? fetchedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (data != null) 'data': data,
+      if (fetchedAt != null) 'fetched_at': fetchedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  VenueCacheCompanion copyWith({
+    Value<String>? id,
+    Value<String>? data,
+    Value<DateTime>? fetchedAt,
+    Value<int>? rowid,
+  }) {
+    return VenueCacheCompanion(
+      id: id ?? this.id,
+      data: data ?? this.data,
+      fetchedAt: fetchedAt ?? this.fetchedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (fetchedAt.present) {
+      map['fetched_at'] = Variable<DateTime>(fetchedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('VenueCacheCompanion(')
+          ..write('id: $id, ')
+          ..write('data: $data, ')
+          ..write('fetchedAt: $fetchedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6905,6 +7218,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SettingsTable settings = $SettingsTable(this);
   late final $JobsTable jobs = $JobsTable(this);
   late final $PlaceMapsTable placeMaps = $PlaceMapsTable(this);
+  late final $VenueCacheTable venueCache = $VenueCacheTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6921,6 +7235,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     settings,
     jobs,
     placeMaps,
+    venueCache,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -6963,6 +7278,7 @@ typedef $$TripsTableCreateCompanionBuilder = TripsCompanion Function({
   required double moonIllumination,
   Value<String?> notes,
   Value<bool> isRetroactive,
+  Value<String?> venueId,
   Value<int> rowid,
 });
 typedef $$TripsTableUpdateCompanionBuilder = TripsCompanion Function({
@@ -6984,6 +7300,7 @@ typedef $$TripsTableUpdateCompanionBuilder = TripsCompanion Function({
   Value<double> moonIllumination,
   Value<String?> notes,
   Value<bool> isRetroactive,
+  Value<String?> venueId,
   Value<int> rowid,
 });
 
@@ -7129,6 +7446,11 @@ class $$TripsTableFilterComposer extends Composer<_$AppDatabase, $TripsTable> {
 
   ColumnFilters<bool> get isRetroactive => $composableBuilder(
     column: $table.isRetroactive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get venueId => $composableBuilder(
+    column: $table.venueId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7281,6 +7603,11 @@ class $$TripsTableOrderingComposer
     column: $table.isRetroactive,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get venueId => $composableBuilder(
+    column: $table.venueId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TripsTableAnnotationComposer
@@ -7361,6 +7688,9 @@ class $$TripsTableAnnotationComposer
     column: $table.isRetroactive,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get venueId =>
+      $composableBuilder(column: $table.venueId, builder: (column) => column);
 
   Expression<T> weatherSnapshotsRefs<T extends Object>(
     Expression<T> Function($$WeatherSnapshotsTableAnnotationComposer a) f,
@@ -7459,6 +7789,7 @@ class $$TripsTableTableManager
                 Value<double> moonIllumination = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<bool> isRetroactive = const Value.absent(),
+                Value<String?> venueId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TripsCompanion(
                 createdAt: createdAt,
@@ -7479,6 +7810,7 @@ class $$TripsTableTableManager
                 moonIllumination: moonIllumination,
                 notes: notes,
                 isRetroactive: isRetroactive,
+                venueId: venueId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -7501,6 +7833,7 @@ class $$TripsTableTableManager
                 required double moonIllumination,
                 Value<String?> notes = const Value.absent(),
                 Value<bool> isRetroactive = const Value.absent(),
+                Value<String?> venueId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TripsCompanion.insert(
                 createdAt: createdAt,
@@ -7521,6 +7854,7 @@ class $$TripsTableTableManager
                 moonIllumination: moonIllumination,
                 notes: notes,
                 isRetroactive: isRetroactive,
+                venueId: venueId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -11665,6 +11999,175 @@ typedef $$PlaceMapsTableProcessedTableManager =
       PlaceMapRow,
       PrefetchHooks Function()
     >;
+typedef $$VenueCacheTableCreateCompanionBuilder = VenueCacheCompanion Function({
+  required String id,
+  required String data,
+  required DateTime fetchedAt,
+  Value<int> rowid,
+});
+typedef $$VenueCacheTableUpdateCompanionBuilder = VenueCacheCompanion Function({
+  Value<String> id,
+  Value<String> data,
+  Value<DateTime> fetchedAt,
+  Value<int> rowid,
+});
+
+class $$VenueCacheTableFilterComposer
+    extends Composer<_$AppDatabase, $VenueCacheTable> {
+  $$VenueCacheTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$VenueCacheTableOrderingComposer
+    extends Composer<_$AppDatabase, $VenueCacheTable> {
+  $$VenueCacheTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get data => $composableBuilder(
+    column: $table.data,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$VenueCacheTableAnnotationComposer
+    extends Composer<_$AppDatabase, $VenueCacheTable> {
+  $$VenueCacheTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get data =>
+      $composableBuilder(column: $table.data, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fetchedAt =>
+      $composableBuilder(column: $table.fetchedAt, builder: (column) => column);
+}
+
+class $$VenueCacheTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $VenueCacheTable,
+          VenueCacheRow,
+          $$VenueCacheTableFilterComposer,
+          $$VenueCacheTableOrderingComposer,
+          $$VenueCacheTableAnnotationComposer,
+          $$VenueCacheTableCreateCompanionBuilder,
+          $$VenueCacheTableUpdateCompanionBuilder,
+          (
+            VenueCacheRow,
+            BaseReferences<_$AppDatabase, $VenueCacheTable, VenueCacheRow>,
+          ),
+          VenueCacheRow,
+          PrefetchHooks Function()
+        > {
+  $$VenueCacheTableTableManager(_$AppDatabase db, $VenueCacheTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$VenueCacheTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$VenueCacheTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$VenueCacheTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> data = const Value.absent(),
+                Value<DateTime> fetchedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => VenueCacheCompanion(
+                id: id,
+                data: data,
+                fetchedAt: fetchedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String data,
+                required DateTime fetchedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => VenueCacheCompanion.insert(
+                id: id,
+                data: data,
+                fetchedAt: fetchedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$VenueCacheTable, VenueCacheRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $VenueCacheTable,
+                    VenueCacheRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$VenueCacheTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $VenueCacheTable,
+      VenueCacheRow,
+      $$VenueCacheTableFilterComposer,
+      $$VenueCacheTableOrderingComposer,
+      $$VenueCacheTableAnnotationComposer,
+      $$VenueCacheTableCreateCompanionBuilder,
+      $$VenueCacheTableUpdateCompanionBuilder,
+      (
+        VenueCacheRow,
+        BaseReferences<_$AppDatabase, $VenueCacheTable, VenueCacheRow>,
+      ),
+      VenueCacheRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -11690,4 +12193,6 @@ class $AppDatabaseManager {
   $$JobsTableTableManager get jobs => $$JobsTableTableManager(_db, _db.jobs);
   $$PlaceMapsTableTableManager get placeMaps =>
       $$PlaceMapsTableTableManager(_db, _db.placeMaps);
+  $$VenueCacheTableTableManager get venueCache =>
+      $$VenueCacheTableTableManager(_db, _db.venueCache);
 }

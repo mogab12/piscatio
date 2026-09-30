@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/background.dart';
 import '../../../core/formatting/formatters_provider.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/providers.dart';
@@ -246,6 +247,10 @@ class _TripHeader extends ConsumerWidget {
               ),
               if (trip.locationRegion != null)
                 _Fact(icon: Icons.place_outlined, text: trip.locationRegion!),
+              if (trip.venueId != null)
+                if (ref.watch(venueProvider(trip.venueId!)).value
+                    case final venue?)
+                  _Fact(icon: Icons.storefront_outlined, text: venue.name),
             ],
           ),
           const SizedBox(height: 20),

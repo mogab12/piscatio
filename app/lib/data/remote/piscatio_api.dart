@@ -262,6 +262,59 @@ class PiscatioApi {
         ) as Map<String, Object?>,
       );
 
+  /// The switches and limits this account gets (`/api/config`).
+  Future<Map<String, Object?>> config() async =>
+      (await _json(() => _http.get(_uri('/api/config'), headers: _headers)))!
+          as Map<String, Object?>;
+
+  /// Listed venues matching [query], near [lat]/[lon] when given.
+  Future<List<Map<String, Object?>>> searchVenues({
+    String query = '',
+    double? lat,
+    double? lon,
+    double radiusKm = 100,
+  }) async {
+    final j = await _json(
+      () => _http.get(
+        _uri('/api/venues', {
+          if (query.isNotEmpty) 'q': query,
+          if (lat != null && lon != null) ...{
+            'lat': lat.toStringAsFixed(4),
+            'lon': lon.toStringAsFixed(4),
+            'radius_km': '$radiusKm',
+          },
+        }),
+        headers: _headers,
+      ),
+    ) as Map<String, Object?>;
+    return [
+      for (final v in (j['results'] as List? ?? const []))
+        (v as Map).cast<String, Object?>(),
+    ];
+  }
+
+  Future<Map<String, Object?>> venue(String id) async =>
+      (await _json(
+            () => _http.get(_uri('/api/venues/$id'), headers: _headers),
+          ))!
+          as Map<String, Object?>;
+
+  /// Turns the consent to share anonymous totals with venues on or off.
+  Future<void> setShareInsights(bool share) => _json(
+    () => _http.patch(
+      _uri('/api/me'),
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode({'share_insights': share}),
+    ),
+  );
+
+  Future<bool> shareInsights() async {
+    final j = await _json(
+      () => _http.get(_uri('/api/me'), headers: _headers),
+    ) as Map<String, Object?>;
+    return j['share_insights'] == true;
+  }
+
   /// Raw Overpass JSON for the area around an approximate point.
   Future<Uint8List> mapArea(double lat, double lon) async => (await _send(
     () => _http.get(

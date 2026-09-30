@@ -89,6 +89,29 @@ class AccountController {
 
   Future<void> syncNow() => _ref.read(backgroundWorkProvider).syncSoon();
 
+  /// The consent to share anonymous totals with venues, as the server has
+  /// it (the server is the one that uses it).
+  Future<bool> shareInsights() async {
+    final (server, token) = await _session();
+    return _guard(() => _api(server, token).shareInsights());
+  }
+
+  Future<void> setShareInsights(bool share) async {
+    final (server, token) = await _session();
+    await _guard(() => _api(server, token).setShareInsights(share));
+    _ref.invalidate(shareInsightsProvider);
+  }
+
+  Future<(String, String)> _session() async {
+    final accounts = _ref.read(accountRepositoryProvider);
+    final account = await accounts.read();
+    final token = await accounts.token();
+    if (account == null || token == null) {
+      throw const AccountFailure(AccountProblem.offline);
+    }
+    return (account.server, token);
+  }
+
   /// Ends the session here; the logbook stays on the phone.
   Future<void> signOut() async {
     final accounts = _ref.read(accountRepositoryProvider);
@@ -128,6 +151,11 @@ class AccountController {
 }
 
 final accountControllerProvider = Provider(AccountController.new);
+
+/// The insights consent, read from the server when the screen asks.
+final shareInsightsProvider = FutureProvider.autoDispose<bool>(
+  (ref) => ref.read(accountControllerProvider).shareInsights(),
+);
 
 /// What the account screen says about syncing.
 enum SyncHealth {

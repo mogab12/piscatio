@@ -18,6 +18,7 @@ import 'package:piscatio/data/repositories/trip_repository.dart';
 import 'package:piscatio/data/sync/sync_service.dart';
 import 'package:piscatio/domain/models/enums.dart';
 import 'package:piscatio/domain/models/geo_point.dart';
+import 'package:piscatio/domain/models/venue.dart';
 
 import '../../helpers/fake_server.dart';
 import '../../helpers/fakes.dart';
@@ -283,5 +284,27 @@ void main() {
     final next = await a.queue.find(JobKind.sync, syncSubject);
     expect(next!.attempts, 0);
     expect(next.nextAttemptAt, a.clock.now().add(SyncJobHandler.every));
+  });
+
+  test('each sync brings the server switches for this account', () async {
+    expect(await a.account.watchFlags().first, isA<FeatureFlags>());
+    server.features['venues'] = true;
+    await a.sync();
+    final flags = await a.account.watchFlags().first;
+    expect(flags.isOn(FeatureFlags.venues), isTrue);
+    expect(flags.isOn('unknown'), isFalse);
+    // Signing out forgets them.
+    await a.account.signOut();
+    final after = await a.account.watchFlags().first;
+    expect(after.isOn(FeatureFlags.venues), isFalse);
+  });
+
+  test("a trip's venue reaches the other phone", () async {
+    final id = await logTrip(a);
+    await a.trips.setVenue(id, 'venue-1');
+    await a.sync();
+    expect(server.tables['trips']![id]!['venue_id'], 'venue-1');
+    await b.sync();
+    expect((await b.trips.getTrip(id))!.venueId, 'venue-1');
   });
 }

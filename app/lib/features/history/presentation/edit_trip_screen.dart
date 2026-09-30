@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/background.dart';
 import '../../../core/formatting/formatters_provider.dart';
 import '../../../core/formatting/l10n.dart';
 import '../../../core/providers.dart';
@@ -11,8 +12,10 @@ import '../../../core/widgets/choice_sheet.dart';
 import '../../../domain/models/enums.dart';
 import '../../../domain/models/geo_point.dart';
 import '../../../domain/models/trip.dart';
+import '../../../domain/models/venue.dart';
 import '../../common/place_search_sheet.dart';
 import '../../trip/application/trip_controller.dart';
+import '../../venues/presentation/venue_picker_sheet.dart';
 
 class EditTripScreen extends ConsumerWidget {
   const EditTripScreen({super.key, required this.tripId});
@@ -44,6 +47,7 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
   late final _region = TextEditingController(text: widget.trip.locationRegion);
   late final _notes = TextEditingController(text: widget.trip.notes);
   late GeoPoint? _location = widget.trip.location;
+  late String? _venueId = widget.trip.venueId;
   var _saving = false;
 
   @override
@@ -118,6 +122,12 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
     });
   }
 
+  Future<void> _pickVenue() async {
+    final picked = await showVenuePicker(context, near: _location);
+    if (picked == null || !mounted) return;
+    setState(() => _venueId = picked.venue?.id);
+  }
+
   Future<void> _save() async {
     if (!_valid || _saving) return;
     setState(() => _saving = true);
@@ -134,6 +144,7 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
             locationRegion: clean(_region),
             privacyLevel: _privacy,
             notes: clean(_notes),
+            venueId: _venueId,
           ),
         );
     if (mounted) context.pop();
@@ -234,6 +245,17 @@ class _EditTripFormState extends ConsumerState<_EditTripForm> {
               if (picked != null) setState(() => _privacy = picked);
             },
           ),
+          // Behind the server's switch until venues open.
+          if (ref.watch(featureProvider(FeatureFlags.venues)))
+            _PickerTile(
+              icon: Icons.storefront_outlined,
+              label: l10n.venueField,
+              value: _venueId == null
+                  ? l10n.venueNone
+                  : ref.watch(venueProvider(_venueId!)).value?.name ??
+                        l10n.venueField,
+              onTap: _pickVenue,
+            ),
           const SizedBox(height: 8),
           TextField(
             controller: _notes,

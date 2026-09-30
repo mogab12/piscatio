@@ -381,5 +381,21 @@
   "cardFrameMap": "Zoom del mapa",
   "cardFrameReset": "Restablecer",
   "cardFrameNothing": "Esta tarjeta no tiene foto ni mapa para encuadrar.",
-  "cardThemePhoto": "Colores del tema en la foto"
+  "cardThemePhoto": "Colores del tema en la foto",
+  "venueField": "Pesquero",
+  "venueNone": "Ninguno",
+  "venueSearchHint": "Buscar por nombre o ciudad",
+  "venueNearby": "Cerca de esta pesca",
+  "venueNoResults": "No se encontraron pesqueros.",
+  "venueSignIn": "Inicia sesión para buscar pesqueros.",
+  "venueVerified": "Verificado",
+  "venueKindPayLake": "Estanque de pesca",
+  "venueKindLodge": "Posada",
+  "venueKindGuide": "Guía de pesca",
+  "venueKindShop": "Tienda de pesca",
+  "venueKindMarina": "Marina",
+  "venueKindCharter": "Barco de pesca",
+  "venueKindOther": "Otro",
+  "accountShareInsights": "Ayudar a los pesqueros con números anónimos",
+  "accountShareInsightsHint": "Los pesqueros donde pescas ven totales como especies y mejores horarios, solo de 10 pescadores o más. Nunca tu nombre ni tus lugares."
 }

@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../../domain/models/venue.dart';
 
 import '../db/app_database.dart';
 import '../remote/piscatio_api.dart';
@@ -32,6 +36,9 @@ abstract final class AccountKeys {
   static const syncCursor = 'sync_cursor';
   static const lastSyncAt = 'last_sync_at';
   static const secretShared = 'privacy_secret_shared';
+
+  /// The server's switches for this account (`/api/config`), as JSON.
+  static const remoteConfig = 'remote_config';
 }
 
 /// The signed-in account as the app knows it.
@@ -92,6 +99,7 @@ class AccountRepository {
       AccountKeys.syncCursor,
       AccountKeys.lastSyncAt,
       AccountKeys.secretShared,
+      AccountKeys.remoteConfig,
     ]) {
       await _settings.remove(key);
     }
@@ -105,6 +113,23 @@ class AccountRepository {
 
   Future<void> setLastSync(DateTime at) =>
       _settings.setRaw(AccountKeys.lastSyncAt, at.toUtc().toIso8601String());
+
+  /// The switches this account got from the server (all off until the
+  /// first sync, and when signed out).
+  Stream<FeatureFlags> watchFlags() =>
+      (_db.select(_db.settings)
+            ..where((s) => s.key.equals(AccountKeys.remoteConfig)))
+          .watchSingleOrNull()
+          .map(
+            (row) => row == null
+                ? FeatureFlags.none
+                : FeatureFlags.fromJson(
+                    jsonDecode(row.value) as Map<String, Object?>,
+                  ),
+          );
+
+  Future<void> setRemoteConfig(Map<String, Object?> config) =>
+      _settings.setRaw(AccountKeys.remoteConfig, jsonEncode(config));
 
   Future<bool> secretShared() async =>
       await _settings.getRaw(AccountKeys.secretShared) == 'true';

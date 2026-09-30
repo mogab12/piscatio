@@ -25,6 +25,14 @@ class FakeServer {
   final refuse = <String>{};
   final requests = <http.Request>[];
 
+  /// The switches `/api/config` sends.
+  final features = <String, bool>{'venues': false};
+
+  /// Listed venues `/api/venues` searches (by name).
+  final venues = <Map<String, Object?>>[];
+  final venueSearches = <Map<String, String>>[];
+  var shareInsights = false;
+
   /// What `/api/conditions/weather` answers (null: MET is down).
   Map<String, Object?>? weather = {
     'time': '2026-09-12T09:00:00Z',
@@ -74,6 +82,23 @@ class FakeServer {
     if (path == '/api/me/privacy-secret') {
       secret ??= (jsonDecode(r.body) as Map)['secret'] as String;
       return _json({'secret': secret});
+    }
+    if (path == '/api/config') return _json({'features': features});
+    if (path == '/api/venues') {
+      final q = (r.url.queryParameters['q'] ?? '').toLowerCase();
+      venueSearches.add(r.url.queryParameters);
+      return _json({
+        'results': [
+          for (final v in venues)
+            if (q.isEmpty || '${v['name']}'.toLowerCase().contains(q)) v,
+        ],
+      });
+    }
+    if (path == '/api/me') {
+      if (r.method == 'PATCH') {
+        shareInsights = (jsonDecode(r.body) as Map)['share_insights'] == true;
+      }
+      return _json({'id': 1, 'email': email, 'share_insights': shareInsights});
     }
     if (path == '/api/conditions/weather') {
       return weather == null

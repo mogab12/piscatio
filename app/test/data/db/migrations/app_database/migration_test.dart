@@ -10,6 +10,7 @@ import 'generated/schema.dart';
 import 'generated/schema_v1.dart' as v1;
 import 'generated/schema_v2.dart' as v2;
 import 'generated/schema_v3.dart' as v3;
+import 'generated/schema_v4.dart' as v4;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -282,6 +283,44 @@ void main() {
         expect(jobs.single.id, job.id);
         expect(jobs.single.attempts, job.attempts);
         expect(await newDb.select(newDb.placeMaps).get(), isEmpty);
+      },
+    );
+  });
+
+  // v3 → v4 adds trips.venue_id (empty) and the venue cache; trips stay.
+  test('migration from v3 to v4 keeps trips, without a venue', () async {
+    const t = '2026-09-12T09:00:00.000Z';
+    await verifier.testWithDataIntegrity(
+      oldVersion: 3,
+      newVersion: 4,
+      createOld: v3.DatabaseAtV3.new,
+      createNew: v4.DatabaseAtV4.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insert(
+          oldDb.trips,
+          const v3.TripsData(
+            createdAt: t,
+            updatedAt: t,
+            syncStatus: 'synced',
+            id: 'trip-1',
+            startedAt: t,
+            timezone: 'America/Cuiaba',
+            latitude: -16.52,
+            longitude: -56.41,
+            privacyLevel: 'exact',
+            moonPhase: 'fullMoon',
+            moonIllumination: 1,
+            isRetroactive: 0,
+          ),
+        );
+      },
+      validateItems: (newDb) async {
+        final trip = (await newDb.select(newDb.trips).get()).single;
+        expect(trip.id, 'trip-1');
+        expect(trip.syncStatus, 'synced');
+        expect(trip.venueId, equals(null));
+        expect(await newDb.select(newDb.venueCache).get(), isEmpty);
       },
     );
   });

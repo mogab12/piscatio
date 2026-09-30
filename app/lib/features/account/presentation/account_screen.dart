@@ -11,6 +11,7 @@ import '../../../core/theme/tokens.dart';
 import '../../../core/widgets/action_slab.dart';
 import '../../../data/account/account_repository.dart';
 import '../../../data/remote/piscatio_api.dart';
+import '../../../domain/models/venue.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../application/account_controller.dart';
 
@@ -398,6 +399,8 @@ class _SignedInState extends ConsumerState<_SignedIn> {
                 ),
                 child: Text(l10n.accountPrivacyNote, style: text.bodyMedium),
               ),
+              if (ref.watch(featureProvider(FeatureFlags.venues)))
+                const _ShareInsightsTile(),
               ListTile(
                 leading: const Icon(Icons.logout_rounded),
                 title: Text(l10n.accountSignOut),
@@ -438,6 +441,39 @@ class _SignedInState extends ConsumerState<_SignedIn> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Consent to show venues anonymous totals of the trips linked to them.
+class _ShareInsightsTile extends ConsumerWidget {
+  const _ShareInsightsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final consent = ref.watch(shareInsightsProvider);
+    final value = consent.value;
+    return SwitchListTile(
+      secondary: const Icon(Icons.storefront_outlined),
+      title: Text(l10n.accountShareInsights),
+      subtitle: Text(l10n.accountShareInsightsHint),
+      isThreeLine: true,
+      value: value ?? false,
+      onChanged: value == null
+          ? null
+          : (v) async {
+              final messenger = ScaffoldMessenger.of(context);
+              try {
+                await ref.read(accountControllerProvider).setShareInsights(v);
+              } on AccountFailure catch (e) {
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(accountProblemMessage(l10n, e.problem)),
+                  ),
+                );
+              }
+            },
     );
   }
 }

@@ -23,6 +23,7 @@ extension TripRowMapper on TripRow {
     moonIllumination: moonIllumination,
     notes: notes,
     isRetroactive: isRetroactive,
+    venueId: venueId,
     createdAt: createdAt.toUtc(),
     updatedAt: updatedAt.toUtc(),
   );

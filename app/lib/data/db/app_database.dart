@@ -24,6 +24,7 @@ part 'app_database.g.dart';
     Settings,
     Jobs,
     PlaceMaps,
+    VenueCache,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -33,7 +34,7 @@ class AppDatabase extends _$AppDatabase {
   factory AppDatabase.open() => AppDatabase(driftDatabase(name: 'piscatio'));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -53,6 +54,10 @@ class AppDatabase extends _$AppDatabase {
       },
       from2To3: (m, schema) async {
         await m.createTable(schema.placeMaps);
+      },
+      from3To4: (m, schema) async {
+        await m.addColumn(schema.trips, schema.trips.venueId);
+        await m.createTable(schema.venueCache);
       },
     ),
     beforeOpen: (details) async {
@@ -86,6 +91,7 @@ class AppDatabase extends _$AppDatabase {
   Future<void> wipeUserData() => transaction(() async {
     await delete(jobs).go();
     await delete(placeMaps).go();
+    await delete(venueCache).go();
     await delete(catchPhotos).go();
     await delete(catches).go();
     await delete(weatherSnapshots).go();

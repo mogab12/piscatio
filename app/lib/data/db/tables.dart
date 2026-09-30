@@ -34,6 +34,10 @@ class Trips extends Table with SyncColumns {
   BoolColumn get isRetroactive =>
       boolean().withDefault(const Constant(false))();
 
+  /// The venue (pay lake, lodge…) where it happened, if the person picked
+  /// one. Its details live in [VenueCache].
+  TextColumn get venueId => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => {id};
 }
@@ -107,6 +111,21 @@ class PlaceMaps extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {areaKey};
+}
+
+/// Venues seen on the server (search results, trips' venues), kept to show
+/// them offline. A cache like [PlaceMaps], not the person's data: never
+/// exported nor synced, and cleared with "delete all data".
+@DataClassName('VenueCacheRow')
+class VenueCache extends Table {
+  TextColumn get id => text()();
+
+  /// The server's venue JSON (see `Venue.fromJson`).
+  TextColumn get data => text()();
+  DateTimeColumn get fetchedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
 }
 
 @DataClassName('SpeciesRow')

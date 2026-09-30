@@ -381,5 +381,21 @@
   "cardFrameMap": "Zoom do mapa",
   "cardFrameReset": "Restaurar",
   "cardFrameNothing": "Este card não tem foto nem mapa para enquadrar.",
-  "cardThemePhoto": "Cores do tema na foto"
+  "cardThemePhoto": "Cores do tema na foto",
+  "venueField": "Pesqueiro",
+  "venueNone": "Nenhum",
+  "venueSearchHint": "Buscar por nome ou cidade",
+  "venueNearby": "Perto desta pescaria",
+  "venueNoResults": "Nenhum pesqueiro encontrado.",
+  "venueSignIn": "Entre na conta para buscar pesqueiros.",
+  "venueVerified": "Verificado",
+  "venueKindPayLake": "Pesqueiro",
+  "venueKindLodge": "Pousada",
+  "venueKindGuide": "Guia de pesca",
+  "venueKindShop": "Loja de pesca",
+  "venueKindMarina": "Marina",
+  "venueKindCharter": "Barco de pesca",
+  "venueKindOther": "Outro",
+  "accountShareInsights": "Ajudar pesqueiros com números anônimos",
+  "accountShareInsightsHint": "Os pesqueiros onde você pesca veem totais como espécies e melhores horários, só de 10 pescadores ou mais. Nunca seu nome nem seus pontos."
 }

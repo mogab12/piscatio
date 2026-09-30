@@ -104,6 +104,15 @@ Regras:
 - Tabela nova sincronizada: `SyncService` (app), `logbook/sync.py` (servidor) e o
   `FakeServer` dos testes, no mesmo commit.
 
+## Negócios e chaves de recurso
+
+- Lugares de pesca (pesqueiros, pousadas, guias, lojas) têm perfil público, planos e
+  assinaturas (`backend/venues`, `backend/billing`). Detalhes em `docs/NEGOCIOS.md`.
+- Recurso novo sai desligado atrás de uma chave (`backend/flags`, `/api/config`); no
+  app, `featureProvider(chave)` decide se aparece.
+- Negócios só veem totais anônimos de quem consentiu (`share_insights`), com mínimo
+  de pessoas e grupos pequenos omitidos. Nunca dados individuais nem coordenadas.
+
 ## Internacionalização
 
 - Idiomas: `en` (modelo), `pt` (conteúdo pt-BR), `es`. Padrão = idioma do aparelho,

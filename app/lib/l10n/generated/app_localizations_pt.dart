@@ -1357,4 +1357,53 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get cardThemePhoto => 'Cores do tema na foto';
+
+  @override
+  String get venueField => 'Pesqueiro';
+
+  @override
+  String get venueNone => 'Nenhum';
+
+  @override
+  String get venueSearchHint => 'Buscar por nome ou cidade';
+
+  @override
+  String get venueNearby => 'Perto desta pescaria';
+
+  @override
+  String get venueNoResults => 'Nenhum pesqueiro encontrado.';
+
+  @override
+  String get venueSignIn => 'Entre na conta para buscar pesqueiros.';
+
+  @override
+  String get venueVerified => 'Verificado';
+
+  @override
+  String get venueKindPayLake => 'Pesqueiro';
+
+  @override
+  String get venueKindLodge => 'Pousada';
+
+  @override
+  String get venueKindGuide => 'Guia de pesca';
+
+  @override
+  String get venueKindShop => 'Loja de pesca';
+
+  @override
+  String get venueKindMarina => 'Marina';
+
+  @override
+  String get venueKindCharter => 'Barco de pesca';
+
+  @override
+  String get venueKindOther => 'Outro';
+
+  @override
+  String get accountShareInsights => 'Ajudar pesqueiros com números anônimos';
+
+  @override
+  String get accountShareInsightsHint =>
+      'Os pesqueiros onde você pesca veem totais como espécies e melhores horários, só de 10 pescadores ou mais. Nunca seu nome nem seus pontos.';
 }

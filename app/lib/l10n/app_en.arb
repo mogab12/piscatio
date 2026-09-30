@@ -1790,5 +1790,69 @@
   "cardThemePhoto": "Theme colors on the photo",
   "@cardThemePhoto": {
     "description": "Card editor, Theme tab: switch that paints the photo and its filter in the theme's colors."
+  },
+  "venueField": "Fishing venue",
+  "@venueField": {
+    "description": "Trip: the business (pay lake, lodge, guide…) where the trip happened."
+  },
+  "venueNone": "None",
+  "@venueNone": {
+    "description": "Venue picker: no venue for this trip."
+  },
+  "venueSearchHint": "Search by name or city",
+  "@venueSearchHint": {
+    "description": "Venue picker: search field hint."
+  },
+  "venueNearby": "Near this trip",
+  "@venueNearby": {
+    "description": "Venue picker: heading of the results around the trip's area."
+  },
+  "venueNoResults": "No venues found.",
+  "@venueNoResults": {
+    "description": "Venue picker: empty results."
+  },
+  "venueSignIn": "Sign in to find venues.",
+  "@venueSignIn": {
+    "description": "Venue picker: shown when signed out."
+  },
+  "venueVerified": "Verified",
+  "@venueVerified": {
+    "description": "Venue: checked by the Piscatio team (label of the badge icon)."
+  },
+  "venueKindPayLake": "Pay lake",
+  "@venueKindPayLake": {
+    "description": "Venue kind."
+  },
+  "venueKindLodge": "Lodge",
+  "@venueKindLodge": {
+    "description": "Venue kind."
+  },
+  "venueKindGuide": "Guide",
+  "@venueKindGuide": {
+    "description": "Venue kind."
+  },
+  "venueKindShop": "Tackle shop",
+  "@venueKindShop": {
+    "description": "Venue kind."
+  },
+  "venueKindMarina": "Marina",
+  "@venueKindMarina": {
+    "description": "Venue kind."
+  },
+  "venueKindCharter": "Fishing boat",
+  "@venueKindCharter": {
+    "description": "Venue kind."
+  },
+  "venueKindOther": "Other",
+  "@venueKindOther": {
+    "description": "Venue kind."
+  },
+  "accountShareInsights": "Help venues with anonymous numbers",
+  "@accountShareInsights": {
+    "description": "Account: consent switch to share anonymous totals with venues where the person fishes."
+  },
+  "accountShareInsightsHint": "Venues where you fish see totals such as species and best hours, only from 10 or more anglers. Never your name or your spots.",
+  "@accountShareInsightsHint": {
+    "description": "Account: explanation under the insights consent switch."
   }
 }

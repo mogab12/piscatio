@@ -21,11 +21,13 @@ import '../data/remote/overpass_client.dart';
 import '../data/remote/piscatio_api.dart';
 import '../data/remote/place_name_service.dart';
 import '../data/repositories/place_map_repository.dart';
+import '../data/repositories/venue_repository.dart';
 import '../data/repositories/weather_repository.dart';
 import '../data/sync/sync_service.dart';
 import '../domain/models/enums.dart';
 import '../domain/models/geo_point.dart';
 import '../domain/models/place_map.dart';
+import '../domain/models/venue.dart';
 import '../domain/models/weather.dart';
 import '../domain/services/overpass_map.dart';
 import '../features/settings/application/preferences.dart';
@@ -80,6 +82,26 @@ final accountRepositoryProvider = Provider(
 /// The signed-in account; null when signed out.
 final accountProvider = StreamProvider<Account?>(
   (ref) => ref.watch(accountRepositoryProvider).watch(),
+);
+
+/// The server's switches for this account (all off when signed out).
+final featureFlagsProvider = StreamProvider<FeatureFlags>(
+  (ref) => ref.watch(accountRepositoryProvider).watchFlags(),
+);
+
+/// Whether the server opened [key] for this account (see [FeatureFlags]).
+final featureProvider = Provider.family<bool, String>(
+  (ref, key) => ref.watch(featureFlagsProvider).value?.isOn(key) ?? false,
+);
+
+final venueRepositoryProvider = Provider(
+  (ref) =>
+      VenueRepository(ref.watch(appDatabaseProvider), ref.watch(clockProvider)),
+);
+
+/// A venue from the cache (null until seen online).
+final venueProvider = StreamProvider.family<Venue?, String>(
+  (ref, id) => ref.watch(venueRepositoryProvider).watch(id),
 );
 
 /// Talks to a Piscatio server at [base] (with a session [token] if any).

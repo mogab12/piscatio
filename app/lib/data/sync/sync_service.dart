@@ -186,6 +186,7 @@ class SyncService {
     'moon_illumination': t.moonIllumination,
     'notes': t.notes,
     'is_retroactive': t.isRetroactive,
+    'venue_id': t.venueId,
   };
 
   static Map<String, Object?> catchJson(CatchRow c) => {
@@ -308,6 +309,7 @@ class SyncService {
                 moonIllumination: _real(j['moon_illumination']) ?? 0,
                 notes: Value(j['notes'] as String?),
                 isRetroactive: Value(j['is_retroactive'] == true),
+                venueId: Value(j['venue_id'] as String?),
               ),
             );
       }

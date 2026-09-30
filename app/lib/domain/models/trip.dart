@@ -32,6 +32,9 @@ abstract class Trip with _$Trip {
     required double moonIllumination,
     String? notes,
     @Default(false) bool isRetroactive,
+
+    /// The venue (pay lake, lodge…) where it happened, if picked.
+    String? venueId,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _Trip;

@@ -190,6 +190,10 @@ class TripRepository {
     );
   }
 
+  /// Links the trip to a venue, or unlinks it (null).
+  Future<void> setVenue(String id, String? venueId) =>
+      _write(id, TripsCompanion(venueId: Value(venueId)));
+
   /// Sets the region found by geocoding, unless the user already typed one.
   Future<void> fillRegion(String id, String region) async {
     await (_db.update(
@@ -222,6 +226,7 @@ class TripRepository {
         moonPhase: Value(moon.phase),
         moonIllumination: Value(moon.illumination),
         notes: Value(trip.notes),
+        venueId: Value(trip.venueId),
       ),
     );
   }

@@ -2391,6 +2391,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Theme colors on the photo'**
   String get cardThemePhoto;
+
+  /// Trip: the business (pay lake, lodge, guide…) where the trip happened.
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing venue'**
+  String get venueField;
+
+  /// Venue picker: no venue for this trip.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get venueNone;
+
+  /// Venue picker: search field hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or city'**
+  String get venueSearchHint;
+
+  /// Venue picker: heading of the results around the trip's area.
+  ///
+  /// In en, this message translates to:
+  /// **'Near this trip'**
+  String get venueNearby;
+
+  /// Venue picker: empty results.
+  ///
+  /// In en, this message translates to:
+  /// **'No venues found.'**
+  String get venueNoResults;
+
+  /// Venue picker: shown when signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to find venues.'**
+  String get venueSignIn;
+
+  /// Venue: checked by the Piscatio team (label of the badge icon).
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get venueVerified;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay lake'**
+  String get venueKindPayLake;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Lodge'**
+  String get venueKindLodge;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Guide'**
+  String get venueKindGuide;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Tackle shop'**
+  String get venueKindShop;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Marina'**
+  String get venueKindMarina;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Fishing boat'**
+  String get venueKindCharter;
+
+  /// Venue kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get venueKindOther;
+
+  /// Account: consent switch to share anonymous totals with venues where the person fishes.
+  ///
+  /// In en, this message translates to:
+  /// **'Help venues with anonymous numbers'**
+  String get accountShareInsights;
+
+  /// Account: explanation under the insights consent switch.
+  ///
+  /// In en, this message translates to:
+  /// **'Venues where you fish see totals such as species and best hours, only from 10 or more anglers. Never your name or your spots.'**
+  String get accountShareInsightsHint;
 }
 
 class _AppLocalizationsDelegate

@@ -69,6 +69,11 @@ class Formatters {
 
   String windSpeed(double kmh) => quantity(windSpeedQuantity(kmh, units));
 
+  /// A distance on the map: "12,3 km" or "7,6 mi".
+  String distanceKm(double km) => units == UnitSystem.imperial
+      ? '${number(km / 1.609344, maxFractionDigits: 1)} ${l10n.unitMile}'
+      : '${number(km, maxFractionDigits: 1)} ${l10n.unitKilometer}';
+
   String precipitation(double mm) => quantity(precipitationQuantity(mm, units));
 
   /// Where the wind comes from: N, NE, E… in the active language.

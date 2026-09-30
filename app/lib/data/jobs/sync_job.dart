@@ -84,12 +84,23 @@ class SyncJobHandler implements JobHandler {
         if (!page.more) break;
       }
       await _account.setLastSync(_clock.now());
+      await _refreshConfig(api);
       if (transfers) _kick();
       return JobReschedule(_clock.now().add(every));
     } on ApiSignedOut {
       await _account.signOut();
       await _sync.forgetServer();
       return const JobDone();
+    }
+  }
+
+  /// The server's switches for this account. An older server without
+  /// `/api/config` leaves everything off.
+  Future<void> _refreshConfig(PiscatioApi api) async {
+    try {
+      await _account.setRemoteConfig(await api.config());
+    } on ApiRejected {
+      return;
     }
   }
 

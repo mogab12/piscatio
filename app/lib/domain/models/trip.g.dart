@@ -24,6 +24,7 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => _Trip(
   moonIllumination: (json['moonIllumination'] as num).toDouble(),
   notes: json['notes'] as String?,
   isRetroactive: json['isRetroactive'] as bool? ?? false,
+  venueId: json['venueId'] as String?,
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: DateTime.parse(json['updatedAt'] as String),
 );
@@ -42,6 +43,7 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'moonIllumination': instance.moonIllumination,
   'notes': instance.notes,
   'isRetroactive': instance.isRetroactive,
+  'venueId': instance.venueId,
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
 };

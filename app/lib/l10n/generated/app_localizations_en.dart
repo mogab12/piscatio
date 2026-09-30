@@ -1355,4 +1355,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cardThemePhoto => 'Theme colors on the photo';
+
+  @override
+  String get venueField => 'Fishing venue';
+
+  @override
+  String get venueNone => 'None';
+
+  @override
+  String get venueSearchHint => 'Search by name or city';
+
+  @override
+  String get venueNearby => 'Near this trip';
+
+  @override
+  String get venueNoResults => 'No venues found.';
+
+  @override
+  String get venueSignIn => 'Sign in to find venues.';
+
+  @override
+  String get venueVerified => 'Verified';
+
+  @override
+  String get venueKindPayLake => 'Pay lake';
+
+  @override
+  String get venueKindLodge => 'Lodge';
+
+  @override
+  String get venueKindGuide => 'Guide';
+
+  @override
+  String get venueKindShop => 'Tackle shop';
+
+  @override
+  String get venueKindMarina => 'Marina';
+
+  @override
+  String get venueKindCharter => 'Fishing boat';
+
+  @override
+  String get venueKindOther => 'Other';
+
+  @override
+  String get accountShareInsights => 'Help venues with anonymous numbers';
+
+  @override
+  String get accountShareInsightsHint =>
+      'Venues where you fish see totals such as species and best hours, only from 10 or more anglers. Never your name or your spots.';
 }
