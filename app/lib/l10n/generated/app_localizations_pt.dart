@@ -1757,4 +1757,82 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get storiesFailed => 'O Instagram não abriu. Tente outros apps.';
+
+  @override
+  String yearTitle(String year) {
+    return 'Resumo de $year';
+  }
+
+  @override
+  String get yearEntryBody => 'Seu ano em números, pronto para virar card.';
+
+  @override
+  String get yearEmpty => 'Nenhuma pescaria neste ano.';
+
+  @override
+  String get cardYearTitle => 'Resumo do ano';
+
+  @override
+  String yearDaysFished(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias na água',
+      one: '1 dia na água',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yearTimeFished(String duration) {
+    return '$duration pescando';
+  }
+
+  @override
+  String yearTopSpecies(String species, String count) {
+    return 'Mais pescada: $species ($count)';
+  }
+
+  @override
+  String yearBiggest(String value) {
+    return 'Maior: $value';
+  }
+
+  @override
+  String yearNewSpecies(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count espécies novas',
+      one: '1 espécie nova',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yearReleased(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count soltas',
+      one: '1 solta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String yearBestMonth(String month) {
+    return 'Melhor mês: $month';
+  }
+
+  @override
+  String yearTopBait(String bait) {
+    return 'Melhor isca: $bait';
+  }
+
+  @override
+  String get yearByMonthTitle => 'Capturas por mês';
+
+  @override
+  String get yearCreateCard => 'Criar card do ano';
 }

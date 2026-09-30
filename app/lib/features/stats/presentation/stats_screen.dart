@@ -19,6 +19,7 @@ import '../../../domain/services/records.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../common/species_label.dart';
 import '../application/stats_providers.dart';
+import 'year_summary_screen.dart';
 
 /// The whole logbook in numbers: totals, when fish bite, what bites,
 /// personal bests. Everything is computed from the trips and catches.
@@ -63,6 +64,7 @@ class StatsScreen extends ConsumerWidget {
                     SliverList.list(
                       children: [
                         _Totals(stats: stats),
+                        const _YearEntry(),
                         if (stats.catchCount > 0) const _WhatWorked(),
                         if (stats.catchCount > 0) ...[
                           SectionLabel(l10n.statsByHourTitle),
@@ -100,6 +102,43 @@ class StatsScreen extends ConsumerWidget {
                     ),
                 ],
               ),
+      ),
+    );
+  }
+}
+
+/// The way to the latest year's review (and its card).
+class _YearEntry extends ConsumerWidget {
+  const _YearEntry();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final years = ref.watch(fishingYearsProvider);
+    if (years.isEmpty) return const SizedBox.shrink();
+    final year = years.first;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        PiscatioSizes.gutter,
+        8,
+        PiscatioSizes.gutter,
+        8,
+      ),
+      child: Material(
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(PiscatioRadii.thumb),
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          minTileHeight: 72,
+          leading: Icon(
+            Icons.auto_awesome_outlined,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          title: Text(l10n.yearTitle('$year')),
+          subtitle: Text(l10n.yearEntryBody),
+          trailing: const Icon(Icons.chevron_right_rounded),
+          onTap: () => context.push(AppRoutes.yearSummary(year)),
+        ),
       ),
     );
   }

@@ -104,6 +104,16 @@ class Formatters {
   String weekdayDate(DateTime utc) =>
       _capitalize(DateFormat.MMMEd(_locale).format(utc.toLocal()));
 
+  /// One letter per month, January first: `J F M A M J J A S O N D`.
+  List<String> monthLetters() => [
+    for (var m = 1; m <= 12; m++)
+      DateFormat('MMMMM', _locale).format(DateTime(2026, m)),
+  ];
+
+  /// `Setembro`, `September`.
+  String monthName(int month) =>
+      _capitalize(DateFormat.MMMM(_locale).format(DateTime(2026, month)));
+
   /// `Setembro de 2026`, for month headers.
   String monthYear(DateTime utc) =>
       _capitalize(DateFormat.yMMMM(_locale).format(utc.toLocal()));

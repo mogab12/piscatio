@@ -20,6 +20,7 @@ import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/settings/presentation/tackle_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
 import '../../features/stats/presentation/stats_screen.dart';
+import '../../features/stats/presentation/year_summary_screen.dart';
 import '../../features/summary/presentation/trip_summary_screen.dart';
 import '../../features/trip/presentation/past_trip_screen.dart';
 import '../providers.dart';
@@ -110,6 +111,15 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.stats,
                 builder: (context, state) => const StatsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'year/:year',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => YearSummaryScreen(
+                      year: int.parse(state.pathParameters['year']!),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -188,6 +198,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => CardEditorScreen(
           subject: CardSubject.trip,
           id: state.pathParameters['tripId']!,
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/cards/year/:year',
+        builder: (context, state) => CardEditorScreen(
+          subject: CardSubject.year,
+          id: state.pathParameters['year']!,
         ),
       ),
       GoRoute(

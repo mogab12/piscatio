@@ -659,3 +659,73 @@ class TripCardData {
     mapScale: mapScale,
   );
 }
+
+/// A year of fishing on a card ("Year in review").
+class YearCardData {
+  const YearCardData({
+    required this.year,
+    required this.tripCount,
+    required this.catchCount,
+    required this.speciesCount,
+    required this.daysFished,
+    required this.timeFishedLabel,
+    required this.byMonth,
+    required this.monthLetters,
+    this.bestMonth,
+    this.topSpeciesName,
+    this.topSpeciesCount = 0,
+    this.biggestLabel,
+    this.newSpeciesCount = 0,
+    this.releasedCount = 0,
+    this.topBaitLabel,
+    this.photoPath,
+    this.photoOptions = const [],
+    this.caption,
+  });
+
+  final int year;
+  final int tripCount;
+  final int catchCount;
+  final int speciesCount;
+  final int daysFished;
+  final String timeFishedLabel;
+
+  /// Catches per month, January first, and each month's letter.
+  final List<int> byMonth;
+  final List<String> monthLetters;
+
+  /// 1–12; null without catches.
+  final int? bestMonth;
+  final String? topSpeciesName;
+  final int topSpeciesCount;
+  final String? biggestLabel;
+  final int newSpeciesCount;
+  final int releasedCount;
+  final String? topBaitLabel;
+  final String? photoPath;
+
+  /// Every photo of the year's catches, for the editor to offer.
+  final List<String> photoOptions;
+  final String? caption;
+
+  YearCardData customized(CardOptions o) => YearCardData(
+    year: year,
+    tripCount: tripCount,
+    catchCount: catchCount,
+    speciesCount: speciesCount,
+    daysFished: daysFished,
+    timeFishedLabel: timeFishedLabel,
+    byMonth: byMonth,
+    monthLetters: monthLetters,
+    bestMonth: bestMonth,
+    topSpeciesName: topSpeciesName,
+    topSpeciesCount: topSpeciesCount,
+    biggestLabel: biggestLabel,
+    newSpeciesCount: newSpeciesCount,
+    releasedCount: releasedCount,
+    topBaitLabel: o.showBait ? topBaitLabel : null,
+    photoPath: o._shownPhoto(photoPath),
+    photoOptions: photoOptions,
+    caption: o._caption,
+  );
+}

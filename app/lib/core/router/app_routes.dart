@@ -30,4 +30,6 @@ abstract final class AppRoutes {
   static String tripSummary(String id) => '/summary/$id';
   static String tripCard(String id) => '/cards/trip/$id';
   static String catchCard(String id) => '/cards/catch/$id';
+  static String yearCard(int year) => '/cards/year/$year';
+  static String yearSummary(int year) => '/stats/year/$year';
 }

@@ -23,6 +23,7 @@ import '../../../domain/services/roman_date.dart';
 import '../../../domain/services/ruler_scale.dart';
 import '../../../domain/services/trip_summary.dart';
 import '../../../domain/services/units.dart';
+import '../../../domain/services/year_summary.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../common/species_label.dart';
 import '../../settings/application/preferences.dart';
@@ -328,6 +329,61 @@ TripCardData buildTripCard({
   );
 }
 
+YearCardData buildYearCard({
+  required YearSummary summary,
+  required List<Catch> allCatches,
+  required Map<String, Species> speciesById,
+  required Formatters f,
+  required String lang,
+  Map<String, Bait> baitsById = const {},
+  String? photoRoot,
+}) {
+  final l10n = f.l10n;
+  String name(String? id) =>
+      (id == null ? null : speciesById[id]?.displayName(lang)) ??
+      l10n.speciesUnknown;
+  final biggest = summary.biggest;
+  final year = allCatches
+      .where((c) => c.caughtAt.toLocal().year == summary.year)
+      .toList();
+  final withPhoto = biggest?.coverPhoto != null
+      ? biggest
+      : year.where((c) => c.coverPhoto != null).firstOrNull;
+  return YearCardData(
+    year: summary.year,
+    tripCount: summary.tripCount,
+    catchCount: summary.catchCount,
+    speciesCount: summary.speciesCount,
+    daysFished: summary.daysFished,
+    timeFishedLabel: f.duration(summary.timeFished),
+    byMonth: summary.byMonth,
+    monthLetters: f.monthLetters(),
+    bestMonth: summary.bestMonth,
+    topSpeciesName: summary.topSpeciesId == null
+        ? null
+        : name(summary.topSpeciesId),
+    topSpeciesCount: summary.species.firstOrNull?.$2 ?? 0,
+    biggestLabel: biggest == null
+        ? null
+        : l10n.cardBiggestValue(
+            name(biggest.speciesId),
+            biggest.weightGrams != null
+                ? f.weight(biggest.weightGrams!)
+                : f.length(biggest.lengthMillimeters!),
+          ),
+    newSpeciesCount: summary.newSpecies.length,
+    releasedCount: summary.releasedCount,
+    topBaitLabel: summary.topBaitId == null
+        ? null
+        : baitsById[summary.topBaitId]?.name,
+    photoPath: _photo(photoRoot, withPhoto?.coverPhoto?.relativePath),
+    photoOptions: [
+      for (final c in year)
+        for (final p in c.photos) ?_photo(photoRoot, p.relativePath),
+    ],
+  );
+}
+
 Formatters _formatters(Ref ref) => Formatters(
   lookupAppLocalizations(Locale(ref.watch(effectiveLanguageProvider))),
   ref.watch(unitSystemProvider),
@@ -385,5 +441,36 @@ final tripCardDataProvider = Provider.family<TripCardData?, String>((
     baitsById: {for (final b in baits) b.id: b},
     photoRoot: root.path,
     map: ref.watch(tripMapProvider(trip.id)).sketch,
+  );
+});
+
+/// A year summed up (see [yearSummary]); null while the logbook loads.
+final yearSummaryProvider = Provider.family<YearSummary?, int>((ref, year) {
+  final trips = ref.watch(tripHistoryProvider).value;
+  final all = ref.watch(allCatchesProvider).value;
+  if (trips == null || all == null) return null;
+  return yearSummary(
+    year: year,
+    trips: [for (final o in trips) o.trip],
+    allCatches: all,
+    now: ref.watch(clockProvider).now(),
+  );
+});
+
+/// Card data for a year, or null while its dependencies load.
+final yearCardDataProvider = Provider.family<YearCardData?, int>((ref, year) {
+  final summary = ref.watch(yearSummaryProvider(year));
+  final all = ref.watch(allCatchesProvider).value;
+  final root = ref.watch(photoRootProvider).value;
+  if (summary == null || all == null || root == null) return null;
+  final baits = ref.watch(baitsProvider).value ?? const [];
+  return buildYearCard(
+    summary: summary,
+    allCatches: all,
+    speciesById: ref.watch(speciesByIdProvider),
+    f: _formatters(ref),
+    lang: ref.watch(effectiveLanguageProvider),
+    baitsById: {for (final b in baits) b.id: b},
+    photoRoot: root.path,
   );
 });

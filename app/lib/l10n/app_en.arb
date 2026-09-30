@@ -2301,5 +2301,116 @@
   "storiesFailed": "Instagram did not open. Try other apps.",
   "@storiesFailed": {
     "description": "Direct Stories share failed"
+  },
+  "yearTitle": "{year} in review",
+  "@yearTitle": {
+    "description": "Year in review screen title and entry in Stats",
+    "placeholders": {
+      "year": {
+        "type": "String",
+        "example": "2026"
+      }
+    }
+  },
+  "yearEntryBody": "Your year in numbers, ready to become a card.",
+  "@yearEntryBody": {
+    "description": "Stats: entry to the year in review"
+  },
+  "yearEmpty": "No trips this year.",
+  "@yearEmpty": {
+    "description": "Year in review without trips"
+  },
+  "cardYearTitle": "Year in review",
+  "@cardYearTitle": {
+    "description": "Title on the year card"
+  },
+  "yearDaysFished": "{count, plural, =1{1 day on the water} other{{count} days on the water}}",
+  "@yearDaysFished": {
+    "description": "Distinct days with a trip in the year",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yearTimeFished": "{duration} fishing",
+  "@yearTimeFished": {
+    "description": "Time fished in the year",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "86 h"
+      }
+    }
+  },
+  "yearTopSpecies": "Most caught: {species} ({count})",
+  "@yearTopSpecies": {
+    "description": "Species caught most in the year",
+    "placeholders": {
+      "species": {
+        "type": "String",
+        "example": "Dourado"
+      },
+      "count": {
+        "type": "String",
+        "example": "12"
+      }
+    }
+  },
+  "yearBiggest": "Biggest: {value}",
+  "@yearBiggest": {
+    "description": "Biggest catch of the year",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "Dourado, 4.2 kg"
+      }
+    }
+  },
+  "yearNewSpecies": "{count, plural, =1{1 new species} other{{count} new species}}",
+  "@yearNewSpecies": {
+    "description": "Species caught for the first time that year",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yearReleased": "{count, plural, =1{1 released} other{{count} released}}",
+  "@yearReleased": {
+    "description": "Catches released in the year",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yearBestMonth": "Best month: {month}",
+  "@yearBestMonth": {
+    "description": "Month with most catches",
+    "placeholders": {
+      "month": {
+        "type": "String",
+        "example": "September"
+      }
+    }
+  },
+  "yearTopBait": "Best bait: {bait}",
+  "@yearTopBait": {
+    "description": "Bait with most catches in the year",
+    "placeholders": {
+      "bait": {
+        "type": "String",
+        "example": "Tuvira"
+      }
+    }
+  },
+  "yearByMonthTitle": "Catches by month",
+  "@yearByMonthTitle": {
+    "description": "Section: month chart"
+  },
+  "yearCreateCard": "Create year card",
+  "@yearCreateCard": {
+    "description": "Opens the card editor for the year"
   }
 }

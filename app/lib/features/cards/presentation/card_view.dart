@@ -7,6 +7,7 @@ import 'styles/chart_card.dart';
 import 'styles/cover_card.dart';
 import 'styles/map_card.dart';
 import 'styles/tag_card.dart';
+import 'styles/year_card.dart';
 
 /// A catch card at its canvas size, as customized in the editor.
 class CatchCardView extends StatelessWidget {
@@ -93,4 +94,36 @@ class TripCardView extends StatelessWidget {
       },
     );
   }
+}
+
+/// A year card ("Year in review") at its canvas size. One layout, in any
+/// theme and format.
+class YearCardView extends StatelessWidget {
+  const YearCardView({
+    super.key,
+    required this.data,
+    required this.format,
+    this.options = const CardOptions(),
+    this.onFrame,
+  });
+
+  final YearCardData data;
+  final CardFormat format;
+  final CardOptions options;
+
+  /// Set while framing in the editor (see [CardPaletteScope.onFrame]).
+  final void Function(CardFrameTarget target, CardFrame frame)? onFrame;
+
+  YearCardData get shown => data.customized(options);
+
+  @override
+  Widget build(BuildContext context) => CardCanvas(
+    format: format,
+    palette: options.palette,
+    photoFilter: options.activeFilter,
+    photoThemed: options.photoThemed,
+    photoFrame: options.photoFrame,
+    onFrame: onFrame,
+    child: YearCard(data: shown, format: format),
+  );
 }

@@ -3099,6 +3099,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Instagram did not open. Try other apps.'**
   String get storiesFailed;
+
+  /// Year in review screen title and entry in Stats
+  ///
+  /// In en, this message translates to:
+  /// **'{year} in review'**
+  String yearTitle(String year);
+
+  /// Stats: entry to the year in review
+  ///
+  /// In en, this message translates to:
+  /// **'Your year in numbers, ready to become a card.'**
+  String get yearEntryBody;
+
+  /// Year in review without trips
+  ///
+  /// In en, this message translates to:
+  /// **'No trips this year.'**
+  String get yearEmpty;
+
+  /// Title on the year card
+  ///
+  /// In en, this message translates to:
+  /// **'Year in review'**
+  String get cardYearTitle;
+
+  /// Distinct days with a trip in the year
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day on the water} other{{count} days on the water}}'**
+  String yearDaysFished(int count);
+
+  /// Time fished in the year
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} fishing'**
+  String yearTimeFished(String duration);
+
+  /// Species caught most in the year
+  ///
+  /// In en, this message translates to:
+  /// **'Most caught: {species} ({count})'**
+  String yearTopSpecies(String species, String count);
+
+  /// Biggest catch of the year
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest: {value}'**
+  String yearBiggest(String value);
+
+  /// Species caught for the first time that year
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new species} other{{count} new species}}'**
+  String yearNewSpecies(int count);
+
+  /// Catches released in the year
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 released} other{{count} released}}'**
+  String yearReleased(int count);
+
+  /// Month with most catches
+  ///
+  /// In en, this message translates to:
+  /// **'Best month: {month}'**
+  String yearBestMonth(String month);
+
+  /// Bait with most catches in the year
+  ///
+  /// In en, this message translates to:
+  /// **'Best bait: {bait}'**
+  String yearTopBait(String bait);
+
+  /// Section: month chart
+  ///
+  /// In en, this message translates to:
+  /// **'Catches by month'**
+  String get yearByMonthTitle;
+
+  /// Opens the card editor for the year
+  ///
+  /// In en, this message translates to:
+  /// **'Create year card'**
+  String get yearCreateCard;
 }
 
 class _AppLocalizationsDelegate

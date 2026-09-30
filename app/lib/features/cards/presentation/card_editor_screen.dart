@@ -27,7 +27,7 @@ import '../application/photo_filters.dart';
 import '../application/stories_sharer.dart';
 import 'card_view.dart';
 
-enum CardSubject { catchItem, trip }
+enum CardSubject { catchItem, trip, year }
 
 enum _Section { style, theme, photo, frame, details, caption }
 
@@ -306,6 +306,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
         return (PostKind.catchCard, item?.tripId, widget.id, item?.speciesId);
       }(),
       CardSubject.trip => (PostKind.tripCard, widget.id, null, null),
+      CardSubject.year => (PostKind.yearCard, null, null, null),
     };
     final venueId = tripId == null
         ? null
@@ -380,6 +381,27 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
           view.shown.map != null && drawsMap(view.style),
         );
       }(),
+      CardSubject.year => () {
+        final data = ref.watch(yearCardDataProvider(int.parse(widget.id)));
+        if (data == null) {
+          return (null, null, null, null, <String>[], null, false);
+        }
+        final view = YearCardView(
+          data: data,
+          format: _format,
+          options: _options,
+          onFrame: onFrame,
+        );
+        return (
+          view,
+          null,
+          view.shown.photoPath,
+          data.photoPath,
+          data.photoOptions,
+          null,
+          false,
+        );
+      }(),
       CardSubject.trip => () {
         final data = ref.watch(tripCardDataProvider(widget.id));
         if (data == null) {
@@ -433,25 +455,32 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
       _ => null,
     };
 
+    // The year card has one layout and no place, weather or map.
+    final isYear = widget.subject == CardSubject.year;
+    final sections = [
+      for (final s in _Section.values)
+        if (!isYear || s != _Section.details) s,
+    ];
     final panel = switch (_section) {
       _Section.style => Column(
         children: [
-          _ChipRow(
-            children: [
-              for (final s in CardStyle.values)
-                ChoiceChip(
-                  label: Text(_styleName(s)),
-                  selected: style == s,
-                  showCheckmark: false,
-                  onSelected:
-                      s == CardStyle.map &&
-                          mapState != CardMapState.ready &&
-                          style != s
-                      ? null
-                      : (_) => setState(() => _style = s),
-                ),
-            ],
-          ),
+          if (!isYear)
+            _ChipRow(
+              children: [
+                for (final s in CardStyle.values)
+                  ChoiceChip(
+                    label: Text(_styleName(s)),
+                    selected: style == s,
+                    showCheckmark: false,
+                    onSelected:
+                        s == CardStyle.map &&
+                            mapState != CardMapState.ready &&
+                            style != s
+                        ? null
+                        : (_) => setState(() => _style = s),
+                  ),
+              ],
+            ),
           _ChipRow(
             children: [
               for (final f in CardFormat.values)
@@ -655,7 +684,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                       child: Semantics(
                         image: true,
                         label: l10n.cardPreviewLabel(
-                          _styleName(style),
+                          isYear ? l10n.cardYearTitle : _styleName(style),
                           _formatName(_format),
                         ),
                         excludeSemantics: true,
@@ -693,7 +722,7 @@ class _CardEditorScreenState extends ConsumerState<CardEditorScreen> {
                   const Divider(height: 1),
                 Row(
                   children: [
-                    for (final s in _Section.values)
+                    for (final s in sections)
                       Expanded(
                         child: _SectionTab(
                           icon: switch (s) {

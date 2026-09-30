@@ -202,6 +202,39 @@ Future<void> shoot(
   await saveScreenshot(tester, name);
 }
 
+YearCardData sampleYear({String? photo, String? caption}) => YearCardData(
+  year: 2026,
+  tripCount: 23,
+  catchCount: 87,
+  speciesCount: 9,
+  daysFished: 21,
+  timeFishedLabel: '112 h',
+  byMonth: const [4, 2, 6, 9, 3, 0, 1, 5, 21, 14, 12, 10],
+  monthLetters: const [
+    'J',
+    'F',
+    'M',
+    'A',
+    'M',
+    'J',
+    'J',
+    'A',
+    'S',
+    'O',
+    'N',
+    'D',
+  ],
+  bestMonth: 9,
+  topSpeciesName: 'Dourado',
+  topSpeciesCount: 31,
+  biggestLabel: 'Pintado, 12,4 kg',
+  newSpeciesCount: 3,
+  releasedCount: 70,
+  topBaitLabel: 'Tuvira',
+  photoPath: photo,
+  caption: caption,
+);
+
 void main() {
   setUpAll(loadRealFonts);
 
@@ -355,6 +388,31 @@ void main() {
   }
 
   // The map style: local (exact) and regional (approximate) maps.
+  for (final format in CardFormat.values) {
+    testWidgets('year ${format.name}', (tester) async {
+      await shoot(
+        tester,
+        'card_year_${format.name}_plain',
+        YearCardView(data: sampleYear(), format: format),
+        format,
+      );
+      await shoot(
+        tester,
+        'card_year_${format.name}_photo',
+        YearCardView(
+          data: sampleYear(photo: _photo),
+          format: format,
+          options: const CardOptions(
+            palette: CardPalette.tucunare,
+            caption: 'Ano do dourado',
+          ),
+        ),
+        format,
+        photo: _photo,
+      );
+    }, skip: !screenshotsEnabled);
+  }
+
   testWidgets('map style', (tester) async {
     final local = sampleMap(PrivacyLevel.exact);
     final regional = sampleMap(PrivacyLevel.approximate);

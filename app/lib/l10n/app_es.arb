@@ -499,5 +499,19 @@
   "shareTitle": "Compartir en",
   "shareToStories": "Historias de Instagram",
   "shareToApps": "Otras apps",
-  "storiesFailed": "Instagram no se abrió. Prueba otras apps."
+  "storiesFailed": "Instagram no se abrió. Prueba otras apps.",
+  "yearTitle": "Resumen de {year}",
+  "yearEntryBody": "Tu año en números, listo para ser una tarjeta.",
+  "yearEmpty": "Ninguna pesca este año.",
+  "cardYearTitle": "Resumen del año",
+  "yearDaysFished": "{count, plural, =1{1 día en el agua} other{{count} días en el agua}}",
+  "yearTimeFished": "{duration} pescando",
+  "yearTopSpecies": "La más pescada: {species} ({count})",
+  "yearBiggest": "Mayor: {value}",
+  "yearNewSpecies": "{count, plural, =1{1 especie nueva} other{{count} especies nuevas}}",
+  "yearReleased": "{count, plural, =1{1 liberada} other{{count} liberadas}}",
+  "yearBestMonth": "Mejor mes: {month}",
+  "yearTopBait": "Mejor carnada: {bait}",
+  "yearByMonthTitle": "Capturas por mes",
+  "yearCreateCard": "Crear tarjeta del año"
 }

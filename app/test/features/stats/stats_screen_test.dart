@@ -27,19 +27,30 @@ void main() {
     await seedSummaryTrip(app, tester);
     await app.pumpScreen(tester, const StatsScreen());
 
+    Finder built(String text) => find.text(text, skipOffstage: false);
     expect(find.text('3'), findsOneWidget);
     expect(find.text('capturas'), findsOneWidget);
     expect(find.text('pescarias'), findsOneWidget);
-    expect(find.text('Capturas por horário'), findsOneWidget);
-    expect(find.byType(HourChart), findsOneWidget);
-    expect(find.textContaining('Mais capturas entre'), findsOneWidget);
+    // The way to the year in review, right under the totals.
+    expect(find.text('Resumo de 2026'), findsOneWidget);
     // Three catches, no pattern yet.
-    expect(find.text('O que funcionou'), findsOneWidget);
-    expect(find.textContaining('Ainda sem padrões'), findsOneWidget);
+    expect(built('O que funcionou'), findsOneWidget);
+    expect(
+      find.textContaining('Ainda sem padrões', skipOffstage: false),
+      findsOneWidget,
+    );
+
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
+    await app.settle(tester);
+    expect(built('Capturas por horário'), findsOneWidget);
+    expect(find.byType(HourChart, skipOffstage: false), findsOneWidget);
+    expect(
+      find.textContaining('Mais capturas entre', skipOffstage: false),
+      findsOneWidget,
+    );
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -600));
     await app.settle(tester);
-    Finder built(String text) => find.text(text, skipOffstage: false);
     expect(built('Espécies mais pescadas'), findsOneWidget);
     // Traíra: two catches (one per trip); dourado: one.
     expect(built('2 capturas'), findsOneWidget);
